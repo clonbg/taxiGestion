@@ -26,6 +26,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'taxistas.apps.TaxistasConfig',
+    'licencias.apps.LicenciasConfig',
+    'ingreso_diario.apps.IngresoDiarioConfig',
+    'ingreso_semanal.apps.IngresoSemanalConfig',
+
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
