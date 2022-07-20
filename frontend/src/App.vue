@@ -95,6 +95,15 @@ export default {
     axios.get("http://127.0.0.1:8000/taxistas/").then((result) => {
       console.log(result.data);
     })
+    axios.get("http://127.0.0.1:8000/licencias/").then((result) => {
+      console.log(result.data);
+    })
+    axios.get("http://127.0.0.1:8000/ingreso_diario/").then((result) => {
+      console.log(result.data);
+    })
+    axios.get("http://127.0.0.1:8000/ingreso_semanal/").then((result) => {
+      console.log(result.data);
+    })
   }
 
 }
