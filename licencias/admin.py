@@ -5,5 +5,5 @@ from .models import Licencia
 
 @admin.register(Licencia)
 class LicenciaAdmin(admin.ModelAdmin):
-    list_display=['matricula','marca','modelo','color']
+    list_display=['num_licencia','matricula','marca','modelo','color']
     list_filter=['marca','modelo','color']
