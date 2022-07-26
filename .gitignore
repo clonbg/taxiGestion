@@ -295,5 +295,6 @@ test/
 node_modules/
 npm-debug.log
 yarn-error.log
+imgs/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,django,vue,vuejs

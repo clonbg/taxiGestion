@@ -50,7 +50,7 @@ class User(AbstractUser):
         MaxValueValidator(100),
         MinValueValidator(0)
     ])
-    #foto = models.ImageField()
+    foto = models.ImageField(upload_to='imgs/%Y/%m/%d/',null=True, blank=True)
     licencia = models.ForeignKey(Licencia, on_delete=models.CASCADE, null=True,blank=True)
     email = models.EmailField(max_length=80, unique=True)
     phone_number = PhoneNumberField()
