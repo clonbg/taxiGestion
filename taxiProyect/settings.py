@@ -33,8 +33,11 @@ INSTALLED_APPS = [
     'ingreso_semanal.apps.IngresoSemanalConfig',
 
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    "phonenumber_field",
 ]
+
+AUTH_USER_MODEL = 'taxistas.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
