@@ -8,9 +8,9 @@ class Licencia(models.Model):
             MinValueValidator(1)
         ], unique=True)
     matricula = models.CharField(max_length=10, unique=True)
-    marca = models.CharField(max_length=10, null=True)
-    modelo = models.CharField(max_length=15, null=True)
-    color = models.CharField(max_length=15, null=True)
+    marca = models.CharField(max_length=10, null=True,blank=True)
+    modelo = models.CharField(max_length=15, null=True,blank=True)
+    color = models.CharField(max_length=15, null=True,blank=True)
 
     def __str__(self):
         return f"<Licencia {self.matricula}"

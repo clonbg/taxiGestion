@@ -51,7 +51,7 @@ class User(AbstractUser):
         MinValueValidator(0)
     ])
     #foto = models.ImageField()
-    licencia = models.ForeignKey(Licencia, on_delete=models.CASCADE, null=True)
+    licencia = models.ForeignKey(Licencia, on_delete=models.CASCADE, null=True,blank=True)
     email = models.EmailField(max_length=80, unique=True)
     phone_number = PhoneNumberField()
 
