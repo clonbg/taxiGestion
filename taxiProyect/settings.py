@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,9 +36,23 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     "phonenumber_field",
+    'djoser',
 ]
 
 AUTH_USER_MODEL = 'taxistas.User'
+
+REST_FRAMEWORK = {
+    'NON_FIELD_ERRORS_KEY':'error',
+    'DEFAULT_AUTHENTICATION_CLASSES':('rest_framework_simplejwt.authentication.JWTAuthentication')
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME':timedelta(days=7),
+    'BLACKLIST_AFTER_ROTATION': False
+
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
