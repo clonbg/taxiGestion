@@ -18,9 +18,7 @@ class LicenciaCreateView(generics.GenericAPIView):
     queryset=Licencia.objects.all()
 
     def get(self, request):
-        serializer_class=LicenciaCreationSerializers
-        licencias=Licencia.objects.all()
-        serializer = serializer_class(instance=licencias, many=True)
+        serializer = self.serializer_class(instance=self.queryset.all(), many=True)
         return Response(data=serializer.data,status=status.HTTP_200_OK)
 
     def post(self, request):
