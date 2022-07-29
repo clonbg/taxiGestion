@@ -7,5 +7,12 @@ urlpatterns = [
     path('licencias/',include('licencias.urls')),
     path('ingreso_diario/',include('ingreso_diario.urls')),
     path('ingreso_semanal/',include('ingreso_semanal.urls')),
-    path('taxistas/', include('djoser.urls.jwt')),
+    path('taxistas/', include('djoser.urls')),
 ]
+
+
+"""
+API
+taxistas/registros/
+licencias/create
+"""
