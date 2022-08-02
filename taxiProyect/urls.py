@@ -8,7 +8,7 @@ urlpatterns = [
     path('ingreso_diario/',include('ingreso_diario.urls')),
     path('ingreso_semanal/',include('ingreso_semanal.urls')),
     path('djoser/', include('djoser.urls.jwt')),
-    path('djoser/', include('djoser.urls')),
+    #path('djoser/', include('djoser.urls')),
 ]
 
 
