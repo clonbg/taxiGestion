@@ -38,13 +38,11 @@ class UserDetailView(generics.GenericAPIView):
         serializer = self.serializer_class(instance=user)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
         
-
-    """
-    def put(self, request, licencia_id):
+    def put(self, request, user_id):
         data=request.data
-        licencia=get_object_or_404(Licencia, pk=licencia_id)
-        serializer=self.serializer_class(data=data,instance=licencia)
+        user=get_object_or_404(User, pk=user_id)
+        serializer=self.serializer_class(data=data,instance=user)
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data,status=status.HTTP_200_OK)
-        return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST) """
+        return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
