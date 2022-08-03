@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.core.validators import MinValueValidator, MaxValueValidator
 from taxistas.models import User
 from taxistas.serializers import UserCreationSerializers
+from datetime import datetime, timedelta
 
 
 class IngresoSemanalCreationSerializers(serializers.ModelSerializer):
@@ -34,11 +35,9 @@ class IngresoSemanalCreationSerializers(serializers.ModelSerializer):
         fields = ['id','dia_inicio','dia_fin','imagen_semana','total_efectivo_semana','total_apps_semana','total_tpv_semana','varios_semana','taxista','taxista_id']
 
     def validate(self, attrs):
-        print(attrs)
-        # El inicio menor o igual que el mayor
+        es_menor_o_igual = attrs['dia_inicio']<=attrs['dia_fin']
         # No tiene ninguno de los días ya apuntados
-        """ ingresos_diarios_taxista = IngresoDiario.objects.filter(dia=attrs['dia'],taxista_id=attrs['taxista']).exists()
-        if ingresos_diarios_taxista:
-            raise serializers.ValidationError(detail='Ya tienes ese día') """
+        dias=attrs['dia_inicio']-attrs['dia_fin']
+        raise serializers.ValidationError(detail=attrs['dia_inicio']-attrs['dia_fin'])
         return super().validate(attrs)
 
