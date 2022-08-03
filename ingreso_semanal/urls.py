@@ -2,5 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns=[
-    path('',views.HelloIngresoSemanalView.as_view(),name='Hello_ingreso_semanal')
+    path('create/',views.IngresoSemanalCreateView.as_view(), name='ingreso_semanal'),
+    #path('<int:ingresosemanal_id>/',views.IngresoSemanalDetailView.as_view(), name='detail_ingreso_diario')
 ]

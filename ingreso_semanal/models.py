@@ -6,7 +6,7 @@ from django.utils.timezone import now
 # Create your models here.
 
 
-class ingresoSemanal(models.Model):
+class IngresoSemanal(models.Model):
     dia_inicio = models.DateField(unique=True)
     dia_fin = models.DateField(default=now,unique=True)
     imagen_semana = models.ImageField(
