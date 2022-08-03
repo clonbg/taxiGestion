@@ -34,6 +34,7 @@ class LicenciaCreateView(generics.GenericAPIView):
 
 class LicenciaDetailView(generics.GenericAPIView):
     serializer_class = LicenciaDetailSerializers
+    permission_classes=[IsAuthenticated]
 
     def get(self, request, licencia_id):
         licencia=get_object_or_404(Licencia, pk=licencia_id)
@@ -51,4 +52,6 @@ class LicenciaDetailView(generics.GenericAPIView):
         return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, licencia_id):
-        pass
+        licencia=get_object_or_404(Licencia, pk=licencia_id)
+        licencia.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
