@@ -3,6 +3,6 @@ from . import views
 
 # taxistas/
 urlpatterns=[
-    path('',views.HelloTaxistasView.as_view(),name='Hello_taxista'),
-    path('registro/',views.UserCreateView.as_view(),name='registro')
+    path('registro/',views.UserCreateView.as_view(),name='registro'),
+    path('<int:user_id>/',views.UserDetailView.as_view(), name='detail_user')
 ]
