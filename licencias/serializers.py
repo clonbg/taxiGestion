@@ -31,18 +31,19 @@ class LicenciaCreationSerializers(serializers.ModelSerializer):
 
         return super().validate(attrs)
 
-    class LicenciaDetailSerializers(serializers.ModelSerializer):
-        num_licencia = serializers.IntegerField(validators=[
-                MaxValueValidator(1000000),
-                MinValueValidator(1)
-            ])
-        matricula = serializers.CharField(max_length=10)
-        marca = serializers.CharField(max_length=10, allow_null=True)
-        modelo = serializers.CharField(max_length=15, allow_null=True)
-        color = serializers.CharField(max_length=15, allow_null=True)
+class LicenciaDetailSerializers(serializers.ModelSerializer):
+    id=serializers.PrimaryKeyRelatedField(read_only=True)
+    num_licencia = serializers.IntegerField(validators=[
+            MaxValueValidator(1000000),
+            MinValueValidator(1)
+        ])
+    matricula = serializers.CharField(max_length=10)
+    marca = serializers.CharField(max_length=10, allow_null=True)
+    modelo = serializers.CharField(max_length=15, allow_null=True)
+    color = serializers.CharField(max_length=15, allow_null=True)
 
 
-        class Meta:
-            model = Licencia
-            fields = ['num_licencia', 'matricula', 'marca','modelo','color']
+    class Meta:
+        model = Licencia
+        fields = ['id','num_licencia', 'matricula', 'marca','modelo','color']
 

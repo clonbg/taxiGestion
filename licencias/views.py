@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .serializers import LicenciaCreationSerializers
+from .serializers import LicenciaCreationSerializers, LicenciaDetailSerializers
 from .models import Licencia
 from rest_framework.permissions import IsAuthenticated
 
@@ -33,9 +33,13 @@ class LicenciaCreateView(generics.GenericAPIView):
 
 
 class LicenciaDetailView(generics.GenericAPIView):
+    serializer_class = LicenciaDetailSerializers
 
     def get(self, request, licencia_id):
-        pass
+        licencia=get_object_or_404(Licencia, pk=licencia_id)
+        serializer = self.serializer_class(instance=licencia)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        
 
     def put(self, request, licencia_id):
         #2:31:47
