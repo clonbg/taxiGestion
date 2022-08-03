@@ -6,8 +6,8 @@ from django.utils.timezone import now
 # Create your models here.
 
 
-class ingresoDiario(models.Model):
-    dia = models.DateField(default=now, unique=True)
+class IngresoDiario(models.Model):
+    dia = models.DateField(default=now)
     imagen = models.ImageField(
         upload_to='imgs/%Y/%m/%d/', null=True, blank=True)
     total_efectivo = models.FloatField(validators=[

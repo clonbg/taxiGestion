@@ -1,13 +1,13 @@
-from .models import ingresoDiario
+from .models import IngresoDiario
 from rest_framework import serializers
 from django.core.validators import MinValueValidator, MaxValueValidator
 from taxistas.models import User
 from taxistas.serializers import UserCreationSerializers
 
 
-class ingresoDiarioCreationSerializers(serializers.ModelSerializer):
+class IngresoDiarioCreationSerializers(serializers.ModelSerializer):
     id=serializers.PrimaryKeyRelatedField(read_only=True)
-    dia = serializers.DateField()#Unique
+    dia = serializers.DateField()
     imagen = serializers.ImageField(allow_null=True)
     total_efectivo = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
@@ -26,17 +26,16 @@ class ingresoDiarioCreationSerializers(serializers.ModelSerializer):
         MinValueValidator(-1000000)
     ],allow_null=True)
     taxista = UserCreationSerializers(read_only=True)
-    taxista_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=User.objects.all(), source='taxista',allow_null=True)
+    taxista_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=User.objects.all(), source='taxista')
 
 
     class Meta:
-        model = User
+        model = IngresoDiario
         fields = ['id','dia','imagen','total_efectivo','total_apps','total_tpv','varios','taxista','taxista_id']
 
     def validate(self, attrs):
-        dia_exists = ingresoDiario.objects.filter(dia=attrs['dia']).exists()
-        if dia_exists:
-            raise serializers.ValidationError(detail='Ya existe ese día')
-
+        ingresos_diarios_taxista = IngresoDiario.objects.filter(dia=attrs['dia'],taxista_id=attrs['taxista']).exists()
+        if ingresos_diarios_taxista:
+            raise serializers.ValidationError(detail='Ya tienes ese día')
         return super().validate(attrs)
 
