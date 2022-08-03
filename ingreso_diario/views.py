@@ -13,7 +13,7 @@ class HelloIngresoDiarioView(generics.GenericAPIView):
 class IngresoDiarioCreateView(generics.GenericAPIView):
     serializer_class=serializers.IngresoDiarioCreationSerializers
     queryset=IngresoDiario.objects.all()
-    #permission_classes=[IsAuthenticated]
+    permission_classes=[IsAuthenticated]
 
     def get(self, request):
         serializer = self.serializer_class(instance=self.queryset.all(), many=True)

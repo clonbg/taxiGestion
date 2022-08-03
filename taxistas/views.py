@@ -15,6 +15,11 @@ class HelloTaxistasView(generics.GenericAPIView):
 class UserCreateView(generics.GenericAPIView):
     serializer_class = serializers.UserCreationSerializers
     permission_classes=[IsAuthenticated]
+    queryset = User.objects.all()
+
+    def get(self, request):
+        serializer = self.serializer_class(instance=self.queryset.all(), many=True)
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
 
     def post(self, request):
         data = request.data
