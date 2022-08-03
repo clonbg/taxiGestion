@@ -30,3 +30,17 @@ class IngresoDiarioDetailView(generics.GenericAPIView):
         ingresodiario=get_object_or_404(IngresoDiario, pk=ingresodiario_id)
         serializer = self.serializer_class(instance=ingresodiario)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, ingresodiario_id):
+        data=request.data
+        ingresodiario=get_object_or_404(IngresoDiario, pk=ingresodiario_id)
+        serializer=self.serializer_class(data=data,instance=ingresodiario)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data,status=status.HTTP_200_OK)
+        return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, ingresodiario_id):
+        ingresodiario=get_object_or_404(IngresoDiario, pk=ingresodiario_id)
+        ingresodiario.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
