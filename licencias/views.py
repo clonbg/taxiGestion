@@ -38,6 +38,7 @@ class LicenciaDetailView(generics.GenericAPIView):
         pass
 
     def put(self, request, licencia_id):
+        #2:31:47
         pass
 
     def delete(self, request, licencia_id):
