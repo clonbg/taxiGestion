@@ -42,8 +42,13 @@ class LicenciaDetailView(generics.GenericAPIView):
         
 
     def put(self, request, licencia_id):
-        #2:31:47
-        pass
+        data=request.data
+        licencia=get_object_or_404(Licencia, pk=licencia_id)
+        serializer=self.serializer_class(data=data,instance=licencia)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data,status=status.HTTP_200_OK)
+        return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, licencia_id):
         pass
