@@ -7,8 +7,8 @@ from django.utils.timezone import now
 
 
 class IngresoSemanal(models.Model):
-    dia_inicio = models.DateField(unique=True)
-    dia_fin = models.DateField(default=now,unique=True)
+    dia_inicio = models.DateField()
+    dia_fin = models.DateField(default=now)
     imagen_semana = models.ImageField(
         upload_to='imgs/%Y/%m/%d/', null=True, blank=True)
     total_efectivo_semana = models.FloatField(validators=[
