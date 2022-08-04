@@ -35,9 +35,14 @@ class IngresoSemanalCreationSerializers(serializers.ModelSerializer):
         fields = ['id','dia_inicio','dia_fin','imagen_semana','total_efectivo_semana','total_apps_semana','total_tpv_semana','varios_semana','taxista','taxista_id']
 
     def validate(self, attrs):
+        # dia_inicio menor que el dia_fin
         es_menor_o_igual = attrs['dia_inicio']<=attrs['dia_fin']
-        # No tiene ninguno de los días ya apuntados
-        dias=attrs['dia_inicio']-attrs['dia_fin']
-        raise serializers.ValidationError(detail=attrs['dia_inicio']-attrs['dia_fin'])
+        if not es_menor_o_igual:
+            raise serializers.ValidationError(detail='El día de inicio debe ser menor o igual al de finalización')
+        # No existe ningún dia_fin mayor o igual que el dia_inicio que estamos poniendo
+        ingresos_semanales_taxista = IngresoSemanal.objects.values_list('dia_fin','taxista').filter(taxista_id=attrs['taxista'])
+        ingresos_fechas_erroneas = ingresos_semanales_taxista.values_list('dia_fin').filter(dia_fin__gte=attrs['dia_inicio'])
+        if ingresos_fechas_erroneas:
+            raise serializers.ValidationError(detail='Ya existen fechas mayores o iguales que el dia de inicio')
         return super().validate(attrs)
 
