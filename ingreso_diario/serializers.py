@@ -67,4 +67,10 @@ class IngresoDiarioDetailSerializers(serializers.ModelSerializer):
         model = IngresoDiario
         fields = ['id','dia','imagen','total_efectivo','total_apps','total_tpv','varios','taxista','taxista_id']
 
+    def validate(self, attrs):
+        ingresos_diarios_taxista = IngresoDiario.objects.values_list('dia','taxista_id').filter(dia=attrs['dia'],taxista_id=attrs['taxista']).exists()
+        if ingresos_diarios_taxista:
+            raise serializers.ValidationError(detail='Ya tienes ese día')
+        return super().validate(attrs)
+
 
