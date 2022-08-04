@@ -40,3 +40,8 @@ class IngresoSemanalDetailView(generics.GenericAPIView):
             return Response(data=serializer.data,status=status.HTTP_200_OK)
         return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, ingresosemanal_id):
+        ingresosemanal=get_object_or_404(IngresoSemanal, pk=ingresosemanal_id)
+        ingresosemanal.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

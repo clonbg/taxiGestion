@@ -42,7 +42,6 @@ class IngresoSemanalCreationSerializers(serializers.ModelSerializer):
         # No existe ningún dia_fin mayor o igual que el dia_inicio que estamos poniendo
         ingresos_semanales_taxista = IngresoSemanal.objects.filter(taxista_id=attrs['taxista'])
         ingresos_fechas_erroneas = ingresos_semanales_taxista.values_list('dia_fin').filter(dia_fin__gte=attrs['dia_inicio'])
-        print(ingresos_fechas_erroneas)
         if ingresos_fechas_erroneas:
             raise serializers.ValidationError(detail='Ya existen fechas mayores o iguales que el dia de inicio')
         return super().validate(attrs)
