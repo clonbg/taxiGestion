@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class IngresoSemanalCreateView(generics.GenericAPIView):
     serializer_class=serializers.IngresoSemanalCreationSerializers
-    queryset=IngresoSemanal.objects.all()
+    queryset=IngresoSemanal.objects.order_by('-id')
     permission_classes=[IsAuthenticated]
 
     def get(self, request):

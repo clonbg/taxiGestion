@@ -16,7 +16,7 @@ class HelloLicenciasView(generics.GenericAPIView):
 
 class LicenciaCreateView(generics.GenericAPIView):
     serializer_class=LicenciaCreationSerializers
-    queryset=Licencia.objects.all()
+    queryset=Licencia.objects.order_by('-id')
     permission_classes=[IsAuthenticated]
 
     def get(self, request):

@@ -5,17 +5,10 @@ from .models import User
 from . import serializers
 from rest_framework.permissions import IsAuthenticated
 
-
-
-class HelloTaxistasView(generics.GenericAPIView):
-    def get(self, request):
-        return Response(data={"message": "Hola taxista"}, status=status.HTTP_200_OK)
-
-
 class UserCreateView(generics.GenericAPIView):
     serializer_class = serializers.UserCreationSerializers
     permission_classes=[IsAuthenticated]
-    queryset = User.objects.all()
+    queryset = User.objects.order_by('-id')
 
     def get(self, request):
         serializer = self.serializer_class(instance=self.queryset.all(), many=True)
