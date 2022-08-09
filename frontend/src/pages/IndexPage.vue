@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { defineComponent, onBeforeMount } from "vue";
+import { defineComponent } from "vue";
 import { useTaxiStore } from "../stores/taxi-store";
 import { api } from "../boot/axios";
 

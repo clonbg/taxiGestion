@@ -8,14 +8,17 @@ export const useTaxiStore = defineStore("counter", () => {
   const token_acceso = ref("");
   const token_refresco = ref("");
   const router = useRouter();
+  const email = ref(null);
+  const password = ref(null)
 
   const newToken = async () => {
     await api
       .post("/djoser/jwt/create/", {
-        email: "clonbg@gmail.com",
-        password: "m4nu3l",
+        email: email.value,
+        password: password.value,
       })
       .then((res) => {
+        router.push('/')
         console.log(res);
         token_acceso.value = res.data.access;
         token_refresco.value = res.data.refresh;
@@ -38,6 +41,8 @@ export const useTaxiStore = defineStore("counter", () => {
     token_acceso,
     token_refresco,
     newToken,
-    verificaToken
+    verificaToken,
+    email,
+    password
   };
 });
