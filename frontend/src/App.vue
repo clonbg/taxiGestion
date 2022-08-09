@@ -4,19 +4,8 @@
 
 <script>
 import { defineComponent } from 'vue'
-import {useTaxiStore} from '../src/stores/taxi-store'
-
 
 export default defineComponent({
   name: 'App',
-  setup() {
-    const taxiStore = useTaxiStore()
-    return {
-      taxiStore
-    }
-  },
-  created(){
-    this.taxiStore.newToken()
-  }
 })
 </script>
