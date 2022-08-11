@@ -1,12 +1,12 @@
 <template>
   <div class="login">
-    <h1 class="title">Login in the page {{taxiStore.email}}{{taxiStore.password}}</h1>
+    <h1 class="title">Login in the page</h1>
     <form action class="form">
       <label class="form-label" for="#email">Email:</label>
-      <input class="form-input" type="email" id="email" required placeholder="Email" v-model="taxiStore.email">
+      <input class="form-input" type="email" id="email" required placeholder="Email">
       <label class="form-label" for="#password">Password:</label>
-      <input class="form-input" type="password" id="password" placeholder="Password" v-model="taxiStore.password">
-      <input class="form-submit" @click="taxiStore.newToken" typevalue="Login">
+      <input class="form-input" type="password" id="password" placeholder="Password">
+      <input class="form-submit" typevalue="Login">
     </form>
   </div>
 </template>
@@ -14,13 +14,12 @@
 <script>
 import { defineComponent } from "vue";
 import { useTaxiStore } from "../stores/taxi-store";
-import { api } from "../boot/axios";
+
 
 export default defineComponent({
   setup() {
-    const taxiStore = useTaxiStore();
     return {
-      taxiStore,
+
     };
   },
 });
