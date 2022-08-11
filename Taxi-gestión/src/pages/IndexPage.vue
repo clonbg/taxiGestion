@@ -9,90 +9,73 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
 import { api } from "../boot/axios";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-export default defineComponent({
-  setup() {
-    const $router = useRouter();
-    const access_token = ref(null);
+const $router = useRouter();
+const access_token = ref(null);
 
-    return {
-      access_token,
-    };
-  },
-  methods: {
-    access() {
-      api
-        .post("/djoser/jwt/create/", {
-          email: "clonbg@gmail.com",
-          password: "m4nu3l",
-        })
-        .then((res) => {
-          this.access_token = res.data.access;
-          localStorage.setItem("tmp_taxi_access_token", Date.now());
-          localStorage.setItem("taxi_refresh_token", res.data.refresh);
-          localStorage.setItem("tmp_taxi_refresh_token", Date.now());
-        })
-        .catch((err) => {
-          console.log(err.request);
-        });
+const access = () => {
+  api
+    .post("/djoser/jwt/create/", {
+      email: "clonbg@gmail.com",
+      password: "m4nu3l",
+    })
+    .then((res) => {
+      access_token.value = res.data.access;
+      localStorage.setItem("tmp_taxi_access_token", Date.now());
+      localStorage.setItem("taxi_refresh_token", res.data.refresh);
+      localStorage.setItem("tmp_taxi_refresh_token", Date.now());
+    })
+    .catch((err) => {
+      console.log(err.request);
+    });
+};
+const refresToken = async () => {
+  if (
+    access_token.value === null ||
+    access_token.value == "" ||
+    access_token.value == undefined ||
+    localStorage.getItem("tmp_taxi_access_token") === null ||
+    localStorage.getItem("tmp_taxi_access_token") == "" ||
+    Date.now() - localStorage.getItem("tmp_taxi_access_token") > 14 * 60 * 1000
+  ) {
+    console.log("no es valido el access token");
+    if (
+      localStorage.getItem("taxi_refresh_token") === null ||
+      localStorage.getItem("taxi_refresh_token") == "" ||
+      localStorage.getItem("tmp_taxi_refresh_token") === null ||
+      localStorage.getItem("tmp_taxi_refresh_token") == "" ||
+      Date.now() - localStorage.getItem("tmp_taxi_refresh_token") >
+        7 * 24 * 60 * 60 * 1000 - 60000
+    ) {
+      console.log("no es válido el refresh token");
+      $router.push("/login");
+    } else {
+      const res = await api.post("/djoser/jwt/refresh/", {
+        refresh: localStorage.getItem("taxi_refresh_token"),
+      });
+      access_token.value = res.data.access;
+      localStorage.setItem("tmp_taxi_access_token", Date.now());
+    }
+  }
+};
+const listaUsuarios = async () => {
+  await refresToken();
+  let axiosConfig = {
+    headers: {
+      Authorization: `Bearer ${access_token.value}`,
     },
-    async refresToken() {
-      if (
-        this.access_token === null ||
-        this.access_token == "" ||
-        this.access_token == undefined ||
-        localStorage.getItem("tmp_taxi_access_token") === null ||
-        localStorage.getItem("tmp_taxi_access_token") == "" ||
-        Date.now() - localStorage.getItem("tmp_taxi_access_token") >
-          14 * 60 * 1000
-      ) {
-        console.log("no es valido el access token");
-        if (
-          localStorage.getItem("taxi_refresh_token") === null ||
-          localStorage.getItem("taxi_refresh_token") == "" ||
-          localStorage.getItem("tmp_taxi_refresh_token") === null ||
-          localStorage.getItem("tmp_taxi_refresh_token") == "" ||
-          Date.now() - localStorage.getItem("tmp_taxi_refresh_token") >
-            7 * 24 * 60 * 60 * 1000 - 60000
-        ) {
-          console.log("no es válido el refresh token");
-          this.$router.push("/login");
-        } else {
-          await api
-            .post("/djoser/jwt/refresh/", {
-              refresh: localStorage.getItem("taxi_refresh_token"),
-            })
-            .then((res) => {
-              this.access_token = res.data.access;
-              localStorage.setItem("tmp_taxi_access_token", Date.now());
-            })
-            .catch((err) => {
-              console.log(err.request);
-            });
-        }
-      }
-    },
-    async listaUsuarios() {
-      await this.refresToken();
-      let axiosConfig = {
-        headers: {
-          Authorization: `Bearer ${this.access_token}`,
-        },
-      };
-      api
-        .get("/taxistas/registro/", axiosConfig)
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err.request);
-        });
-    },
-  },
-});
+  };
+  api
+    .get("/taxistas/registro/", axiosConfig)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err.request);
+    });
+};
 </script>
