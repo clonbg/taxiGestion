@@ -13,14 +13,12 @@
 import { defineComponent } from "vue";
 import { api } from "../boot/axios";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
+    const $router = useRouter();
     const access_token = ref(null);
-
-    //access()
-    //refresToken();
-    //listaUsuarios()
 
     return {
       access_token,
@@ -54,10 +52,6 @@ export default defineComponent({
           14 * 60 * 1000
       ) {
         console.log("no es valido el access token");
-        console.log(
-          localStorage.getItem("taxi_refresh_token"),
-          localStorage.getItem("tmp_taxi_refresh_token")
-        );
         if (
           localStorage.getItem("taxi_refresh_token") === null ||
           localStorage.getItem("taxi_refresh_token") == "" ||
@@ -67,7 +61,7 @@ export default defineComponent({
             7 * 24 * 60 * 60 * 1000 - 60000
         ) {
           console.log("no es válido el refresh token");
-          console.log("Deberiamos volver al login");
+          this.$router.push("/login");
         } else {
           await api
             .post("/djoser/jwt/refresh/", {

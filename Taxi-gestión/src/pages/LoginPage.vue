@@ -1,12 +1,23 @@
 <template>
   <div class="login">
-    <h1 class="title">Login in the page</h1>
+    <h3 class="title">Página de Login</h3>
     <form action class="form">
       <label class="form-label" for="#email">Email:</label>
-      <input class="form-input" type="email" id="email" required placeholder="Email">
+      <input
+        class="form-input"
+        type="email"
+        id="email"
+        required
+        placeholder="Email"
+      />
       <label class="form-label" for="#password">Password:</label>
-      <input class="form-input" type="password" id="password" placeholder="Password">
-      <input class="form-submit" typevalue="Login">
+      <input
+        class="form-input"
+        type="password"
+        id="password"
+        placeholder="Password"
+      />
+      <input class="form-submit" typevalue="Login" placeholder="Login" />
     </form>
   </div>
 </template>
@@ -15,12 +26,9 @@
 import { defineComponent } from "vue";
 import { useTaxiStore } from "../stores/taxi-store";
 
-
 export default defineComponent({
   setup() {
-    return {
-
-    };
+    return {};
   },
 });
 </script>
@@ -67,9 +75,9 @@ export default defineComponent({
 .form-submit {
   background: #1ab188;
   border: none;
-  color: white;
+  color: black;
   margin-top: 3rem;
-  padding: 1rem 0;
+  padding: 1rem 1rem;
   cursor: pointer;
   transition: background 0.2s;
   &:hover {
