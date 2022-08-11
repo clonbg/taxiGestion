@@ -22,10 +22,11 @@ class UserCreationSerializers(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=80)
     phone_number = PhoneNumberField()
     password = serializers.CharField(min_length=4)
+    is_staff = serializers.BooleanField()
 
     class Meta:
         model = User
-        fields = ['id','dni','nombre','apellidos','sueldo','foto','licencia','licencia_id','email','phone_number','password']
+        fields = ['id','dni','nombre','apellidos','sueldo','foto','licencia','licencia_id','email','phone_number','password','is_staff']
 
     def create(self,validated_data):
         user = User(**validated_data)
@@ -59,10 +60,11 @@ class UserDetailSerializers(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=80)
     phone_number = PhoneNumberField()
     password = serializers.CharField(min_length=4)
+    is_staff = serializers.BooleanField()
 
     class Meta:
         model = User
-        fields = ['id','dni','nombre','apellidos','sueldo','foto','licencia','licencia_id','email','phone_number','password']
+        fields = ['id','dni','nombre','apellidos','sueldo','foto','licencia','licencia_id','email','phone_number','password','is_staff']
 
     def update(self,instance,validated_data):
         updated_user=super().update(instance,validated_data)

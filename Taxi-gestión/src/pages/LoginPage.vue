@@ -24,7 +24,6 @@
 
 <script>
 import { defineComponent } from "vue";
-import { useTaxiStore } from "../stores/taxi-store";
 
 export default defineComponent({
   setup() {
