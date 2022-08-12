@@ -59,9 +59,9 @@ export const useTaxiStore = defineStore("taxi", () => {
   const logout = () => {
     access_token.value=null
     localStorage.removeItem("tmp_taxi_access_token")
-    localStorage.removeItem('tmp_taxi_access_token')
+    localStorage.removeItem("tmp_taxi_refresh_token")
     localStorage.removeItem('taxi_refresh_token')
-  }
+  };
   return {
     access_token,
     access,
