@@ -17,17 +17,25 @@
         id="password"
         placeholder="Password"
       />
-      <input class="form-submit" typevalue="Login" placeholder="Login" />
+      <q-btn
+        class="form-submit"
+        typevalue="Login"
+        placeholder="Login"
+        @click="taxiStore.access"
+        >Login</q-btn
+      >
     </form>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import { useTaxiStore } from "../stores/taxi-store";
 
 export default defineComponent({
   setup() {
-    return {};
+    const taxiStore = useTaxiStore();
+    return { taxiStore };
   },
 });
 </script>
