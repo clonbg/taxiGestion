@@ -24,7 +24,7 @@
           >
             Login
           </q-btn>
-          <q-btn color="red" @click="taxiStore.logout()" v-else> Logout </q-btn>
+          <q-btn color="red" @click="logout()" v-else> Logout </q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -51,6 +51,9 @@
 import { ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 import { useTaxiStore } from "../stores/taxi-store";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const taxiStore = useTaxiStore();
 
@@ -103,5 +106,9 @@ const leftDrawerOpen = ref(false);
 
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
+};
+const logout = async () => {
+  taxiStore.logout();
+  router.push("/login");
 };
 </script>

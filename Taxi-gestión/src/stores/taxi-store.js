@@ -4,24 +4,23 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 export const useTaxiStore = defineStore("taxi", () => {
-  const $router = useRouter();
+  const router = useRouter();
   const access_token = ref(null);
 
-  const access = () => {
-    api
+  const access = async () => {
+    const res = await api
       .post("/djoser/jwt/create/", {
         email: "clonbg@gmail.com",
         password: "m4nu3l",
       })
       .then((res) => {
-        $router.push("/");
         access_token.value = res.data.access;
         localStorage.setItem("tmp_taxi_access_token", Date.now());
         localStorage.setItem("taxi_refresh_token", res.data.refresh);
         localStorage.setItem("tmp_taxi_refresh_token", Date.now());
       })
       .catch((err) => {
-        console.log(err.request);
+        console.log(err);
       });
   };
   const refresToken = async () => {
@@ -45,7 +44,6 @@ export const useTaxiStore = defineStore("taxi", () => {
           7 * 24 * 60 * 60 * 1000 - 60000
       ) {
         console.log("no es válido el refresh token");
-        $router.push("/login");
       } else {
         const res = await api.post("/djoser/jwt/refresh/", {
           refresh: localStorage.getItem("taxi_refresh_token"),
@@ -55,8 +53,7 @@ export const useTaxiStore = defineStore("taxi", () => {
       }
     }
   };
-  const logout = () => {
-    $router.push("/login");
+  const logout = async () => {
     access_token.value = null;
     localStorage.removeItem("tmp_taxi_access_token");
     localStorage.removeItem("tmp_taxi_refresh_token");

@@ -2,7 +2,7 @@
   <div class="login">
     <h3 class="title">Página de Login</h3>
     <form action class="form">
-      <label class="form-label" for="#email">Email:</label>
+      <!-- <label class="form-label" for="#email">Email:</label>
       <input
         class="form-input"
         type="email"
@@ -16,28 +16,27 @@
         type="password"
         id="password"
         placeholder="Password"
-      />
-      <q-btn
-        class="form-submit"
-        typevalue="Login"
-        placeholder="Login"
-        @click="taxiStore.access"
+      /> -->
+      <q-btn class="form-submit" placeholder="Login" @click="login()"
         >Login</q-btn
       >
     </form>
   </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
 import { useTaxiStore } from "../stores/taxi-store";
+import { useRouter } from "vue-router";
 
-export default defineComponent({
-  setup() {
-    const taxiStore = useTaxiStore();
-    return { taxiStore };
-  },
-});
+const router = useRouter();
+
+const taxiStore = useTaxiStore();
+const login = async () => {
+  await taxiStore.access();
+  if (taxiStore.access_token) {
+    router.push("/");
+  }
+};
 </script>
 
 <style lang="scss" scoped>

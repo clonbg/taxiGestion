@@ -6,6 +6,7 @@ import {
   createWebHashHistory,
 } from "vue-router";
 import routes from "./routes";
+import { useTaxiStore } from "../stores/taxi-store";
 
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
@@ -20,8 +21,17 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach((to, from, next) => {
-    console.log(to.meta.auth);
+  Router.beforeEach(async (to, from, next) => {
+    const protegida = to.meta.auth;
+    const taxiStore = useTaxiStore();
+
+    if (protegida) {
+      await taxiStore.refresToken();
+      if (taxiStore.access_token) {
+        return next();
+      }
+      return next("/login");
+    }
     next();
   });
 
