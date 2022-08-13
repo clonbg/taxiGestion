@@ -2,7 +2,7 @@
   <div class="login">
     <h3 class="title">Página de Login</h3>
     <form action class="form">
-      <!-- <label class="form-label" for="#email">Email:</label>
+      <label class="form-label" for="#email">Email:</label>
       <input
         class="form-input"
         type="email"
@@ -16,7 +16,7 @@
         type="password"
         id="password"
         placeholder="Password"
-      /> -->
+      />
       <q-btn class="form-submit" placeholder="Login" @click="login()"
         >Login</q-btn
       >

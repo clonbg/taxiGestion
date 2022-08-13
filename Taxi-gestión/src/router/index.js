@@ -28,9 +28,14 @@ export default route(function (/* { store, ssrContext } */) {
     if (protegida) {
       await taxiStore.refresToken();
       if (taxiStore.access_token) {
-        return next();
+        return next(); //Si es protegida y existe el access_token
       }
-      return next("/login");
+      return next("/login"); //Si es protegida y NO existe el access_token
+    }
+    if (to.path == "/login") {
+      if (taxiStore.access_token) {
+        return next("/"); //Si es la página de login y existe el access_token
+      }
     }
     next();
   });
