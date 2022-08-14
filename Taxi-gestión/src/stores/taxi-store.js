@@ -2,24 +2,34 @@ import { defineStore } from "pinia";
 import { api } from "../boot/axios";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { Notify } from "quasar";
 
 export const useTaxiStore = defineStore("taxi", () => {
   const router = useRouter();
   const access_token = ref(null);
+  const user = ref(null);
 
-  const access = async () => {
+  const access = async (email, password) => {
     const res = await api
       .post("/djoser/jwt/create/", {
-        email: "clonbg@gmail.com",
-        password: "m4nu3l",
+        email: email,
+        password: password,
       })
       .then((res) => {
+        Notify.create({
+          type: "positive",
+          message: "Ha sido logueado correctamente",
+        });
         access_token.value = res.data.access;
         localStorage.setItem("tmp_taxi_access_token", Date.now());
         localStorage.setItem("taxi_refresh_token", res.data.refresh);
         localStorage.setItem("tmp_taxi_refresh_token", Date.now());
       })
       .catch((err) => {
+        Notify.create({
+          type: "negative",
+          message: "Algo ha fallado¡¡",
+        });
         console.log(err);
       });
   };
@@ -61,6 +71,7 @@ export const useTaxiStore = defineStore("taxi", () => {
   };
   return {
     access_token,
+    user,
     access,
     refresToken,
     logout,

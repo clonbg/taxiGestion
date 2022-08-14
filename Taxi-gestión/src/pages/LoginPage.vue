@@ -9,6 +9,7 @@
         id="email"
         required
         placeholder="Email"
+        v-model="email"
       />
       <label class="form-label" for="#password">Password:</label>
       <input
@@ -16,6 +17,7 @@
         type="password"
         id="password"
         placeholder="Password"
+        v-model="password"
       />
       <q-btn class="form-submit" placeholder="Login" @click="login()"
         >Login</q-btn
@@ -25,14 +27,19 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useTaxiStore } from "../stores/taxi-store";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
 const taxiStore = useTaxiStore();
+
+const email = ref(null);
+const password = ref(null);
+
 const login = async () => {
-  await taxiStore.access();
+  await taxiStore.access(email.value, password.value);
   if (taxiStore.access_token) {
     router.push("/");
   }

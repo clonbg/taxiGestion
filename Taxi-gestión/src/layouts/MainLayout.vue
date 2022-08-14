@@ -53,10 +53,13 @@ import { ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 import { useTaxiStore } from "../stores/taxi-store";
 import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 
 const router = useRouter();
 
 const taxiStore = useTaxiStore();
+
+const $q = useQuasar();
 
 const essentialLink = [
   {
@@ -111,5 +114,9 @@ const toggleLeftDrawer = () => {
 const logout = async () => {
   taxiStore.logout();
   router.push("/login");
+  $q.notify({
+    type: "info",
+    message: "Ha salido de la aplicación",
+  });
 };
 </script>
