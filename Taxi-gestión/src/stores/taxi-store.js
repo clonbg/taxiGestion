@@ -8,7 +8,6 @@ export const useTaxiStore = defineStore("taxi", () => {
   const router = useRouter();
   const access_token = ref(null);
   const user = ref(null);
-  const emailUsuario = ref(null);
 
   const access = async (email, password) => {
     const res = await api
@@ -21,7 +20,7 @@ export const useTaxiStore = defineStore("taxi", () => {
           type: "positive",
           message: "Ha sido logueado correctamente",
         });
-        emailUsuario.value = email;
+        localStorage.setItem("email_taxi_user", email);
         access_token.value = res.data.access;
         localStorage.setItem("tmp_taxi_access_token", Date.now());
         localStorage.setItem("taxi_refresh_token", res.data.refresh);
@@ -65,18 +64,40 @@ export const useTaxiStore = defineStore("taxi", () => {
       }
     }
   };
+  const usuario = async () => {
+    await refresToken();
+    if (access_token.value) {
+      let axiosConfig = {
+        headers: {
+          Authorization: `Bearer ${access_token.value}`,
+        },
+      };
+      api
+        .get("/taxistas/registro/", axiosConfig)
+        .then((res) => {
+          user.value = res.data.filter(
+            (user) => user.email == localStorage.getItem("email_taxi_user")
+          );
+        })
+        .catch((err) => {
+          console.log(err.request);
+        });
+    }
+  };
   const logout = async () => {
     access_token.value = null;
     localStorage.removeItem("tmp_taxi_access_token");
     localStorage.removeItem("tmp_taxi_refresh_token");
     localStorage.removeItem("taxi_refresh_token");
+    localStorage.removeItem("email_taxi_user");
   };
+  usuario();
   return {
     access_token,
     user,
-    emailUsuario,
     access,
     refresToken,
     logout,
+    usuario,
   };
 });

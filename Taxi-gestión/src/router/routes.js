@@ -12,17 +12,17 @@ const routes = [
       {
         path: "diario",
         component: () => import("pages/IngresoDiario.vue"),
-        meta: { auth: true },
+        meta: { auth: true, staff: true },
       },
       {
         path: "semanal",
         component: () => import("pages/IngresoSemanal.vue"),
-        meta: { auth: true },
+        meta: { auth: true, staff: true },
       },
       {
         path: "graficas",
         component: () => import("src/pages/GraficasPage.vue"),
-        meta: { auth: true },
+        meta: { auth: true, admin: true },
       },
     ],
   },

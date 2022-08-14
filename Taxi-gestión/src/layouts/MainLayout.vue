@@ -14,6 +14,7 @@
         <q-toolbar-title>
           <q-btn color="black" to="/">Perfil</q-btn>
           <q-btn color="cyan" to="/login">Login</q-btn>
+          <q-btn color="orange" to="/graficas">Graficas</q-btn>
         </q-toolbar-title>
 
         <div>

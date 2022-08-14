@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <q-btn @click="taxiStore.refresToken()" class="q-ma-md">Refresh</q-btn>
-    <q-btn @click="usuario()" class="q-ma-md">Usuarios</q-btn>
+    <q-btn @click="taxiStore.usuario()" class="q-ma-md">Usuarios</q-btn>
     <q-btn to="/diario" class="q-ma-md" v-if="taxiStore.access_token">Diario</q-btn>
     <q-btn to="/semanal" class="q-ma-md" v-if="taxiStore.access_token">Semanal</q-btn>
 
@@ -13,32 +13,7 @@
 </template>
 
 <script setup>
-import { api } from "../boot/axios";
 import { useTaxiStore } from "../stores/taxi-store";
-import { onMounted, ref } from "vue";
 
 const taxiStore = useTaxiStore();
-const usuario = async () => {
-  await taxiStore.refresToken();
-  if (taxiStore.access_token) {
-    let axiosConfig = {
-      headers: {
-        Authorization: `Bearer ${taxiStore.access_token}`,
-      },
-    };
-    api
-      .get("/taxistas/registro/", axiosConfig)
-      .then((res) => {
-        taxiStore.user = res.data.filter(
-          (user) => user.email == taxiStore.emailUsuario
-        );
-      })
-      .catch((err) => {
-        console.log(err.request);
-      });
-  }
-};
-onMounted: {
-  usuario();
-}
 </script>
