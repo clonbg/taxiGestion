@@ -8,6 +8,7 @@ export const useTaxiStore = defineStore("taxi", () => {
   const router = useRouter();
   const access_token = ref(null);
   const user = ref(null);
+  const emailUsuario = ref(null);
 
   const access = async (email, password) => {
     const res = await api
@@ -20,6 +21,7 @@ export const useTaxiStore = defineStore("taxi", () => {
           type: "positive",
           message: "Ha sido logueado correctamente",
         });
+        emailUsuario.value = email;
         access_token.value = res.data.access;
         localStorage.setItem("tmp_taxi_access_token", Date.now());
         localStorage.setItem("taxi_refresh_token", res.data.refresh);
@@ -30,7 +32,7 @@ export const useTaxiStore = defineStore("taxi", () => {
           type: "negative",
           message: "Algo ha fallado¡¡",
         });
-        console.log(err);
+        console.log(err.request);
       });
   };
   const refresToken = async () => {
@@ -72,6 +74,7 @@ export const useTaxiStore = defineStore("taxi", () => {
   return {
     access_token,
     user,
+    emailUsuario,
     access,
     refresToken,
     logout,

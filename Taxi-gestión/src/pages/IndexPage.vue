@@ -6,7 +6,7 @@
     <q-btn to="/semanal" class="q-ma-md" v-if="taxiStore.access_token">Semanal</q-btn>
 
     <p>ACCESS: {{ taxiStore.access_token }}</p>
-    <p><pre>{{usuarios}}</pre></p>
+    <p><pre>{{user}}</pre></p>
 
     <p></p>
   </q-page>
@@ -18,7 +18,7 @@ import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref } from "vue";
 
 const taxiStore = useTaxiStore();
-const usuarios = ref(null);
+const user = ref(null);
 const usuario = async () => {
   await taxiStore.refresToken();
   if (taxiStore.access_token) {
@@ -31,7 +31,9 @@ const usuario = async () => {
       .get("/taxistas/registro/", axiosConfig)
       .then((res) => {
         console.log(res.data);
-        usuarios.value = res.data;
+        user.value = res.data.filter(
+          (user) => user.email == taxiStore.emailUsuario
+        );
       })
       .catch((err) => {
         console.log(err.request);
