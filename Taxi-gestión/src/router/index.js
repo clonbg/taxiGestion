@@ -35,7 +35,7 @@ export default route(function (/* { store, ssrContext } */) {
     if (to.path == "/login") {
       if (taxiStore.access_token) {
         return next("/"); //Si es la página de login y existe el access_token
-      }
+      } else taxiStore.logout(); //Si es la página de login y no existe el access_token
     }
     next();
   });
