@@ -1,5 +1,9 @@
 <template>
-  <q-item clickable :to="to">
+  <q-item
+    clickable
+    @click="leer(to)"
+    v-if="!admin || (admin && taxiStore.user[0].is_superuser)"
+  >
     <q-item-section v-if="icon" avatar>
       <q-icon color="black" :name="icon" />
     </q-item-section>
@@ -13,6 +17,9 @@
 
 <script>
 import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
+import { openURL } from "quasar";
+import { useTaxiStore } from "../stores/taxi-store";
 
 export default defineComponent({
   name: "EssentialLink",
@@ -35,6 +42,30 @@ export default defineComponent({
     icon: {
       type: String,
       default: "",
+    },
+
+    link: {
+      type: String,
+      default: "",
+    },
+    admin: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  setup() {
+    const router = useRouter();
+    const taxiStore = useTaxiStore();
+
+    return { router, taxiStore };
+  },
+  methods: {
+    leer(to) {
+      if (to[0] == "/") {
+        this.router.push(to);
+      } else {
+        openURL(to);
+      }
     },
   },
 });

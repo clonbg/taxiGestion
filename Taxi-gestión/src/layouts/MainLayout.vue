@@ -36,7 +36,6 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
         <q-item-label header> Secciones </q-item-label>
-
         <EssentialLink
           v-for="link in essentialLink"
           :key="link.title"
@@ -72,40 +71,30 @@ const essentialLink = [
     to: "/",
   },
   {
-    title: "Github",
-    caption: "github.com/quasarframework",
-    icon: "code",
-    link: "https://github.com/quasarframework",
+    title: "Ingresos diarios",
+    caption: "cada día",
+    icon: "attach_money",
+    to: "/diario",
   },
   {
-    title: "Discord Chat Channel",
-    caption: "chat.quasar.dev",
-    icon: "chat",
-    link: "https://chat.quasar.dev",
+    title: "Ingresos semanales",
+    caption: "cada semana",
+    icon: "attach_moneyattach_money",
+    to: "/semanal",
   },
   {
-    title: "Forum",
-    caption: "forum.quasar.dev",
-    icon: "record_voice_over",
-    link: "https://forum.quasar.dev",
+    title: "Gráficas",
+    caption: "comparativas",
+    icon: "insert_chart_outlined",
+    to: "/graficas",
+    admin: true,
   },
   {
-    title: "Twitter",
-    caption: "@quasarframework",
-    icon: "rss_feed",
-    link: "https://twitter.quasar.dev",
-  },
-  {
-    title: "Facebook",
-    caption: "@QuasarFramework",
-    icon: "public",
-    link: "https://facebook.quasar.dev",
-  },
-  {
-    title: "Quasar Awesome",
-    caption: "Community Quasar projects",
-    icon: "favorite",
-    link: "https://awesome.quasar.dev",
+    title: "Base de datos",
+    caption: "Base de datos",
+    icon: "storage",
+    to: "http://127.0.0.1:8000/admin/",
+    admin: true,
   },
 ];
 
