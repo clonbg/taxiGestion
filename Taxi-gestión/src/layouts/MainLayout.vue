@@ -24,14 +24,18 @@
           >
             Login
           </q-btn>
-          <q-btn icon="mdi-location-exit" color="red" @click="logout()"></q-btn>
+          <q-btn
+            icon="mdi-location-exit"
+            color="red"
+            @click="confirmaLogout"
+          ></q-btn>
         </div>
       </q-toolbar>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label header> Essential Links </q-item-label>
+        <q-item-label header> Secciones </q-item-label>
 
         <EssentialLink
           v-for="link in essentialLink"
@@ -62,10 +66,10 @@ const $q = useQuasar();
 
 const essentialLink = [
   {
-    title: "Docs",
-    caption: "quasar.dev",
-    icon: "school",
-    link: "https://quasar.dev",
+    title: "Perfil de usuario",
+    caption: taxiStore.user[0].email,
+    icon: "person",
+    to: "/",
   },
   {
     title: "Github",
@@ -116,6 +120,16 @@ const logout = async () => {
   $q.notify({
     type: "info",
     message: "Ha salido de la aplicación",
+  });
+};
+const confirmaLogout = () => {
+  $q.dialog({
+    title: "Cuidado",
+    message: "Está seguro de abandonar la sesión?",
+    cancel: true,
+    persistent: true,
+  }).onOk(() => {
+    logout();
   });
 };
 </script>
