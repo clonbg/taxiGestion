@@ -2,7 +2,6 @@ const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
-    meta: { auth: true },
     children: [
       {
         path: "",
@@ -22,7 +21,6 @@ const routes = [
       {
         path: "graficas",
         component: () => import("src/pages/GraficasPage.vue"),
-        meta: { auth: true, admin: true },
       },
     ],
   },

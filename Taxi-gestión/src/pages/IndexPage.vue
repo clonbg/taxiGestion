@@ -6,7 +6,7 @@
     <q-btn to="/semanal" class="q-ma-md" v-if="taxiStore.access_token">Semanal</q-btn>
 
     <p>ACCESS: {{ taxiStore.access_token }}</p>
-    <p><pre>{{taxiStore.user}}</pre></p>
+    <p><pre>{{taxiStore.user[0]}}</pre></p>
 
     <p></p>
   </q-page>
@@ -14,10 +14,10 @@
 
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
-import {onMounted} from 'vue'
+import { onMounted } from "vue";
 
 const taxiStore = useTaxiStore();
 onMounted: {
-    taxiStore.usuario()
-  }
+  taxiStore.usuario();
+}
 </script>

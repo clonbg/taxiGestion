@@ -99,6 +99,4 @@ export const useTaxiStore = defineStore("taxi", () => {
     logout,
     usuario,
   };
-
-
 });

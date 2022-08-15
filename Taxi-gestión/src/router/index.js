@@ -22,26 +22,35 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach(async (to, from, next) => {
-    const protegida = to.meta.auth;
     const taxiStore = useTaxiStore();
 
-    if (protegida) {
-      await taxiStore.refresToken();
+    await taxiStore.refresToken();
+    await taxiStore.usuario();
+
+    if (to.meta.auth) {
       if (taxiStore.access_token) {
-        if (taxiStore.user != null) {
-          if (!taxiStore.user[0].is_superuser && to.meta.admin) {
-            return next('/')
-          }
-        }
         return next(); //Si es protegida y existe el access_token
       }
       return next("/login"); //Si es protegida y NO existe el access_token
     }
+
     if (to.path == "/login") {
       if (taxiStore.access_token) {
         return next("/"); //Si es la página de login y existe el access_token
       }
     }
+
+    if (to.path == "/graficas") {
+      if (taxiStore.access_token) {
+        if (taxiStore.user == null) {
+          return next("/");
+        }
+        if (taxiStore.user[0].is_superuser) {
+          return next();
+        } else return next("/");
+      }
+    }
+
     next();
   });
 
