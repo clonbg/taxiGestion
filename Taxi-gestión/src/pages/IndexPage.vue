@@ -1,14 +1,6 @@
 <template>
-  <q-page padding>
-    <q-btn @click="taxiStore.refresToken()" class="q-ma-md">Refresh</q-btn>
-    <q-btn @click="taxiStore.usuario()" class="q-ma-md">Usuarios</q-btn>
-    <q-btn to="/diario" class="q-ma-md" v-if="taxiStore.access_token">Diario</q-btn>
-    <q-btn to="/semanal" class="q-ma-md" v-if="taxiStore.access_token">Semanal</q-btn>
-
-    <p>ACCESS: {{ taxiStore.access_token }}</p>
+  <q-page padding class="body-dark">
     <p><pre>{{taxiStore.user[0]}}</pre></p>
-
-    <p></p>
   </q-page>
 </template>
 
