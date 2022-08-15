@@ -24,10 +24,11 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach(async (to, from, next) => {
     const taxiStore = useTaxiStore();
 
-    await taxiStore.refresToken();
     await taxiStore.usuario();
 
     if (to.meta.auth) {
+      await taxiStore.refresToken();
+
       if (taxiStore.access_token) {
         return next(); //Si es protegida y existe el access_token
       }
@@ -41,6 +42,8 @@ export default route(function (/* { store, ssrContext } */) {
     }
 
     if (to.path == "/graficas") {
+      await taxiStore.refresToken();
+
       if (taxiStore.access_token) {
         if (taxiStore.user == null) {
           return next("/");

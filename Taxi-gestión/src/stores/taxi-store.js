@@ -1,11 +1,9 @@
 import { defineStore } from "pinia";
 import { api } from "../boot/axios";
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref } from "vue";
 import { Notify } from "quasar";
 
 export const useTaxiStore = defineStore("taxi", () => {
-  const router = useRouter();
   const access_token = ref(null);
   const user = ref(null);
 
@@ -29,9 +27,9 @@ export const useTaxiStore = defineStore("taxi", () => {
       .catch((err) => {
         Notify.create({
           type: "negative",
-          message: "Algo ha fallado¡¡",
+          message: JSON.stringify(err.response.data.detail),
         });
-        console.log(err.request.response);
+        console.log(err.response.data.detail);
       });
   };
   const refresToken = async () => {

@@ -1,27 +1,35 @@
 <template>
   <div class="login">
-    <h3 class="title">Página de Login</h3>
-    <form action class="form">
-      <label class="form-label" for="#email">Email:</label>
-      <input
-        class="form-input"
-        type="email"
-        id="email"
-        required
-        placeholder="Email"
+    <h3 class="title">Gestión de taxis</h3>
+    <form class="form" @submit.prevent="login()">
+      <q-input
+        class="q-mb-md"
+        dark
+        standout
         v-model="email"
+        label="Correo
+      electrónico"
+        type="email"
+        stack-label
+        :rules="[
+          (val) =>
+            (val && /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/.test(val)) ||
+            'El correo no es correcto',
+        ]"
       />
-      <label class="form-label" for="#password">Password:</label>
-      <input
-        class="form-input"
-        type="password"
-        id="password"
-        placeholder="Password"
+
+      <q-input
+        dark
+        standout
         v-model="password"
+        label="Contraseña"
+        type="password"
+        stack-label
+        :rules="[
+          (val) => (val && val.length > 3) || 'Password mínimo 4 caracteres',
+        ]"
       />
-      <q-btn class="form-submit" placeholder="Login" @click="login()"
-        >Login</q-btn
-      >
+      <q-btn class="form-submit" type="submit">Login</q-btn>
     </form>
   </div>
 </template>
@@ -39,16 +47,20 @@ const email = ref(null);
 const password = ref(null);
 
 const login = async () => {
-  await taxiStore.access(email.value, password.value);
-  if (taxiStore.access_token) {
-    router.push("/");
+  if (email.value && password.value) {
+    await taxiStore.access(email.value, password.value);
+    if (taxiStore.access_token) {
+      router.push("/");
+      email.value = "";
+      password.value = "";
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .login {
-  padding: 2rem;
+  padding: 5rem;
 }
 .title {
   text-align: center;
@@ -66,25 +78,7 @@ const login = async () => {
   padding: 40px;
   box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
 }
-.form-label {
-  margin-top: 2rem;
-  color: white;
-  margin-bottom: 0.5rem;
-  &:first-of-type {
-    margin-top: 0rem;
-  }
-}
-.form-input {
-  padding: 10px 15px;
-  background: none;
-  background-image: none;
-  border: 1px solid white;
-  color: white;
-  &:focus {
-    outline: 0;
-    border-color: #1ab188;
-  }
-}
+
 .form-submit {
   background: #1ab188;
   border: none;
