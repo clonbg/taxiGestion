@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "../boot/axios";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Notify } from "quasar";
 
@@ -31,7 +31,7 @@ export const useTaxiStore = defineStore("taxi", () => {
           type: "negative",
           message: "Algo ha fallado¡¡",
         });
-        console.log(err.request);
+        console.log(err.request.response);
       });
   };
   const refresToken = async () => {
@@ -91,7 +91,6 @@ export const useTaxiStore = defineStore("taxi", () => {
     localStorage.removeItem("taxi_refresh_token");
     localStorage.removeItem("email_taxi_user");
   };
-  usuario();
   return {
     access_token,
     user,
@@ -100,4 +99,6 @@ export const useTaxiStore = defineStore("taxi", () => {
     logout,
     usuario,
   };
+
+
 });

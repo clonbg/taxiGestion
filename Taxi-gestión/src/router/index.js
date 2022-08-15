@@ -28,7 +28,11 @@ export default route(function (/* { store, ssrContext } */) {
     if (protegida) {
       await taxiStore.refresToken();
       if (taxiStore.access_token) {
-        console.log(taxiStore.user);
+        if (taxiStore.user != null) {
+          if (!taxiStore.user[0].is_superuser && to.meta.admin) {
+            return next('/')
+          }
+        }
         return next(); //Si es protegida y existe el access_token
       }
       return next("/login"); //Si es protegida y NO existe el access_token

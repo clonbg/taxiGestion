@@ -14,6 +14,10 @@
 
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
+import {onMounted} from 'vue'
 
 const taxiStore = useTaxiStore();
+onMounted: {
+    taxiStore.usuario()
+  }
 </script>
