@@ -12,9 +12,7 @@
         />
 
         <q-toolbar-title>
-          <q-btn color="black" to="/">Perfil</q-btn>
-          <q-btn color="cyan" to="/login">Login</q-btn>
-          <q-btn color="orange" to="/graficas">Graficas</q-btn>
+          {{ taxiStore.user[0].nombre }} {{ taxiStore.user[0].apellidos }}
         </q-toolbar-title>
 
         <div>
@@ -26,7 +24,7 @@
           >
             Login
           </q-btn>
-          <q-btn color="red" @click="logout()" v-else> Logout </q-btn>
+          <q-btn icon="mdi-location-exit" color="red" @click="logout()"></q-btn>
         </div>
       </q-toolbar>
     </q-header>
