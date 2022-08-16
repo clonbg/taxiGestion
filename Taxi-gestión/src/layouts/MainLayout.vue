@@ -12,7 +12,8 @@
         />
 
         <q-toolbar-title>
-          {{ taxiStore.user[0].nombre }} {{ taxiStore.user[0].apellidos }}
+          {{ taxiStore.user ? taxiStore.user[0].nombre : "" }}
+          {{ taxiStore.user ? taxiStore.user[0].apellidos : "" }}
         </q-toolbar-title>
 
         <div>
@@ -56,6 +57,7 @@ import EssentialLink from "components/EssentialLink.vue";
 import { useTaxiStore } from "../stores/taxi-store";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import { onMounted } from "vue";
 
 const router = useRouter();
 
@@ -66,7 +68,7 @@ const $q = useQuasar();
 const essentialLink = [
   {
     title: "Perfil de usuario",
-    caption: taxiStore.user[0].email,
+    caption: localStorage.getItem("email_taxi_user"),
     icon: "person",
     to: "/",
   },
@@ -121,4 +123,8 @@ const confirmaLogout = () => {
     logout();
   });
 };
+
+onMounted: {
+  taxiStore.usuario();
+}
 </script>

@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { Notify } from "quasar";
 
 export const useTaxiStore = defineStore("taxi", () => {
+  const urlServer = ref("http://localhost:8000");
   const access_token = ref(null);
   const user = ref(null);
 
@@ -92,6 +93,7 @@ export const useTaxiStore = defineStore("taxi", () => {
   return {
     access_token,
     user,
+    urlServer,
     access,
     refresToken,
     logout,
