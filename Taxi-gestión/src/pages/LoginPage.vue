@@ -51,8 +51,6 @@ const login = async () => {
     await taxiStore.access(email.value, password.value);
     if (taxiStore.access_token) {
       router.push("/");
-      email.value = "";
-      password.value = "";
     }
   }
 };
