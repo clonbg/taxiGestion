@@ -2,14 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
           {{ taxiStore.user ? taxiStore.user[0].nombre : "" }}
@@ -17,19 +10,10 @@
         </q-toolbar-title>
 
         <div>
-          <q-btn
-            color="green"
-            class="q-mx-md"
-            @click="taxiStore.access()"
-            v-if="!taxiStore.access_token"
-          >
+          <q-btn color="green" class="q-mx-md" @click="taxiStore.access()" v-if="!taxiStore.access_token">
             Login
           </q-btn>
-          <q-btn
-            icon="mdi-location-exit"
-            color="red"
-            @click="confirmaLogout"
-          ></q-btn>
+          <q-btn icon="mdi-location-exit" color="red" @click="confirmaLogout"></q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -37,11 +21,7 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-grey-4">
       <q-list>
         <q-item-label header> Secciones </q-item-label>
-        <EssentialLink
-          v-for="link in essentialLink"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in essentialLink" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 

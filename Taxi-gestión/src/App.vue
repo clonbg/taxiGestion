@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-grey-3">
+  <div padding class="bg-grey-3">
     <router-view />
   </div>
 </template>

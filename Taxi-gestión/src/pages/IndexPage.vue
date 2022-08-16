@@ -1,51 +1,38 @@
 <template>
-  <q-page padding>
-    <div class="row q-ma-md q-ml-md">
-      <form class="form" @submit.prevent="editarUsuario()">
+  <q-page>
+    <div class="q-mx-auto vertical-middle">
+      <form class="form q-mx-auto" @submit.prevent="subir()" style="max-width:400px">
         <img v-if="(taxiStore.user[0].foto) ? true : false" :src="`${taxiStore.urlServer}${taxiStore.user[0].foto}`"
-          class="imgRedonda" />
+          class="imgRedonda q-ma-xl" />
         <img v-else src="imgs/fraguel.jpg" class="imgRedonda" />
-        <q-input label="Label (stacked)" stack-label dense name="asdf" />
+        <q-file v-model="file" label="Cambie su foto" filled class="q-my-md">
+          <template v-slot:prepend>
+            <q-icon name="attach_file" />
+          </template>
+        </q-file>
+        <q-input standout v-model="taxiStore.user[0].nombre" label="Nombre" dense class="q-my-lg" />
+        <q-input standout v-model="taxiStore.user[0].apellidos" label="Apellidos" dense class="q-my-lg" />
         <q-btn class="form-submit" type="submit">Save</q-btn>
       </form>
-
+      <p>Falta seguir con el formulario, cambiar la id, y las validaciones y notificación error y ok</p>
+      <pre>{{ taxiStore.user }}</pre>
     </div>
-
-    <div class="q-gutter-md row items-start">
-
-    </div>
-    <p>
-    <pre>{{ taxiStore.user }}</pre>
-    </p>
   </q-page>
 </template>
 
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { api } from '../boot/axios'
 
 const taxiStore = useTaxiStore();
+
+const file = ref(null)
 
 const getUser = async () => {
   await taxiStore.usuario();
 };
 
-const editarUsuario = () => {
-  const formData = new FormData();
-  Object.entries(taxiStore.user[0]).forEach(element => {
-    formData.append(element[0], element[1])
-  });
-
-  //console.log("Form Data");
-  for (let obj of formData) {
-    //console.log(obj);
-  }
-
-  //console.log(JSON.stringify(formData));
-  subir()
-
-}
 
 const subir = async () => {
   await taxiStore.refresToken();
@@ -55,25 +42,26 @@ const subir = async () => {
         Authorization: `Bearer ${taxiStore.access_token}`
       },
     };
-    const data = {
-      "dni": "taxijefe@freeallapp.com",
-      "nombre": "taxijefe@freeallapp.",
-      "apellidos": "taxijefe@freeallapp.com",
-      "sueldo": 6,
-      "foto": null,
-      "licencia_id": null,
-      "email": "taxijefe@freeallapp.com",
-      "phone_number": null,
-    }
+    var formData = new FormData();
+    formData.append('dni', "taxijefe@freeallapp.com")
+    formData.append("nombre", taxiStore.user[0].nombre)
+    formData.append("apellidos", taxiStore.user[0].apellidos)
+    formData.append("sueldo", 78)
+    formData.append("foto", file.value ? file.value : '')
+    formData.append("licencia_id", 4)
+    formData.append("email", "taxijefe@freeallapp.com")
+    formData.append("phone_number", '')
+
     console.log(axiosConfig)
     api
-      .put("/taxistas/7/", data, axiosConfig)
+      .put("/taxistas/7/", formData, axiosConfig)
       .then(async (res) => {
         await taxiStore.usuario()
+        file.value = null
         console.log(res)
       })
       .catch((err) => {
-        console.log(err.request.response);
+        console.log(err.request);
       });
   }
 };
