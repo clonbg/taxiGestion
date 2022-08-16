@@ -23,7 +23,8 @@ class UserCreationSerializers(serializers.ModelSerializer):
         allow_null=True)
     email = serializers.EmailField(max_length=80)
     phone_number = PhoneNumberField()
-    password = serializers.CharField(min_length=4)
+    password = serializers.CharField(
+        min_length=4)
     is_staff = serializers.BooleanField(default=True)
     is_superuser = serializers.BooleanField(default=False)
 
@@ -70,7 +71,7 @@ class UserDetailSerializers(serializers.ModelSerializer):
         allow_null=True)
     email = serializers.EmailField(max_length=80)
     phone_number = PhoneNumberField()
-    password = serializers.CharField(min_length=4)
+    password = serializers.CharField(allow_null=True, read_only=True)
     is_staff = serializers.BooleanField(default=True)
     is_superuser = serializers.BooleanField(default=False)
 
@@ -84,6 +85,5 @@ class UserDetailSerializers(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         updated_user = super().update(instance, validated_data)
-        updated_user.set_password(validated_data['password'])
         updated_user.save()
         return updated_user
