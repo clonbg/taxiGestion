@@ -9,14 +9,16 @@
             </div>
           </template>
         </q-img>
-        <q-file v-model="file" label="Cambie su foto" filled class="q-my-md">
+        <q-file v-model="file" label="Cambie su foto" filled class="q-my-xl">
           <template v-slot:prepend>
             <q-icon name="attach_file" />
           </template>
         </q-file>
-        <q-input standout v-model="taxiStore.user.nombre" label="Nombre" dense class="q-my-lg" />
-        <q-input standout v-model="taxiStore.user.apellidos" label="Apellidos" dense class="q-my-lg" />
-        <q-btn class="form-submit" type="submit">Save</q-btn>
+        <q-input standout v-model="taxiStore.user.nombre" label="Nombre" dense class="q-my-lg"
+          :rules="[val => val && val.length >= 3 && val.length <= 20 || 'Entre 3 y 20 carácteres']" />
+        <q-input standout v-model="taxiStore.user.apellidos" label="Apellidos" dense class="q-my-lg"
+          :rules="[val => val && val.length >= 3 && val.length <= 50 || 'Entre 3 y 50 carácteres']" />
+        <q-btn class="form-submit" type="submit" :disable=saveState>Save</q-btn>
       </form>
     </div>
     <p>seguir con el formulario y las validaciones y notificación error y ok</p>
@@ -27,7 +29,7 @@
 
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { api } from '../boot/axios'
 
 const taxiStore = useTaxiStore();
@@ -38,6 +40,12 @@ const getUser = async () => {
   await taxiStore.usuario();
 };
 
+const saveState = computed(() => {
+  if (taxiStore.user.nombre.length < 3 || taxiStore.user.nombre.length > 20 || taxiStore.user.apellidos.length < 3 || taxiStore.user.apellidos.length > 50) {
+    return true
+  }
+  return false
+})
 
 const subir = async () => {
   await taxiStore.refresToken();
