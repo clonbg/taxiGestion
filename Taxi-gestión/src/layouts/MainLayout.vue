@@ -10,9 +10,6 @@
         </q-toolbar-title>
 
         <div>
-          <q-btn color="green" class="q-mx-md" @click="taxiStore.access()" v-if="!taxiStore.access_token">
-            Login
-          </q-btn>
           <q-btn icon="mdi-location-exit" color="red" @click="confirmaLogout"></q-btn>
         </div>
       </q-toolbar>

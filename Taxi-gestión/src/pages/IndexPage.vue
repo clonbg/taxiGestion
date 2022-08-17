@@ -1,10 +1,14 @@
 <template>
   <q-page>
-    <div class="q-mx-auto vertical-middle">
-      <form class="form q-mx-auto" @submit.prevent="subir()" style="max-width:400px">
-        <img v-if="(taxiStore.user[0].foto) ? true : false" :src="`${taxiStore.urlServer}${taxiStore.user[0].foto}`"
-          class="imgRedonda q-ma-xl" />
-        <img v-else src="imgs/fraguel.jpg" class="imgRedonda" />
+    <div class="flex flex-center">
+      <form class="form q-my-xl" @submit.prevent="subir()" style="min-width:600px">
+        <q-img :src="`${taxiStore.urlServer}${taxiStore.user[0].foto}`" class="imagen q-ma-xl" :ratio="16 / 9"><template
+            v-slot:error>
+            <div class="absolute-full flex flex-center bg-negative text-white">
+              No se puede cargar la imagen
+            </div>
+          </template>
+        </q-img>
         <q-file v-model="file" label="Cambie su foto" filled class="q-my-md">
           <template v-slot:prepend>
             <q-icon name="attach_file" />
@@ -14,9 +18,10 @@
         <q-input standout v-model="taxiStore.user[0].apellidos" label="Apellidos" dense class="q-my-lg" />
         <q-btn class="form-submit" type="submit">Save</q-btn>
       </form>
-      <p>Falta seguir con el formulario, cambiar la id, y las validaciones y notificación error y ok</p>
-      <pre>{{ taxiStore.user }}</pre>
     </div>
+    <p>Falta el nombre y apellidos del navbar, seguir con el formulario, cambiar la id, y las validaciones y
+      notificación error y ok</p>
+    <pre>{{ taxiStore.user }}</pre>
   </q-page>
 </template>
 
@@ -47,14 +52,14 @@ const subir = async () => {
     formData.append("nombre", taxiStore.user[0].nombre)
     formData.append("apellidos", taxiStore.user[0].apellidos)
     formData.append("sueldo", 78)
-    formData.append("foto", file.value ? file.value : '')
+    formData.append("foto", file.value ? file.value : null)
     formData.append("licencia_id", 4)
     formData.append("email", "taxijefe@freeallapp.com")
     formData.append("phone_number", '')
 
     console.log(axiosConfig)
     api
-      .put("/taxistas/7/", formData, axiosConfig)
+      .put(`/taxistas/7/`, formData, axiosConfig)
       .then(async (res) => {
         await taxiStore.usuario()
         file.value = null
@@ -71,14 +76,9 @@ onMounted: {
 </script>
 
 <style scoped>
-.imgRedonda {
+.imagen {
   width: 15rem;
   height: 15rem;
-  border-radius: 30rem;
   border: 10px solid #666;
-}
-
-.imgR {
-  border-radius: 50%;
 }
 </style>
