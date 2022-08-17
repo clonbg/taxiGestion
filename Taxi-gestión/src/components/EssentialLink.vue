@@ -1,12 +1,8 @@
 <template>
-  <q-item
-    clickable
-    @click="leer(to)"
-    v-if="
-      !admin ||
-      (admin && (taxiStore.user ? taxiStore.user[0].is_superuser : false))
-    "
-  >
+  <q-item clickable @click="leer(to)" v-if="
+    !admin ||
+    (admin && (taxiStore.user ? taxiStore.user.is_superuser : false))
+  ">
     <q-item-section v-if="icon" avatar>
       <q-icon color="black" :name="icon" />
     </q-item-section>

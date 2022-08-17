@@ -5,8 +5,8 @@
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
-          {{ taxiStore.user ? taxiStore.user[0].nombre : "" }}
-          {{ taxiStore.user ? taxiStore.user[0].apellidos : "" }}
+          {{ taxiStore.user ? taxiStore.user.nombre : "" }}
+          {{ taxiStore.user ? taxiStore.user.apellidos : "" }}
         </q-toolbar-title>
 
         <div>

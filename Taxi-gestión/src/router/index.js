@@ -48,7 +48,7 @@ export default route(function (/* { store, ssrContext } */) {
         if (taxiStore.user == null) {
           return next("/");
         }
-        if (taxiStore.user[0].is_superuser) {
+        if (taxiStore.user.is_superuser) {
           return next();
         } else return next("/");
       }

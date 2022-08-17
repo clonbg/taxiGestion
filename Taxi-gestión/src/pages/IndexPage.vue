@@ -2,7 +2,7 @@
   <q-page>
     <div class="flex flex-center">
       <form class="form q-my-xl" @submit.prevent="subir()" style="min-width:600px">
-        <q-img :src="`${taxiStore.urlServer}${taxiStore.user[0].foto}`" class="imagen q-ma-xl" :ratio="16 / 9"><template
+        <q-img :src="`${taxiStore.urlServer}${taxiStore.user.foto}`" class="imagen q-ma-xl" :ratio="16 / 9"><template
             v-slot:error>
             <div class="absolute-full flex flex-center bg-negative text-white">
               No se puede cargar la imagen
@@ -14,14 +14,15 @@
             <q-icon name="attach_file" />
           </template>
         </q-file>
-        <q-input standout v-model="taxiStore.user[0].nombre" label="Nombre" dense class="q-my-lg" />
-        <q-input standout v-model="taxiStore.user[0].apellidos" label="Apellidos" dense class="q-my-lg" />
+        <q-input standout v-model="taxiStore.user.nombre" label="Nombre" dense class="q-my-lg" />
+        <q-input standout v-model="taxiStore.user.apellidos" label="Apellidos" dense class="q-my-lg" />
         <q-btn class="form-submit" type="submit">Save</q-btn>
       </form>
     </div>
     <p>Falta el nombre y apellidos del navbar, seguir con el formulario, cambiar la id, y las validaciones y
       notificación error y ok</p>
     <pre>{{ taxiStore.user }}</pre>
+    <pre>{{ `${taxiStore.urlServer}${taxiStore.user.foto}` }}</pre>
   </q-page>
 </template>
 
@@ -48,25 +49,29 @@ const subir = async () => {
       },
     };
     var formData = new FormData();
-    formData.append('dni', "taxijefe@freeallapp.com")
-    formData.append("nombre", taxiStore.user[0].nombre)
-    formData.append("apellidos", taxiStore.user[0].apellidos)
-    formData.append("sueldo", 78)
-    formData.append("foto", file.value ? file.value : null)
-    formData.append("licencia_id", 4)
-    formData.append("email", "taxijefe@freeallapp.com")
-    formData.append("phone_number", '')
+    formData.append('dni', taxiStore.user.dni)
+    formData.append("nombre", taxiStore.user.nombre)
+    formData.append("apellidos", taxiStore.user.apellidos)
+    formData.append("sueldo", taxiStore.user.sueldo)
+    if (file.value) {
+      formData.append("foto", file.value)
+    }
+    if (taxiStore.user.licencia) {
+      formData.append("licencia_id", parseInt(taxiStore.user.licencia.id))
+    }
+    formData.append("email", taxiStore.user.email)
+    formData.append("phone_number", taxiStore.user.phone_number)
 
     console.log(axiosConfig)
-    api
-      .put(`/taxistas/7/`, formData, axiosConfig)
+    await api
+      .put(`/taxistas/${taxiStore.user.id}/`, formData, axiosConfig)
       .then(async (res) => {
-        await taxiStore.usuario()
         file.value = null
+        getUser()
         console.log(res)
       })
       .catch((err) => {
-        console.log(err.request);
+        console.log(err.request.response);
       });
   }
 };

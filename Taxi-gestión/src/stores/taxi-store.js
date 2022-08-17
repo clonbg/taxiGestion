@@ -32,6 +32,7 @@ export const useTaxiStore = defineStore("taxi", () => {
         });
         console.log(err.response.data.detail);
       });
+    usuario();
   };
   const refresToken = async () => {
     if (
@@ -71,12 +72,14 @@ export const useTaxiStore = defineStore("taxi", () => {
           Authorization: `Bearer ${access_token.value}`,
         },
       };
-      api
+      await api
         .get("/taxistas/registro/", axiosConfig)
         .then((res) => {
-          user.value = res.data.filter(
+          const tmp = res.data.filter(
             (user) => user.email == localStorage.getItem("email_taxi_user")
           );
+          user.value = tmp[0];
+          localStorage.setItem("id_taxi_user", user.value.id);
         })
         .catch((err) => {
           console.log(err.request);
@@ -89,6 +92,7 @@ export const useTaxiStore = defineStore("taxi", () => {
     localStorage.removeItem("tmp_taxi_refresh_token");
     localStorage.removeItem("taxi_refresh_token");
     localStorage.removeItem("email_taxi_user");
+    localStorage.removeItem("id_taxi_user");
   };
   return {
     access_token,

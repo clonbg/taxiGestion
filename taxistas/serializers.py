@@ -62,13 +62,14 @@ class UserDetailSerializers(serializers.ModelSerializer):
     sueldo = serializers.IntegerField(
         validators=[MaxValueValidator(100),
                     MinValueValidator(0)])
-    foto = serializers.ImageField(allow_null=True)
-    licencia = LicenciaCreationSerializers(read_only=True)
+    foto = serializers.ImageField(allow_null=True, required=False)
+    licencia = LicenciaCreationSerializers(read_only=True,)
     licencia_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=Licencia.objects.all(),
         source='licencia',
-        allow_null=True)
+        allow_null=True,
+        required=False)
     email = serializers.EmailField(max_length=80)
     phone_number = PhoneNumberField()
     password = serializers.CharField(allow_null=True, read_only=True)
