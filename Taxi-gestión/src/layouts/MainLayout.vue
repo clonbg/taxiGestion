@@ -52,13 +52,13 @@ const essentialLink = [
   {
     title: "Ingresos diarios",
     caption: "cada día",
-    icon: "attach_money",
+    icon: "$",
     to: "/diario",
   },
   {
     title: "Ingresos semanales",
     caption: "cada semana",
-    icon: "attach_moneyattach_money",
+    icon: "$$",
     to: "/semanal",
   },
   {
