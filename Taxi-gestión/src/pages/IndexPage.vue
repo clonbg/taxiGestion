@@ -18,12 +18,17 @@
           :rules="[val => val && val.length >= 3 && val.length <= 20 || 'Entre 3 y 20 carácteres']" />
         <q-input standout v-model="taxiStore.user.apellidos" label="Apellidos" dense class="q-my-lg"
           :rules="[val => val && val.length >= 3 && val.length <= 50 || 'Entre 3 y 50 carácteres']" />
+        <q-input standout v-model="taxiStore.user.dni" label="DNI" dense class="q-my-lg"
+          :rules="[val => val && val.length >= 3 && val.length <= 50 || 'No es válido']" />
         <q-btn class="form-submit" type="submit" :disable=saveState>Save</q-btn>
       </form>
     </div>
-    <p>seguir con el formulario y las validaciones y notificación error y ok</p>
+    <p>seguir con el formulario y las validaciones y notificación error y ok
+      dni,existe, es del tamaño y noestá en la bd
+    </p>
     <pre>{{ taxiStore.user }}</pre>
     <pre>{{ `${taxiStore.urlServer}${taxiStore.user.foto}` }}</pre>
+    <pre>{{ taxiStore.listaUsuarios }}</pre>
   </q-page>
 </template>
 
@@ -46,6 +51,30 @@ const saveState = computed(() => {
   }
   return false
 })
+
+const nif = (dni) => {
+  var numero
+  var letr
+  var letra
+  var expresion_regular_dni
+
+  expresion_regular_dni = /^\d{8}[a-zA-Z]$/;
+
+  if (expresion_regular_dni.test(dni) == true) {
+    numero = dni.substr(0, dni.length - 1);
+    letr = dni.substr(dni.length - 1, 1);
+    numero = numero % 23;
+    letra = 'TRWAGMYFPDXBNJZSQVHLCKET';
+    letra = letra.substring(numero, numero + 1);
+    if (letra != letr.toUpperCase()) {
+      return true
+    } else {
+      return false
+    }
+  } else {
+    return true
+  }
+}
 
 const subir = async () => {
   await taxiStore.refresToken();
@@ -80,7 +109,7 @@ const subir = async () => {
         console.log(res)
       })
       .catch((err) => {
-        console.log(err.request.response);
+        console.log(err.response.data);
       });
   }
 };
