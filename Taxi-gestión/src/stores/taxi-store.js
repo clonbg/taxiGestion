@@ -7,6 +7,7 @@ export const useTaxiStore = defineStore("taxi", () => {
   const urlServer = ref("http://localhost:8000");
   const access_token = ref(null);
   const user = ref(null);
+  const letrero = { nombre: ref(null), apellidos: ref(null) };
 
   const access = async (email, password) => {
     const res = await api
@@ -80,6 +81,8 @@ export const useTaxiStore = defineStore("taxi", () => {
           );
           user.value = tmp[0];
           localStorage.setItem("id_taxi_user", user.value.id);
+          letrero.nombre = user.value.nombre;
+          letrero.apellidos = user.value.apellidos;
         })
         .catch((err) => {
           console.log(err.request);
@@ -98,6 +101,7 @@ export const useTaxiStore = defineStore("taxi", () => {
     access_token,
     user,
     urlServer,
+    letrero,
     access,
     refresToken,
     logout,

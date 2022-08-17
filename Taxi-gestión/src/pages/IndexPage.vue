@@ -19,8 +19,7 @@
         <q-btn class="form-submit" type="submit">Save</q-btn>
       </form>
     </div>
-    <p>Falta el nombre y apellidos del navbar, seguir con el formulario, cambiar la id, y las validaciones y
-      notificación error y ok</p>
+    <p>seguir con el formulario y las validaciones y notificación error y ok</p>
     <pre>{{ taxiStore.user }}</pre>
     <pre>{{ `${taxiStore.urlServer}${taxiStore.user.foto}` }}</pre>
   </q-page>
@@ -68,6 +67,8 @@ const subir = async () => {
       .then(async (res) => {
         file.value = null
         getUser()
+        taxiStore.letrero.nombre = taxiStore.user.nombre
+        taxiStore.letrero.apellidos = taxiStore.user.apellidos
         console.log(res)
       })
       .catch((err) => {
