@@ -22,7 +22,7 @@ class UserCreationSerializers(serializers.ModelSerializer):
         source='licencia',
         allow_null=True)
     email = serializers.EmailField(max_length=80)
-    phone_number = PhoneNumberField()
+    phone_number = serializers.CharField()
     password = serializers.CharField(
         min_length=4)
     is_staff = serializers.BooleanField(default=True)
@@ -71,7 +71,7 @@ class UserDetailSerializers(serializers.ModelSerializer):
         allow_null=True,
         required=False)
     email = serializers.EmailField(max_length=80)
-    phone_number = PhoneNumberField()
+    phone_number = serializers.CharField()
     password = serializers.CharField(allow_null=True, read_only=True)
     is_staff = serializers.BooleanField(default=True)
     is_superuser = serializers.BooleanField(default=False)

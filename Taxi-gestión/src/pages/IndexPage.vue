@@ -102,7 +102,7 @@
         <div class="row">
           <div class="col-12">
             <q-input
-              class="q-my-md"
+              class="q-mt-md"
               standout
               v-model="taxiStore.user.email"
               label="Email"
@@ -116,6 +116,21 @@
             />
           </div>
         </div>
+        <div class="row">
+          <div class="col-12">
+            <q-input
+              standout
+              v-model="taxiStore.user.phone_number"
+              label="Número de teléfono"
+              dense
+              :rules="[
+                (val) =>
+                  (val && !isNaN(val) && val.length >= 7 && val.length <= 11) ||
+                  'Número de teléfono no válido',
+              ]"
+            />
+          </div>
+        </div>
         <q-btn
           class="form-submit"
           type="submit"
@@ -125,7 +140,11 @@
         >
       </form>
     </div>
-    <p>seguir con el formulario y las validaciones y notificación error y ok</p>
+    <p>
+      seguir con el formulario y las validaciones y notificación error y ok - Si
+      es igual que no grabe - Probar con usuario nuevo sin datos - el email y el
+      num_telef no exista
+    </p>
     <pre>{{ taxiStore.user }}</pre>
     <pre>{{ `${taxiStore.urlServer}${taxiStore.user.foto}` }}</pre>
     <pre>{{ taxiStore.listaUsuarios }}</pre>
@@ -153,7 +172,10 @@ const saveState = computed(() => {
     taxiStore.user.apellidos.length > 50 ||
     nif(taxiStore.user.dni) ||
     !nifBd(taxiStore.user.dni) ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(taxiStore.user.email)
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(taxiStore.user.email) ||
+    isNaN(taxiStore.user.phone_number) ||
+    taxiStore.user.phone_number.length < 7 ||
+    taxiStore.user.phone_number.length > 11
   ) {
     return true;
   }
