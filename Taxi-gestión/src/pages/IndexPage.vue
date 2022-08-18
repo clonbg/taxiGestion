@@ -110,8 +110,10 @@
               dense
               :rules="[
                 (val) =>
-                  (val && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) ||
-                  'Email no válido',
+                  (val &&
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) &&
+                    emailBd(val)) ||
+                  'Email no válido o ya existente',
               ]"
             />
           </div>
@@ -125,8 +127,12 @@
               dense
               :rules="[
                 (val) =>
-                  (val && !isNaN(val) && val.length >= 7 && val.length <= 11) ||
-                  'Número de teléfono no válido',
+                  (val &&
+                    !isNaN(val) &&
+                    val.length >= 7 &&
+                    val.length <= 11 &&
+                    tlfBd(val)) ||
+                  'Número de teléfono no válido o existente',
               ]"
             />
           </div>
@@ -142,8 +148,7 @@
     </div>
     <p>
       seguir con el formulario y las validaciones y notificación error y ok - Si
-      es igual que no grabe - Probar con usuario nuevo sin datos - el email y el
-      num_telef no exista
+      es igual que no grabe - Probar con usuario nuevo sin datos
     </p>
     <pre>{{ taxiStore.user }}</pre>
     <pre>{{ `${taxiStore.urlServer}${taxiStore.user.foto}` }}</pre>
@@ -175,7 +180,9 @@ const saveState = computed(() => {
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(taxiStore.user.email) ||
     isNaN(taxiStore.user.phone_number) ||
     taxiStore.user.phone_number.length < 7 ||
-    taxiStore.user.phone_number.length > 11
+    taxiStore.user.phone_number.length > 11 ||
+    !emailBd(taxiStore.user.email) ||
+    !tlfBd(taxiStore.user.phone_number)
   ) {
     return true;
   }
@@ -218,6 +225,26 @@ const nifBd = (dni) => {
   var usersBd = taxiStore.listaUsuarios
     .filter((item) => item.id !== taxiStore.user.id)
     .filter((item) => item.dni.toUpperCase() == dni.toUpperCase());
+  if (usersBd.length == 0) {
+    return true;
+  }
+  return false;
+};
+
+const emailBd = (email) => {
+  var usersBd = taxiStore.listaUsuarios
+    .filter((item) => item.id !== taxiStore.user.id)
+    .filter((item) => item.email.toUpperCase() == email.toUpperCase());
+  if (usersBd.length == 0) {
+    return true;
+  }
+  return false;
+};
+
+const tlfBd = (tlf) => {
+  var usersBd = taxiStore.listaUsuarios
+    .filter((item) => item.id !== taxiStore.user.id)
+    .filter((item) => item.phone_number == tlf);
   if (usersBd.length == 0) {
     return true;
   }
