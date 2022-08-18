@@ -144,6 +144,15 @@
           :color="saveState ? 'red' : 'green'"
           >Save</q-btn
         >
+        <q-btn
+          class="form-submit q-ml-md"
+          @click="
+            getUser();
+            file = null;
+          "
+          color="primary"
+          >Cancel</q-btn
+        >
       </form>
     </div>
   </q-page>
@@ -254,7 +263,7 @@ const subir = async () => {
       },
     };
     var formData = new FormData();
-    formData.append("dni", taxiStore.user.dni);
+    formData.append("dni", taxiStore.user.dni.toUpperCase());
     formData.append("nombre", taxiStore.user.nombre);
     formData.append("apellidos", taxiStore.user.apellidos);
     formData.append("sueldo", taxiStore.user.sueldo);
@@ -267,7 +276,6 @@ const subir = async () => {
     formData.append("email", taxiStore.user.email);
     formData.append("phone_number", taxiStore.user.phone_number);
 
-    console.log(axiosConfig);
     await api
       .put(`/taxistas/${taxiStore.user.id}/`, formData, axiosConfig)
       .then(async (res) => {
@@ -275,7 +283,6 @@ const subir = async () => {
         getUser();
         taxiStore.letrero.nombre = taxiStore.user.nombre;
         taxiStore.letrero.apellidos = taxiStore.user.apellidos;
-        console.log(res);
         Notify.create({
           type: "positive",
           message: "Ha sido guardado correctamente",
