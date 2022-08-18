@@ -146,10 +146,6 @@
         >
       </form>
     </div>
-    <p>notificación error y ok - Si es igual que no grabe</p>
-    <pre>{{ taxiStore.user }}</pre>
-    <pre>{{ `${taxiStore.urlServer}${taxiStore.user.foto}` }}</pre>
-    <pre>{{ taxiStore.listaUsuarios }}</pre>
   </q-page>
 </template>
 
@@ -157,6 +153,7 @@
 import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref, computed } from "vue";
 import { api } from "../boot/axios";
+import { Notify } from "quasar";
 
 const taxiStore = useTaxiStore();
 
@@ -179,7 +176,7 @@ const saveState = computed(() => {
     taxiStore.user.phone_number?.length < 7 ||
     taxiStore.user.phone_number?.length > 11 ||
     !emailBd(taxiStore.user.email) ||
-    !tlfBd(taxiStore.user.phone_number)
+    !tlfBd(taxiStore.user?.phone_number)
   ) {
     return true;
   }
@@ -279,9 +276,17 @@ const subir = async () => {
         taxiStore.letrero.nombre = taxiStore.user.nombre;
         taxiStore.letrero.apellidos = taxiStore.user.apellidos;
         console.log(res);
+        Notify.create({
+          type: "positive",
+          message: "Ha sido guardado correctamente",
+        });
       })
       .catch((err) => {
         console.log(err.response);
+        Notify.create({
+          type: "negative",
+          message: JSON.stringify(err.response.data.detail),
+        });
       });
   }
 };
