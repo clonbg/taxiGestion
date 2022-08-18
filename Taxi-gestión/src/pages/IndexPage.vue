@@ -297,9 +297,9 @@ const subir = async () => {
       });
   }
 };
-onMounted: {
+onMounted(() => {
   getUser();
-}
+});
 </script>
 
 <style scoped>

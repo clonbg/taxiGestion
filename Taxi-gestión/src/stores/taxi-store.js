@@ -7,6 +7,7 @@ export const useTaxiStore = defineStore("taxi", () => {
   const urlServer = ref("http://localhost:8000");
   const access_token = ref(null);
   const user = ref(null);
+  const diarios = ref(null);
   const letrero = { nombre: ref(null), apellidos: ref(null) };
   const listaUsuarios = ref(null);
 
@@ -91,6 +92,26 @@ export const useTaxiStore = defineStore("taxi", () => {
         });
     }
   };
+
+  const get_ingresos_diarios = async () => {
+    await refresToken();
+    if (access_token.value) {
+      let axiosConfig = {
+        headers: {
+          Authorization: `Bearer ${access_token.value}`,
+        },
+      };
+      await api
+        .get("/ingreso_diario/create/", axiosConfig)
+        .then((res) => {
+          diarios.value = res.data;
+        })
+        .catch((err) => {
+          console.log(err.request);
+        });
+    }
+  };
+
   const logout = async () => {
     access_token.value = null;
     localStorage.removeItem("tmp_taxi_access_token");
@@ -105,9 +126,11 @@ export const useTaxiStore = defineStore("taxi", () => {
     urlServer,
     letrero,
     listaUsuarios,
+    diarios,
     access,
     refresToken,
     logout,
     usuario,
+    get_ingresos_diarios,
   };
 });
