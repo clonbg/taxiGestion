@@ -99,7 +99,28 @@
             />
           </div>
         </div>
-        <q-btn class="form-submit" type="submit" :disable="saveState"
+        <div class="row">
+          <div class="col-12">
+            <q-input
+              class="q-my-md"
+              standout
+              v-model="taxiStore.user.email"
+              label="Email"
+              type="email"
+              dense
+              :rules="[
+                (val) =>
+                  (val && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) ||
+                  'Email no válido',
+              ]"
+            />
+          </div>
+        </div>
+        <q-btn
+          class="form-submit"
+          type="submit"
+          :disable="saveState"
+          :color="saveState ? 'red' : 'green'"
           >Save</q-btn
         >
       </form>
@@ -131,7 +152,8 @@ const saveState = computed(() => {
     taxiStore.user.apellidos.length < 3 ||
     taxiStore.user.apellidos.length > 50 ||
     nif(taxiStore.user.dni) ||
-    !nifBd(taxiStore.user.dni)
+    !nifBd(taxiStore.user.dni) ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(taxiStore.user.email)
   ) {
     return true;
   }
