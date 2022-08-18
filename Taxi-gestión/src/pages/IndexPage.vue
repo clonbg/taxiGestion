@@ -16,46 +16,89 @@
             </div>
           </template>
         </q-img>
-        <q-file v-model="file" label="Cambie su foto" filled class="q-my-xl">
-          <template v-slot:prepend>
-            <q-icon name="attach_file" />
-          </template>
-        </q-file>
-        <q-input
-          standout
-          v-model="taxiStore.user.nombre"
-          label="Nombre"
-          dense
-          class="q-my-md"
-          :rules="[
-            (val) =>
-              (val && val.length >= 3 && val.length <= 20) ||
-              'Entre 3 y 20 carácteres',
-          ]"
-        />
-        <q-input
-          standout
-          v-model="taxiStore.user.apellidos"
-          label="Apellidos"
-          dense
-          class="q-my-md"
-          :rules="[
-            (val) =>
-              (val && val.length >= 3 && val.length <= 50) ||
-              'Entre 3 y 50 carácteres',
-          ]"
-        />
-        <q-input
-          standout
-          v-model="taxiStore.user.dni"
-          label="DNI"
-          dense
-          class="q-my-md"
-          :rules="[
-            (val) =>
-              (val && !nif(val) && nifBd(val)) || 'No es válido o ya existe',
-          ]"
-        />
+        <div class="row">
+          <div class="col-12">
+            <q-file
+              v-model="file"
+              label="Cambie su foto"
+              filled
+              class="q-my-xl"
+            >
+              <template v-slot:prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <q-input
+              standout
+              v-model="taxiStore.user.nombre"
+              label="Nombre"
+              dense
+              :rules="[
+                (val) =>
+                  (val && val.length >= 3 && val.length <= 20) ||
+                  'Entre 3 y 20 carácteres',
+              ]"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <q-input
+              standout
+              v-model="taxiStore.user.apellidos"
+              label="Apellidos"
+              dense
+              :rules="[
+                (val) =>
+                  (val && val.length >= 3 && val.length <= 50) ||
+                  'Entre 3 y 50 carácteres',
+              ]"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <q-input
+              standout
+              v-model="taxiStore.user.dni"
+              label="DNI"
+              dense
+              :rules="[
+                (val) =>
+                  (val && !nif(val) && nifBd(val)) ||
+                  'No es válido o ya existe',
+              ]"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <q-input
+              v-model="taxiStore.user.sueldo"
+              standout
+              dense
+              label="Sueldo"
+              suffix="%"
+              disable
+              readonly
+            />
+          </div>
+          <div class="col-1"></div>
+          <div class="col-7">
+            <q-input
+              standout
+              v-model="licencia"
+              label="Número de licencia"
+              dense
+              disable
+              readonly
+            />
+          </div>
+        </div>
         <q-btn class="form-submit" type="submit" :disable="saveState"
           >Save</q-btn
         >
@@ -93,6 +136,14 @@ const saveState = computed(() => {
     return true;
   }
   return false;
+});
+
+const licencia = computed(() => {
+  if (taxiStore.user.licencia) {
+    return taxiStore.user.licencia.num_licencia;
+  } else {
+    return "---------";
+  }
 });
 
 const nif = (dni) => {
