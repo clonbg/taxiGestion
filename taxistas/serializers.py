@@ -25,8 +25,8 @@ class UserCreationSerializers(serializers.ModelSerializer):
     phone_number = serializers.CharField()
     password = serializers.CharField(
         min_length=4)
-    is_staff = serializers.BooleanField(default=True)
-    is_superuser = serializers.BooleanField(default=False)
+    is_staff = serializers.BooleanField(allow_null=True, read_only=True)
+    is_superuser = serializers.BooleanField(allow_null=True, read_only=True)
 
     class Meta:
         model = User
@@ -73,8 +73,8 @@ class UserDetailSerializers(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=80)
     phone_number = serializers.CharField()
     password = serializers.CharField(allow_null=True, read_only=True)
-    is_staff = serializers.BooleanField(default=True)
-    is_superuser = serializers.BooleanField(default=False)
+    is_staff = serializers.BooleanField(allow_null=True, read_only=True)
+    is_superuser = serializers.BooleanField(allow_null=True, read_only=True)
 
     class Meta:
         model = User
