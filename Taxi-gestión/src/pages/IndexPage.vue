@@ -146,10 +146,7 @@
         >
       </form>
     </div>
-    <p>
-      seguir con el formulario y las validaciones y notificación error y ok - Si
-      es igual que no grabe - Probar con usuario nuevo sin datos
-    </p>
+    <p>notificación error y ok - Si es igual que no grabe</p>
     <pre>{{ taxiStore.user }}</pre>
     <pre>{{ `${taxiStore.urlServer}${taxiStore.user.foto}` }}</pre>
     <pre>{{ taxiStore.listaUsuarios }}</pre>
@@ -178,9 +175,9 @@ const saveState = computed(() => {
     nif(taxiStore.user.dni) ||
     !nifBd(taxiStore.user.dni) ||
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(taxiStore.user.email) ||
-    isNaN(taxiStore.user.phone_number) ||
-    taxiStore.user.phone_number.length < 7 ||
-    taxiStore.user.phone_number.length > 11 ||
+    isNaN(taxiStore.user?.phone_number) ||
+    taxiStore.user.phone_number?.length < 7 ||
+    taxiStore.user.phone_number?.length > 11 ||
     !emailBd(taxiStore.user.email) ||
     !tlfBd(taxiStore.user.phone_number)
   ) {
@@ -279,7 +276,6 @@ const subir = async () => {
       .then(async (res) => {
         file.value = null;
         getUser();
-        console.log(taxiStore.user);
         taxiStore.letrero.nombre = taxiStore.user.nombre;
         taxiStore.letrero.apellidos = taxiStore.user.apellidos;
         console.log(res);
