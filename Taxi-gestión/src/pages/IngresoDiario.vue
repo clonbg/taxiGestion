@@ -1,7 +1,11 @@
 <template>
   <q-page padding>
     <div class="row">
-      <div class="col-6">Aquí quiero poner el calendario y en el otro las entradas</div>
+      <div class="col-6">
+        <div class="flex flex-center q-ma-xl">
+          <q-date v-model="date" :events="events" />
+        </div>
+      </div>
       <div class="col-6">{{ diariosTaxi }}</div>
     </div>
   </q-page>
@@ -15,6 +19,9 @@ const taxiStore = useTaxiStore();
 
 const diariosTaxi = ref([]);
 
+const date = ref('2019/02/01')
+const events = ['2019/02/01', '2019/02/05', '2019/02/06', '2019/02/09', '2019/02/23']
+
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
   const tmp = taxiStore.diarios.forEach((element) => {
@@ -24,3 +31,11 @@ onMounted(async () => {
   });
 });
 </script>
+
+<style scoped>
+.caja {
+  width: 100px;
+  height: 100px;
+  background-color: green;
+}
+</style>
