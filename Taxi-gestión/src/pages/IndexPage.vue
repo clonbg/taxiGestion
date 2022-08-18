@@ -157,8 +157,9 @@ const subir = async () => {
       .then(async (res) => {
         file.value = null;
         getUser();
+        console.log(taxiStore.user);
         taxiStore.letrero.nombre = taxiStore.user.nombre;
-        taxiStore.letrero.apellidos = taxiStore.user.apellidoS;
+        taxiStore.letrero.apellidos = taxiStore.user.apellidos;
         console.log(res);
       })
       .catch((err) => {
