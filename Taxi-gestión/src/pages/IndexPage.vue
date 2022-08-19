@@ -1,10 +1,14 @@
 <template>
   <q-page>
     <div class="flex flex-center">
-      <form
+      <q-form
         class="form q-my-xl"
         @submit.prevent="subir()"
         style="min-width: 600px"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="off"
+        spellcheck="false"
       >
         <q-img
           :src="`${taxiStore.urlServer}${taxiStore.user.foto}`"
@@ -142,7 +146,7 @@
           type="submit"
           :disable="saveState"
           :color="saveState ? 'red' : 'green'"
-          >Save</q-btn
+          >Guardar</q-btn
         >
         <q-btn
           class="form-submit q-ml-md"
@@ -151,9 +155,9 @@
             file = null;
           "
           color="primary"
-          >Cancel</q-btn
+          >Cancelar</q-btn
         >
-      </form>
+      </q-form>
     </div>
   </q-page>
 </template>
