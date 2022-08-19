@@ -6,20 +6,25 @@
           <q-date v-model="date" :events="events" />
         </div>
       </div>
+      <div class="col-6">{{ diario }}</div>
     </div>
-    <div class="col-6">{{ diariosTaxi }}</div>
+    <div>{{ diariosTaxi }}</div>
   </q-page>
 </template>
 
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 
 const taxiStore = useTaxiStore();
 
 const diariosTaxi = ref([]);
 
+const diario = ref(null)
+
 const date = ref(null)
+
+watchEffect(() => { console.log(date.value) }) //asignando
 
 const getHoy = () => {
   let today = new Date()
@@ -42,13 +47,27 @@ const getEvents = () => {
 
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
-  const tmp = taxiStore.diarios.forEach((element) => {
+  taxiStore.diarios.forEach((element) => {
     if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
       diariosTaxi.value.push(element);
     }
   });
   getHoy();
+  diariosTaxi.value.sort(function (a, b) {
+    return new Date(b.dia) - new Date(a.dia);
+  });
+  console.log(diariosTaxi.value[0].dia)
+  diario.value = diariosTaxi.value[0]
+  //diario.value = diariosTaxi.value.filter((dia) => dia.dia.replaceAll('-', '/') == date.value)
   getEvents()
 });
 
 </script>
+
+<style scoped>
+.imagen {
+  width: 15rem;
+  height: 15rem;
+  border: 10px solid #666;
+}
+</style>
