@@ -6,22 +6,33 @@
           <q-date v-model="date" :events="events" />
         </div>
       </div>
-      <div class="col-6">{{ diariosTaxi }}</div>
     </div>
+    <div class="col-6">{{ diariosTaxi }}</div>
   </q-page>
 </template>
 
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
-import { onMounted, computed, ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const taxiStore = useTaxiStore();
 
 const diariosTaxi = ref([]);
 
-const date = ref('2019/02/01')
-const events = ['2019/02/01', '2019/02/05', '2019/02/06', '2019/02/09', '2019/02/23']
+const date = ref(null)
 
+const getHoy = () => {
+  let today = new Date()
+  let year = today.getFullYear()
+  let month = today.getMonth() + 1
+  if (month < 10) {
+    month = '0' + month
+  }
+  let day = today.getDate()
+  date.value = year + '/' + month + '/' + day
+}
+
+const events = ['2019/02/01', '2019/02/05', '2019/02/06', '2019/02/09', '2019/02/23']
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
   const tmp = taxiStore.diarios.forEach((element) => {
@@ -30,12 +41,8 @@ onMounted(async () => {
     }
   });
 });
+onMounted(() => {
+  getHoy();
+  console.log(date.value)
+});
 </script>
-
-<style scoped>
-.caja {
-  width: 100px;
-  height: 100px;
-  background-color: green;
-}
-</style>
