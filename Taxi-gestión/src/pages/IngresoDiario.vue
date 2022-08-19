@@ -32,7 +32,14 @@ const getHoy = () => {
   date.value = year + '/' + month + '/' + day
 }
 
-const events = ['2019/02/01', '2019/02/05', '2019/02/06', '2019/02/09', '2019/02/23']
+const events = ref([])
+
+const getEvents = () => {
+  diariosTaxi.value.forEach(element => {
+    events.value.push(element.dia.replaceAll('-', '/'))
+  });
+}
+
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
   const tmp = taxiStore.diarios.forEach((element) => {
@@ -40,9 +47,8 @@ onMounted(async () => {
       diariosTaxi.value.push(element);
     }
   });
-});
-onMounted(() => {
   getHoy();
-  console.log(date.value)
+  getEvents()
 });
+
 </script>
