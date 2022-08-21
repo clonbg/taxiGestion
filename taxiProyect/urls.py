@@ -26,6 +26,7 @@ urlpatterns = [
     path('licencias/',include('licencias.urls')),
     path('ingreso_diario/',include('ingreso_diario.urls')),
     path('ingreso_semanal/',include('ingreso_semanal.urls')),
+    path('varios_diarios/',include('varios_diarios.urls')),
     path('djoser/', include('djoser.urls.jwt')),
     path('reset_password/',auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('reset_password_send/',auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
