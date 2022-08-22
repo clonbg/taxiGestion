@@ -24,7 +24,7 @@ class IngresoDiarioCreationSerializers(serializers.ModelSerializer):
         MinValueValidator(1)
     ],allow_null=True)
     varios_diarios = VariosDiariosCreationSerializers(read_only=True)
-    varios_diarios_id = serializers.PrimaryKeyRelatedField(many=True,write_only=True, queryset=VariosDiarios.objects.all(), source='varios_diarios', allow_null=True)
+    varios_diarios_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=VariosDiarios.objects.all(), source='varios_diarios', allow_null=True)
     taxista = UserCreationSerializers(read_only=True)
     taxista_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=User.objects.all(), source='taxista')
 

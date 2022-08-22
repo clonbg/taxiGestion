@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class VariosDiariosCreationSerializers(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
     cantidad = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
         MinValueValidator(-1000000),
@@ -13,10 +14,11 @@ class VariosDiariosCreationSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = VariosDiarios
-        fields = ['cantidad', 'concepto']
+        fields = ['id','cantidad', 'concepto']
 
 
 class VariosDiariosDetailSerializers(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
     cantidad = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
         MinValueValidator(-1000000),
@@ -26,4 +28,4 @@ class VariosDiariosDetailSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = VariosDiarios
-        fields = ['cantidad', 'concepto']
+        fields = ['id','cantidad', 'concepto']
