@@ -10,7 +10,7 @@ class VariosDiariosCreateView(generics.GenericAPIView):
     serializer_class = VariosDiariosCreationSerializers
     queryset = VariosDiarios.objects.order_by('-id')
 
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         serializer = self.serializer_class(instance=self.queryset.all(),
@@ -31,7 +31,7 @@ class VariosDiariosCreateView(generics.GenericAPIView):
 class VariosDiariosDetailView(generics.GenericAPIView):
     serializer_class = VariosDiariosDetailSerializers
 
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, vario_diario_id):
         diario = get_object_or_404(VariosDiarios, pk=vario_diario_id)
