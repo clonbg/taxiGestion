@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 class IngresoDiarioCreateView(generics.GenericAPIView):
     serializer_class=serializers.IngresoDiarioCreationSerializers
     queryset=IngresoDiario.objects.order_by('-id')
-    permission_classes=[IsAuthenticated]
+    #permission_classes=[IsAuthenticated]
 
     def get(self, request):
         serializer = self.serializer_class(instance=self.queryset.all(), many=True)
@@ -24,7 +24,7 @@ class IngresoDiarioCreateView(generics.GenericAPIView):
 
 class IngresoDiarioDetailView(generics.GenericAPIView):
     serializer_class=serializers.IngresoDiarioDetailSerializers
-    permission_classes=[IsAuthenticated]
+    #permission_classes=[IsAuthenticated]
 
     def get(self, request, ingresodiario_id):
         ingresodiario=get_object_or_404(IngresoDiario, pk=ingresodiario_id)

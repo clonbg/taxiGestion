@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from taxistas.models import User
+from varios_diarios.models import VariosDiarios
 from django.utils.timezone import now
 
 # Create your models here.
@@ -22,10 +23,7 @@ class IngresoDiario(models.Model):
         MaxValueValidator(1000000),
         MinValueValidator(1)
     ],null=True, blank=True)
-    varios = models.FloatField(validators=[
-        MaxValueValidator(1000000),
-        MinValueValidator(-1000000)
-    ],null=True, blank=True)
+    varios_diarios = models.ForeignKey(VariosDiarios, on_delete=models.CASCADE,null=True,blank=True)
     taxista = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True)
 
     def __str__(self):
