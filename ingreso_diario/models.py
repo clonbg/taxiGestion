@@ -23,7 +23,7 @@ class IngresoDiario(models.Model):
         MaxValueValidator(1000000),
         MinValueValidator(1)
     ],null=True, blank=True)
-    varios_diarios = models.ForeignKey(VariosDiarios, on_delete=models.CASCADE,null=True,blank=True)
+    vario_diario = models.ManyToManyField(VariosDiarios, blank=True)
     taxista = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True)
 
     def __str__(self):

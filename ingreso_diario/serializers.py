@@ -23,15 +23,17 @@ class IngresoDiarioCreationSerializers(serializers.ModelSerializer):
         MaxValueValidator(1000000),
         MinValueValidator(1)
     ],allow_null=True)
-    varios_diarios = VariosDiariosCreationSerializers(read_only=True)
-    varios_diarios_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=VariosDiarios.objects.all(), source='varios_diarios', allow_null=True)
+    
+    vario_diario = VariosDiariosCreationSerializers(many=True, read_only=True)
+    vario_diario_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=VariosDiarios.objects.all(), source='vario_diario',many=True)
     taxista = UserCreationSerializers(read_only=True)
     taxista_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=User.objects.all(), source='taxista')
 
 
     class Meta:
         model = IngresoDiario
-        fields = ['id','dia','imagen','total_efectivo','total_apps','total_tpv','varios_diarios','varios_diarios_id','taxista','taxista_id']
+        #fields = ['id','dia','imagen','total_efectivo','total_apps','total_tpv','vario_diario_id','taxista','taxista_id']
+        fields = '__all__'
 
     def validate(self, attrs):
         ingresos_diarios_taxista = IngresoDiario.objects.values_list('dia','taxista_id').filter(dia=attrs['dia'],taxista_id=attrs['taxista']).exists()
