@@ -189,7 +189,7 @@ const getDiarios = async () => {
 
 const saveState = computed(() => {
   if (
-    total_efectivo.value ||
+    !total_efectivo.value ||
     total_efectivo.value < 0 ||
     isNaN(total_efectivo.value) ||
     !total_tpv.value ||
