@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from taxistas.models import User
 from django.utils.timezone import now
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -22,7 +23,7 @@ class IngresoDiario(models.Model):
         MaxValueValidator(1000000),
         MinValueValidator(1)
     ], null=True, blank=True)
-
+    vario = ArrayField(models.CharField(max_length=25))
     taxista = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True)
 
