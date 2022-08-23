@@ -4,23 +4,24 @@
       v-model="date"
       :events="events"
       class="float-left"
-      style="margin-right: 10%"
+      style="margin-right: 15%"
     />
 
     <q-form
-      v-if="diario.length != 0"
       class="form float-right"
       @submit.prevent="subir()"
       autocorrect="off"
       autocapitalize="off"
       autocomplete="off"
       spellcheck="false"
+      style="width: 30rem"
     >
       <q-img
-        :src="`${taxiStore.urlServer}${diario[0]?.imagen}`"
+        :src="`${taxiStore.urlServer}${imagen}`"
         class="imagen q-my-xl"
         :ratio="16 / 9"
-        ><template v-slot:error>
+      >
+        <template v-slot:error>
           <div class="absolute-full flex flex-center bg-negative text-white">
             No se puede cargar la imagen
           </div>
@@ -38,7 +39,7 @@
           <q-input
             class="q-mt-md"
             standout
-            v-model="diario[0].total_efectivo"
+            v-model="total_efectivo"
             label="Efectivo"
             dense
             :rules="[
@@ -51,7 +52,7 @@
         <div class="col-12">
           <q-input
             standout
-            v-model="diario[0].total_tpv"
+            v-model="total_tpv"
             label="TPV"
             dense
             :rules="[
@@ -64,7 +65,7 @@
         <div class="col-12">
           <q-input
             standout
-            v-model="diario[0].total_apps"
+            v-model="total_apps"
             label="Apps"
             dense
             :rules="[
@@ -75,17 +76,7 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <q-input
-            standout
-            v-model="diario[0].varios"
-            label="Varios"
-            dense
-            :rules="[
-              (val) =>
-                (val && (val >= -100000) & (val <= 100000)) ||
-                'Valor no válido',
-            ]"
-          />
+          <q-input standout v-model="varios" label="Varios" dense />
         </div>
       </div>
 
@@ -101,17 +92,24 @@
         @click="
           getDiarios();
           file = null;
+          imagen = '';
+          total_efectivo = '';
+          total_tpv = '';
+          total_apps = '';
+          varios = '';
         "
         color="primary"
         >Cancelar</q-btn
       >
     </q-form>
-    <div v-else class="float-right">Nada que ver</div>
-    diario:{{ diario[0] }}
-    <p><br /></p>
-    <br /><br />
-    diarioTaxi:{{ diariosTaxi }}
-    <p>Falta el subir(), state de varios</p>
+
+    <p>
+      <br />
+    </p>
+    <br />
+
+    <br />
+    diario:{{ diario[0] }} diarioTaxi:{{ diariosTaxi }} <br /><br />
   </q-page>
 </template>
 
@@ -125,6 +123,12 @@ const diariosTaxi = ref([]);
 
 const diario = ref(null);
 
+let imagen = ref("");
+let total_efectivo = ref("");
+let total_tpv = ref("");
+let total_apps = ref("");
+let varios = ref("");
+
 const date = ref(null);
 
 const file = ref(null);
@@ -132,6 +136,20 @@ watchEffect(() => {
   diario.value = diariosTaxi.value.filter(
     (dia) => dia.dia.replaceAll("-", "/") == date.value
   );
+  if (diario.value[0]) {
+    console.log(diario.value[0].imagen);
+    imagen.value = diario.value[0].imagen;
+    total_efectivo.value = diario.value[0].total_efectivo;
+    total_tpv.value = diario.value[0].total_tpv;
+    total_apps.value = diario.value[0].total_apps;
+    varios.value = diario.value[0].vario;
+  } else {
+    imagen.value = "";
+    total_efectivo.value = "";
+    total_tpv.value = "";
+    total_apps.value = "";
+    varios.value = "";
+  }
 });
 
 const getHoy = () => {
@@ -155,22 +173,24 @@ const getEvents = () => {
 
 const getDiarios = async () => {
   await taxiStore.get_ingresos_diarios();
-  diario.value = taxiStore.diarios.filter(
-    (dia) => dia.id == diario.value[0].id
-  );
+  if (diario.value[0]) {
+    diario.value = taxiStore.diarios.filter(
+      (dia) => dia.id == diario.value[0].id
+    );
+  }
 };
 
 const saveState = computed(() => {
   if (
-    !diario.value[0].total_efectivo ||
-    diario.value[0].total_efectivo < 0 ||
-    isNaN(diario.value[0].total_efectivo) ||
-    !diario.value[0].total_tpv ||
-    diario.value[0].total_tpv < 0 ||
-    isNaN(diario.value[0].total_tpv) ||
-    !diario.value[0].total_apps ||
-    diario.value[0].total_apps < 0 ||
-    isNaN(diario.value[0].total_apps)
+    total_efectivo.value ||
+    total_efectivo.value < 0 ||
+    isNaN(total_efectivo.value) ||
+    !total_tpv.value ||
+    total_tpv.value < 0 ||
+    isNaN(total_tpv.value) ||
+    !total_apps.value ||
+    total_apps.value < 0 ||
+    isNaN(total_apps.value)
   ) {
     return true;
   }
@@ -193,6 +213,11 @@ onMounted(async () => {
     (dia) => dia.dia.replaceAll("-", "/") == date.value
   );
   console.log(diario.value);
+  imagen.value = diario.value[0].imagen;
+  total_efectivo.value = diario.value[0].total_efectivo;
+  total_tpv.value = diario.value[0].total_tpv;
+  total_apps.value = diario.value[0].total_apps;
+  varios.value = diario.value[0].vario;
 });
 </script>
 
