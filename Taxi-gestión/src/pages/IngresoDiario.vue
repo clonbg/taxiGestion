@@ -74,11 +74,26 @@
           />
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <q-input standout v-model="varios" label="Varios" dense />
+      <span v-for="(item, index) in varios" :key="index">
+        <div v-if="index % 2 != 0">
+          <div class="row no-wrap">
+            <div class="col-4 q-mb-md q-mr-sm">
+              <q-input
+                standout
+                v-model="varios[index - 1]"
+                label="Varios"
+                dense
+              />
+            </div>
+            <div class="col-7">
+              <q-input standout v-model="varios[index]" label="Varios" dense />
+            </div>
+            <div class="col-2 nowrap">
+              <q-icon name="delete" color="teal" size="3em" />
+            </div>
+          </div>
         </div>
-      </div>
+      </span>
 
       <q-btn
         class="form-submit"
@@ -102,14 +117,6 @@
         >Cancelar</q-btn
       >
     </q-form>
-
-    <p>
-      <br />
-    </p>
-    <br />
-
-    <br />
-    diario:{{ diario[0] }} diarioTaxi:{{ diariosTaxi }} <br /><br />
   </q-page>
 </template>
 
@@ -197,6 +204,22 @@ const saveState = computed(() => {
   return false;
 });
 
+const arrayDarrays = () => {
+  const obj = diario.value[0]?.vario;
+  let objExterno = new Object();
+  let objInterno = new Object();
+  for (let i = 0; i < obj.length; i++) {
+    const element = obj[i];
+    if (i % 2 != 0) {
+      objInterno = `{"${obj[i - 1]}":"${element}"}`;
+      objExterno = +objInterno;
+      objInterno = new Object();
+    }
+  }
+  console.log(objExterno);
+  varios.value = objExterno;
+};
+
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
   taxiStore.diarios.forEach((element) => {
@@ -217,7 +240,7 @@ onMounted(async () => {
   total_efectivo.value = diario.value[0].total_efectivo;
   total_tpv.value = diario.value[0].total_tpv;
   total_apps.value = diario.value[0].total_apps;
-  varios.value = diario.value[0].vario;
+  arrayDarrays();
 });
 </script>
 
