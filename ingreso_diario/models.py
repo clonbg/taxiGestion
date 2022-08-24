@@ -23,7 +23,7 @@ class IngresoDiario(models.Model):
         MaxValueValidator(1000000),
         MinValueValidator(1)
     ], null=True, blank=True)
-    vario = ArrayField(models.CharField(max_length=25))
+    vario = ArrayField(models.CharField(max_length=25), null=True, blank=True)
     taxista = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True)
 

@@ -6,7 +6,6 @@
       class="float-left"
       style="margin-right: 15%"
     />
-
     <q-form
       class="form float-right"
       @submit.prevent="subir()"
@@ -16,6 +15,12 @@
       spellcheck="false"
       style="width: 30rem"
     >
+      <p>
+        Imagen obligatoria,maximo dias en el calendario hasta hoy, si ya existe
+        put, error en el concepto validacion cuando pones numeros(tampoco
+        permite más de 25 caracteres), vario guarda todo en un texto separado
+        por comas
+      </p>
       <q-img
         :src="`${taxiStore.urlServer}${imagen}`"
         class="imagen q-my-xl"
@@ -141,6 +146,7 @@
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref, watchEffect, computed } from "vue";
+import { api } from "../boot/axios";
 
 const taxiStore = useTaxiStore();
 
@@ -157,6 +163,7 @@ let varios = ref("");
 const date = ref(null);
 
 const file = ref(null);
+
 watchEffect(() => {
   diario.value = diariosTaxi.value.filter(
     (dia) => dia.dia.replaceAll("-", "/") == date.value
@@ -203,6 +210,7 @@ const getDiarios = async () => {
       if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
         diariosTaxi.value.push(element);
       }
+      console.log("Por aquí");
     });
     diario.value = diariosTaxi.value.filter(
       (dia) => dia.dia.replaceAll("-", "/") == date.value
@@ -218,12 +226,14 @@ const getDiarios = async () => {
 };
 
 const validarVarios = () => {
-  let array = Object.values(varios.value);
-  const found = array.lastIndexOf("") != -1;
-  if (varios.value.length > 0 && found) {
-    return true;
-  } else {
-    return false;
+  if (varios.value) {
+    let array = Object.values(varios.value);
+    const found = array.lastIndexOf("") != -1;
+    if (varios.value.length > 0 && found) {
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
@@ -259,6 +269,44 @@ const variosMas = () => {
     array.push("");
     array.push("");
     varios.value = array;
+  }
+};
+
+const subir = async () => {
+  await taxiStore.refresToken();
+  if (taxiStore.access_token) {
+    let axiosConfig = {
+      headers: {
+        Authorization: `Bearer ${taxiStore.access_token}`,
+      },
+    };
+    var formData = new FormData();
+    formData.append("dia", date.value.replaceAll("/", "-"));
+    formData.append("imagen", file.value);
+    formData.append("total_efectivo", total_efectivo.value);
+    formData.append("total_apps", total_apps.value);
+    formData.append("total_tpv", total_tpv.value);
+
+    if (varios.value.length > 0) {
+      for (let i = 0; i < varios.value.length; i++) {
+        const element = varios.value[i];
+        console.log(`${element}: ${varios.value[element]}`);
+        formData.append("vario", element);
+      }
+    }
+    formData.append("taxista_id", taxiStore.user.id);
+    await api
+      .post(`/ingreso_diario/create/`, formData, axiosConfig)
+      .then((res) => {
+        file.value = null;
+        imagen.value = res.data.imagen;
+        date.value = res.data.dia.replaceAll("-", "/");
+        diariosTaxi.value.push(res.data);
+        getEvents();
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
   }
 };
 
