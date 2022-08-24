@@ -113,6 +113,14 @@
         color="primary"
         >Cancelar</q-btn
       >
+      <q-btn
+        round
+        color="purple"
+        glossy
+        icon="add_task"
+        class="float-right q-mt-sm"
+        @click="variosMas()"
+      />
     </q-form>
   </q-page>
 </template>
@@ -217,6 +225,13 @@ const borrar = (i) => {
   let array = Object.values(varios.value);
   array.splice(i - 1, 1);
   array.splice(i - 1, 1);
+  varios.value = array;
+};
+
+const variosMas = () => {
+  let array = Object.values(varios.value);
+  array.push("");
+  array.push("");
   varios.value = array;
 };
 
