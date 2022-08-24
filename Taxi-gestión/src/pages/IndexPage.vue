@@ -16,14 +16,19 @@
           :ratio="16 / 9"
         >
           <template v-slot:error>
-            <div
-              class="absolute-full flex flex-center bg-negative text-white"
-            >No se puede cargar la imagen</div>
+            <div class="absolute-full flex flex-center bg-negative text-white">
+              No se puede cargar la imagen
+            </div>
           </template>
         </q-img>
         <div class="row">
           <div class="col-12">
-            <q-file v-model="file" label="Cambie su foto" filled class="q-my-xl">
+            <q-file
+              v-model="file"
+              label="Cambie su foto"
+              filled
+              class="q-my-xl"
+            >
               <template v-slot:prepend>
                 <q-icon name="attach_file" />
               </template>
@@ -89,7 +94,14 @@
           </div>
           <div class="col-1"></div>
           <div class="col-7">
-            <q-input standout v-model="licencia" label="Número de licencia" dense disable readonly />
+            <q-input
+              standout
+              v-model="licencia"
+              label="Número de licencia"
+              dense
+              disable
+              readonly
+            />
           </div>
         </div>
         <div class="row">
@@ -136,15 +148,17 @@
           :disable="saveState"
           :color="saveState ? 'red' : 'green'"
           :loading="loading[0]"
-        >Guardar</q-btn>
+          >Guardar</q-btn
+        >
         <q-btn
           class="form-submit q-ml-md"
           @click="
-  getUser();
-file = null;
+            getUser();
+            file = null;
           "
           color="primary"
-        >Cancelar</q-btn>
+          >Cancelar</q-btn
+        >
       </q-form>
     </div>
   </q-page>
@@ -156,31 +170,24 @@ import { onMounted, ref, computed } from "vue";
 import { api } from "../boot/axios";
 import { Notify } from "quasar";
 
-const loading = ref([
-  false,
-  false,
-  false,
-  false,
-  false,
-  false
-])
+const loading = ref([false, false, false, false, false, false]);
 
-const progress = ref(false)
+const progress = ref(false);
 
 const simulateProgress = (number) => {
   // we set loading state
-  loading.value[number] = true
+  loading.value[number] = true;
 
   // simulate a delay
   setTimeout(() => {
     // we're done, we reset loading state
-    loading.value[number] = false
+    loading.value[number] = false;
     Notify.create({
       type: "positive",
       message: "Ha sido guardado correctamente",
     });
-  }, 3000)
-}
+  }, 3000);
+};
 
 const taxiStore = useTaxiStore();
 
@@ -301,7 +308,7 @@ const subir = async () => {
         getUser();
         taxiStore.letrero.nombre = taxiStore.user.nombre;
         taxiStore.letrero.apellidos = taxiStore.user.apellidos;
-        simulateProgress(0)
+        simulateProgress(0);
       })
       .catch((err) => {
         console.log(err.response);

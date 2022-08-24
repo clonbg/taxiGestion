@@ -104,15 +104,7 @@
       >
       <q-btn
         class="form-submit q-ml-md q-my-md"
-        @click="
-          getDiarios();
-          file = null;
-          imagen = '';
-          total_efectivo = '';
-          total_tpv = '';
-          total_apps = '';
-          varios = '';
-        "
+        @click="getDiarios()"
         color="primary"
         >Cancelar</q-btn
       >
@@ -144,7 +136,6 @@ watchEffect(() => {
     (dia) => dia.dia.replaceAll("-", "/") == date.value
   );
   if (diario.value[0]) {
-    console.log(diario.value[0].imagen);
     imagen.value = diario.value[0].imagen;
     total_efectivo.value = diario.value[0].total_efectivo;
     total_tpv.value = diario.value[0].total_tpv;
@@ -179,12 +170,25 @@ const getEvents = () => {
 };
 
 const getDiarios = async () => {
-  await taxiStore.get_ingresos_diarios();
   if (diario.value[0]) {
-    diario.value = taxiStore.diarios.filter(
-      (dia) => dia.id == diario.value[0].id
+    await taxiStore.get_ingresos_diarios();
+    taxiStore.diarios.forEach((element) => {
+      diariosTaxi.value = [];
+      if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
+        diariosTaxi.value.push(element);
+      }
+    });
+    diario.value = diariosTaxi.value.filter(
+      (dia) => dia.dia.replaceAll("-", "/") == date.value
     );
+  } else {
+    imagen.value = "";
+    total_efectivo.value = "";
+    total_tpv.value = "";
+    total_apps.value = "";
+    varios.value = "";
   }
+  file.value = [];
 };
 
 const saveState = computed(() => {
@@ -204,22 +208,6 @@ const saveState = computed(() => {
   return false;
 });
 
-const arrayDarrays = () => {
-  const obj = diario.value[0]?.vario;
-  let objExterno = new Object();
-  let objInterno = new Object();
-  for (let i = 0; i < obj.length; i++) {
-    const element = obj[i];
-    if (i % 2 != 0) {
-      objInterno = `{"${obj[i - 1]}":"${element}"}`;
-      objExterno = +objInterno;
-      objInterno = new Object();
-    }
-  }
-  console.log(objExterno);
-  varios.value = objExterno;
-};
-
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
   taxiStore.diarios.forEach((element) => {
@@ -235,12 +223,6 @@ onMounted(async () => {
   diario.value = diariosTaxi.value.filter(
     (dia) => dia.dia.replaceAll("-", "/") == date.value
   );
-  console.log(diario.value);
-  imagen.value = diario.value[0].imagen;
-  total_efectivo.value = diario.value[0].total_efectivo;
-  total_tpv.value = diario.value[0].total_tpv;
-  total_apps.value = diario.value[0].total_apps;
-  arrayDarrays();
 });
 </script>
 
