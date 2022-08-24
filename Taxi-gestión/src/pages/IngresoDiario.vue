@@ -126,6 +126,7 @@
         >Cancelar</q-btn
       >
       <q-btn
+        :disable="validarVarios()"
         round
         color="purple"
         glossy
