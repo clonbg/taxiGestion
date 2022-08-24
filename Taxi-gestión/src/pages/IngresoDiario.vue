@@ -18,8 +18,7 @@
       <p>
         Imagen obligatoria,maximo dias en el calendario hasta hoy, si ya existe
         put, error en el concepto validacion cuando pones numeros(tampoco
-        permite más de 25 caracteres), vario guarda todo en un texto separado
-        por comas
+        permite más de 25 caracteres), continuar con validarVarios
       </p>
       <q-img
         :src="`${taxiStore.urlServer}${imagen}`"
@@ -33,7 +32,7 @@
         </template>
       </q-img>
 
-      <q-file v-model="file" label="Imagen" filled>
+      <q-file v-model="file" label="Inserte o cambie la imagen" filled>
         <template v-slot:prepend>
           <q-icon name="attach_file" />
         </template>
@@ -180,6 +179,7 @@ watchEffect(() => {
     total_tpv.value = "";
     total_apps.value = "";
     varios.value = "";
+    file.value = null;
   }
 });
 
@@ -229,7 +229,9 @@ const validarVarios = () => {
   if (varios.value) {
     let array = Object.values(varios.value);
     const found = array.lastIndexOf("") != -1;
-    if (varios.value.length > 0 && found) {
+    if (array.length > 0 && found) {
+      //tiene entradas y ninguna vacia
+      //un for que recorra el array y mire las pares y las impares
       return true;
     } else {
       return false;
