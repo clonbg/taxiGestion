@@ -77,16 +77,28 @@
       <span v-for="(item, index) in varios" :key="index">
         <div v-if="index % 2 != 0">
           <div class="row no-wrap">
-            <div class="col-4 q-mb-md q-mr-sm">
+            <div class="col-4 q-mb-lm q-mr-sm">
               <q-input
                 standout
                 v-model="varios[index - 1]"
                 label="Varios"
                 dense
+                :rules="[
+                  (val) =>
+                    (val && val >= 0 && !isNaN(val)) || 'Valor no válido',
+                ]"
               />
             </div>
             <div class="col-7">
-              <q-input standout v-model="varios[index]" label="Varios" dense />
+              <q-input
+                standout
+                v-model="varios[index]"
+                label="Varios"
+                dense
+                :rules="[
+                  (val) => (val && val.length >= 3) || 'Valor no válido',
+                ]"
+              />
             </div>
             <div class="col-2 nowrap">
               <q-icon
@@ -204,6 +216,16 @@ const getDiarios = async () => {
   file.value = [];
 };
 
+const validarVarios = () => {
+  let array = Object.values(varios.value);
+  const found = array.lastIndexOf("") != -1;
+  if (varios.value.length > 0 && found) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const saveState = computed(() => {
   if (
     !total_efectivo.value ||
@@ -214,7 +236,8 @@ const saveState = computed(() => {
     isNaN(total_tpv.value) ||
     !total_apps.value ||
     total_apps.value < 0 ||
-    isNaN(total_apps.value)
+    isNaN(total_apps.value) ||
+    validarVarios()
   ) {
     return true;
   }
@@ -230,9 +253,12 @@ const borrar = (i) => {
 
 const variosMas = () => {
   let array = Object.values(varios.value);
-  array.push("");
-  array.push("");
-  varios.value = array;
+  const found = array.lastIndexOf("") == -1;
+  if (found) {
+    array.push("");
+    array.push("");
+    varios.value = array;
+  }
 };
 
 onMounted(async () => {
