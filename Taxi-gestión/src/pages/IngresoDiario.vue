@@ -89,7 +89,12 @@
               <q-input standout v-model="varios[index]" label="Varios" dense />
             </div>
             <div class="col-2 nowrap">
-              <q-icon name="delete" color="teal" size="3em" />
+              <q-icon
+                name="delete"
+                color="teal"
+                size="3em"
+                @click="borrar(index)"
+              />
             </div>
           </div>
         </div>
@@ -207,6 +212,13 @@ const saveState = computed(() => {
   }
   return false;
 });
+
+const borrar = (i) => {
+  let array = Object.values(varios.value);
+  array.splice(i - 1, 1);
+  array.splice(i - 1, 1);
+  varios.value = array;
+};
 
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
