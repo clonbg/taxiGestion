@@ -17,8 +17,7 @@
     >
       <p>
         Imagen obligatoria,maximo dias en el calendario hasta hoy, si ya existe
-        put, error en el concepto validacion cuando pones numeros(tampoco
-        permite más de 25 caracteres), continuar con validarVarios
+        put
       </p>
       <q-img
         :src="`${taxiStore.urlServer}${imagen}`"
@@ -47,7 +46,9 @@
             label="Efectivo"
             dense
             :rules="[
-              (val) => (val && val >= 0 && !isNaN(val)) || 'Valor no válido',
+              (val) =>
+                (val && val >= 0 && !isNaN(val) && val <= 1000000) ||
+                'Valor no válido',
             ]"
           />
         </div>
@@ -60,7 +61,9 @@
             label="TPV"
             dense
             :rules="[
-              (val) => (val && val >= 0 && !isNaN(val)) || 'Valor no válido',
+              (val) =>
+                (val && val >= 0 && !isNaN(val) && val <= 1000000) ||
+                'Valor no válido',
             ]"
           />
         </div>
@@ -73,7 +76,9 @@
             label="Apps"
             dense
             :rules="[
-              (val) => (val && val >= 0 && !isNaN(val)) || 'Valor no válido',
+              (val) =>
+                (val && val >= 0 && !isNaN(val) && val <= 1000000) ||
+                'Valor no válido',
             ]"
           />
         </div>
@@ -89,7 +94,8 @@
                 dense
                 :rules="[
                   (val) =>
-                    (val && val >= 0 && !isNaN(val)) || 'Valor no válido',
+                    (val && val >= 0 && !isNaN(val) && val <= 1000000) ||
+                    'Valor no válido',
                 ]"
               />
             </div>
@@ -100,7 +106,11 @@
                 label="Varios"
                 dense
                 :rules="[
-                  (val) => (val && val.length >= 3) || 'Valor no válido',
+                  (val) =>
+                    (val &&
+                      val.toString().length >= 3 &&
+                      val.toString().length <= 25) ||
+                    'Valor no válido',
                 ]"
               />
             </div>
@@ -130,7 +140,7 @@
         >Cancelar</q-btn
       >
       <q-btn
-        :disable="validarVarios()"
+        :disable="validarVarios"
         round
         color="purple"
         glossy
@@ -225,32 +235,59 @@ const getDiarios = async () => {
   file.value = [];
 };
 
-const validarVarios = () => {
-  if (varios.value) {
-    let array = Object.values(varios.value);
-    const found = array.lastIndexOf("") != -1;
-    if (array.length > 0 && found) {
-      //tiene entradas y ninguna vacia
-      //un for que recorra el array y mire las pares y las impares
-      return true;
-    } else {
-      return false;
+const validarVarios = computed(() => {
+  if (varios.value.length > 1) {
+    // Es mayor de 1
+    console.log("Existe varios.value");
+    for (let i = 0; i < varios.value.length; i++) {
+      const element = varios.value[i];
+      if (element == "") {
+        //Hay alguno vacío
+        return true;
+      }
+      if (i % 2 == 0 && isNaN(element)) {
+        //Los impares del array no son un número
+        return true;
+      }
+      if (i % 2 == 0 && element > 1000000) {
+        //Los impares del array son como máximo
+        return true;
+      }
+      if (i % 2 != 0 && element.toString().length < 3) {
+        //Par mayor de 3
+        return true;
+      }
+      if (i % 2 != 0 && element.toString().length > 25) {
+        //Par menor de 25
+        return true;
+      }
+      console.log(
+        i % 2 != 0,
+        element.length < 3,
+        element.toString().length > 25,
+        element
+      );
     }
   }
-};
+  console.log("false final");
+  return false;
+});
 
 const saveState = computed(() => {
   if (
     !total_efectivo.value ||
     total_efectivo.value < 0 ||
+    total_efectivo.value > 1000000 ||
     isNaN(total_efectivo.value) ||
     !total_tpv.value ||
     total_tpv.value < 0 ||
+    total_tpv.value > 1000000 ||
     isNaN(total_tpv.value) ||
     !total_apps.value ||
     total_apps.value < 0 ||
+    total_apps.value > 1000000 ||
     isNaN(total_apps.value) ||
-    validarVarios()
+    validarVarios.value
   ) {
     return true;
   }
