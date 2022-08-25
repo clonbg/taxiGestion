@@ -1,20 +1,8 @@
 <template>
   <q-page>
     <div class="flex flex-center">
-      <q-form
-        class="form q-my-xl"
-        @submit.prevent="subir()"
-        style="min-width: 600px"
-        autocorrect="off"
-        autocapitalize="off"
-        autocomplete="off"
-        spellcheck="false"
-      >
-        <q-img
-          :src="`${taxiStore.urlServer}${taxiStore.user.foto}`"
-          class="imagen q-ma-xl"
-          :ratio="16 / 9"
-        >
+      <q-form class="form q-my-xl" @submit.prevent="subir()" style="min-width: 600px" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false">
+        <q-img :src="`${taxiStore.urlServer}${taxiStore.user.foto}`" class="imagen q-ma-xl" :ratio="16 / 9">
           <template v-slot:error>
             <div class="absolute-full flex flex-center bg-negative text-white">
               No se puede cargar la imagen
@@ -23,12 +11,7 @@
         </q-img>
         <div class="row">
           <div class="col-12">
-            <q-file
-              v-model="file"
-              label="Cambie su foto"
-              filled
-              class="q-my-xl"
-            >
+            <q-file v-model="file" label="Cambie su foto" filled class="q-my-xl">
               <template v-slot:prepend>
                 <q-icon name="attach_file" />
               </template>
@@ -37,100 +20,54 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <q-input
-              standout
-              v-model="taxiStore.user.nombre"
-              label="Nombre"
-              dense
-              :rules="[
+            <q-input standout v-model="taxiStore.user.nombre" label="Nombre" dense :rules="[
                 (val) =>
                   (val && val.length >= 3 && val.length <= 20) ||
                   'Entre 3 y 20 carácteres',
-              ]"
-            />
+              ]" />
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <q-input
-              standout
-              v-model="taxiStore.user.apellidos"
-              label="Apellidos"
-              dense
-              :rules="[
+            <q-input standout v-model="taxiStore.user.apellidos" label="Apellidos" dense :rules="[
                 (val) =>
                   (val && val.length >= 3 && val.length <= 50) ||
                   'Entre 3 y 50 carácteres',
-              ]"
-            />
+              ]" />
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <q-input
-              standout
-              v-model="taxiStore.user.dni"
-              label="DNI"
-              dense
-              :rules="[
+            <q-input standout v-model="taxiStore.user.dni" label="DNI" dense :rules="[
                 (val) =>
                   (val && !nif(val) && nifBd(val)) ||
                   'No es válido o ya existe',
-              ]"
-            />
+              ]" />
           </div>
         </div>
         <div class="row">
           <div class="col-4">
-            <q-input
-              v-model="taxiStore.user.sueldo"
-              standout
-              dense
-              label="Sueldo"
-              suffix="%"
-              disable
-              readonly
-            />
+            <q-input v-model="taxiStore.user.sueldo" standout dense label="Sueldo" suffix="%" disable readonly />
           </div>
           <div class="col-1"></div>
           <div class="col-7">
-            <q-input
-              standout
-              v-model="licencia"
-              label="Número de licencia"
-              dense
-              disable
-              readonly
-            />
+            <q-input standout v-model="licencia" label="Número de licencia" dense disable readonly />
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <q-input
-              class="q-mt-md"
-              standout
-              v-model="taxiStore.user.email"
-              label="Email"
-              type="email"
-              dense
-              :rules="[
+            <q-input class="q-mt-md" standout v-model="taxiStore.user.email" label="Email" type="email" dense :rules="[
                 (val) =>
                   (val &&
                     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) &&
                     emailBd(val)) ||
                   'Email no válido o ya existente',
-              ]"
-            />
+              ]" />
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <q-input
-              standout
-              v-model="taxiStore.user.phone_number"
-              label="Número de teléfono"
-              dense
-              :rules="[
+            <q-input standout v-model="taxiStore.user.phone_number" label="Número de teléfono" dense :rules="[
                 (val) =>
                   (val &&
                     !isNaN(val) &&
@@ -138,32 +75,18 @@
                     val.length <= 11 &&
                     tlfBd(val)) ||
                   'Número de teléfono no válido o existente',
-              ]"
-            />
+              ]" />
           </div>
         </div>
-        <q-btn
-          class="form-submit"
-          type="submit"
-          :disable="saveState"
-          :color="saveState ? 'red' : 'green'"
-          :loading="loading[0]"
-          >Guardar</q-btn
-        >
-        <q-btn
-          class="form-submit q-ml-md"
-          @click="
+        <q-btn class="form-submit" type="submit" :disable="saveState" :color="saveState ? 'red' : 'green'" :loading="loading[0]">Guardar</q-btn>
+        <q-btn class="form-submit q-ml-md" @click="
             getUser();
             file = null;
-          "
-          color="primary"
-          >Cancelar</q-btn
-        >
+          " color="primary">Cancelar</q-btn>
       </q-form>
     </div>
   </q-page>
 </template>
-
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref, computed } from "vue";
@@ -322,12 +245,13 @@ const subir = async () => {
 onMounted(() => {
   getUser();
 });
-</script>
 
+</script>
 <style scoped>
 .imagen {
   width: 15rem;
   height: 15rem;
   border: 10px solid #666;
 }
+
 </style>
