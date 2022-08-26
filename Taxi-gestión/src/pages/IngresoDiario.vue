@@ -3,6 +3,7 @@
     <q-date v-model="date" :events="events" class="float-left" style="margin-right: 15%" today-btn :options="optionsFn" />
     <q-form class="form float-right" @submit.prevent="subir()" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" style="width: 30rem">
       <p>si ya existe put (Si existe en getEvents...)</p>
+      <p>Obligatorio alcrear user. Password al inscribirse</p>
       <q-img :src="`${taxiStore.urlServer}${imagen}`" class="imagen q-my-xl" :ratio="16 / 9">
         <template v-slot:error>
           <div class="absolute-full flex flex-center bg-negative text-white">
@@ -12,7 +13,7 @@
       </q-img>
       <q-file v-model="file" label="Inserte o cambie la imagen" filled :rules="[
               (val) =>
-                (val && val!=null) ||
+                (events.indexOf(date)==-1 ? val : true) ||
                 'La imagen es obligatoria',
             ]">
         <template v-slot:prepend>
@@ -210,8 +211,8 @@ const saveState = computed(() => {
     total_apps.value < 0 ||
     total_apps.value > 1000000 ||
     isNaN(total_apps.value) ||
-    validarVarios.value ||
-    file.value == null
+    validarVarios.value
+    //file.value == null
   ) {
     return true;
   }
@@ -245,6 +246,8 @@ const subir = async () => {
     };
     var formData = new FormData();
     formData.append("dia", date.value.replaceAll("/", "-"));
+    console.log(typeof file.value,file.value)
+    if (file.value) {formData.append("imagen", file.value)}
     formData.append("imagen", file.value);
     formData.append("total_efectivo", total_efectivo.value);
     formData.append("total_apps", total_apps.value);
@@ -257,18 +260,35 @@ const subir = async () => {
       }
     }
     formData.append("taxista_id", taxiStore.user.id);
+    if (events.value.indexOf(date.value)!=-1) {
+      console.log('PUT')
+      await api
+    .put(`/ingreso_diario/${diario.value[0].id}/`, formData, axiosConfig)
+    .then((res) => {
+      imagen.value = res.data.imagen;
+      date.value = res.data.dia.replaceAll("-", "/");
+      getEvents();
+      file.value = null;
+    })
+    .catch((err) => {
+      console.log(err.response);
+    });
+    } else {
+      console.log('POST')
     await api
-      .post(`/ingreso_diario/create/`, formData, axiosConfig)
-      .then((res) => {
-        imagen.value = res.data.imagen;
-        date.value = res.data.dia.replaceAll("-", "/");
-        diariosTaxi.value.push(res.data);
-        getEvents();
-        file.value = null;
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
+    .post(`/ingreso_diario/create/`, formData, axiosConfig)
+    .then((res) => {
+      imagen.value = res.data.imagen;
+      date.value = res.data.dia.replaceAll("-", "/");
+      diariosTaxi.value.push(res.data);
+      getEvents();
+      file.value = null;
+    })
+    .catch((err) => {
+      console.log(err.response);
+    });
+    }
+    
   }
 };
 

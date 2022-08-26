@@ -43,7 +43,7 @@ class IngresoDiarioCreationSerializers(serializers.ModelSerializer):
 class IngresoDiarioDetailSerializers(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(read_only=True)
     dia = serializers.DateField(read_only=True)
-    imagen = serializers.ImageField(allow_null=True)
+    imagen = serializers.ImageField(allow_null=True, required=False)
     total_efectivo = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
         MinValueValidator(1)
