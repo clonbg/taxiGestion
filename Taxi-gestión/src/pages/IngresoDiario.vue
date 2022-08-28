@@ -3,7 +3,8 @@
     <q-date v-model="date" :events="events" class="float-left" style="margin-right: 15%" today-btn :options="optionsFn" />
     <q-form class="form float-right" @submit.prevent="subir()" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" style="width: 30rem">
       <p>si ya existe put (Si existe en getEvents...)</p>
-      <p>Obligatorio alcrear user. Password al inscribirse</p>
+      <p>Obligatorio al crear user. Password al inscribirse</p>
+      <p>Retardo en el login</p>
       <q-img :src="`${taxiStore.urlServer}${imagen}`" class="imagen q-my-xl" :ratio="16 / 9">
         <template v-slot:error>
           <div class="absolute-full flex flex-center bg-negative text-white">
