@@ -174,25 +174,25 @@ const getDiarios = async () => {
 const validarVarios = computed(() => {
   if (varios.value) {
     // Es mayor de 1
-    for (let i = 0; i < varios.value.length; i++) {
-      const element = varios.value[i];
-      if (element == "") {
+    for (let i in varios.value) {
+      
+      if (i == "") {
         //Hay alguno vacío
         return true;
       }
-      if (i % 2 == 0 && isNaN(element)) {
+      if (i % 2 == 0 && isNaN(i)) {
         //Los impares del array no son un número
         return true;
       }
-      if (i % 2 == 0 && element > 1000000) {
+      if (i % 2 == 0 && i > 1000000) {
         //Los impares del array son como máximo
         return true;
       }
-      if (i % 2 != 0 && element.toString().length < 3) {
+      if (i % 2 != 0 && i.toString().length < 3) {
         //Par mayor de 3
         return true;
       }
-      if (i % 2 != 0 && element.toString().length > 25) {
+      if (i % 2 != 0 && i.toString().length > 25) {
         //Par menor de 25
         return true;
       }
@@ -250,18 +250,18 @@ const subir = async () => {
     };
     var formData = new FormData();
     formData.append("dia", date.value.replaceAll("/", "-"));
-    formData.append("imagen", file.value);
     formData.append("total_efectivo", total_efectivo.value);
     formData.append("total_apps", total_apps.value);
     formData.append("total_tpv", total_tpv.value);
 
-    if (varios.value.length > 0) {
+    if (varios.value!=null||varios?.value[0]!='null') {
       for (let i = 0; i < varios.value.length; i++) {
         const element = varios.value[i];
         formData.append("vario", element);
       }
     }
     formData.append("taxista_id", taxiStore.user.id);
+    if (file.value) {formData.append("imagen", file.value)}
     if (events.value.indexOf(date.value)!=-1) {
       console.log('PUT')
       await api
@@ -277,7 +277,7 @@ const subir = async () => {
     });
     } else {
       console.log('POST')
-      if (file.value) {formData.append("imagen", file.value)}
+      
     await api
     .post(`/ingreso_diario/create/`, formData, axiosConfig)
     .then((res) => {
