@@ -178,10 +178,12 @@ const validarVarios = () => {
       if (varios.value[i] != '') { //Las dos están escritas
         if (i % 2 == 0) {
           if (isNaN(varios.value[i]) || varios.value[i] > 1000000) {
-            return true } //es un número menor de un millón
+            return true
+          } //es un número menor de un millón
         } else {
           if (varios.value[i].length > 25 || varios.value[i].length < 3) {
-            return true } //es un string entre 2 y 24 letras
+            return true
+          } //es un string entre 2 y 24 letras
         }
       } else return true
     }
@@ -202,8 +204,7 @@ const saveState = computed(() => {
     total_apps.value < 0 ||
     total_apps.value > 1000000 ||
     isNaN(total_apps.value) ||
-    validarVarios()
-    //file.value == null
+    validarVarios() || (events.value.indexOf(date.value) == -1 && file.value == null)
   ) {
     return true;
   }
@@ -218,14 +219,10 @@ const borrar = (i) => {
 };
 
 const variosMas = () => {
-  console.log('aqui')
   if (varios.value) {
     varios.value.push('')
     varios.value.push('')
-  Object.values(varios.value).push('')
   } else {
-        console.log('dont exist')
-
     varios.value = []
     varios.value.push('')
     varios.value.push('')
@@ -259,7 +256,6 @@ const subir = async() => {
     formData.append("taxista_id", taxiStore.user.id);
     if (file.value) { formData.append("imagen", file.value) }
     if (events.value.indexOf(date.value) != -1) {
-      console.log('PUT')
       await api
         .put(`/ingreso_diario/${diario.value[0].id}/`, formData, axiosConfig)
         .then((res) => {
@@ -272,8 +268,6 @@ const subir = async() => {
           console.log(err.response);
         });
     } else {
-      console.log('POST')
-
       await api
         .post(`/ingreso_diario/create/`, formData, axiosConfig)
         .then((res) => {
