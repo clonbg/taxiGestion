@@ -231,14 +231,17 @@ const borrar = (i) => {
 };
 
 const variosMas = () => {
-  let array = Object.values(varios.value);
+  let array
+  if (varios.value!=null) {
+      if (varios.value[0]=='null') {
+        array = []
+      } else { array = Object.values(varios.value);}
   const found = array.lastIndexOf("") == -1;
   if (found) {
     array.push("");
     array.push("");
     varios.value = array;
-  }
-};
+}}}
 
 const subir = async () => {
   await taxiStore.refresToken();
@@ -254,12 +257,15 @@ const subir = async () => {
     formData.append("total_apps", total_apps.value);
     formData.append("total_tpv", total_tpv.value);
 
-    if (varios.value!=null||varios?.value[0]!='null') {
-      for (let i = 0; i < varios.value.length; i++) {
+    if (varios.value!=null) {
+      if (varios.value[0]!='null') {
+        for (let i = 0; i < varios.value.length; i++) {
         const element = varios.value[i];
         formData.append("vario", element);
       }
-    }
+      
+      }
+    } else formData.append("vario", null);
     formData.append("taxista_id", taxiStore.user.id);
     if (file.value) {formData.append("imagen", file.value)}
     if (events.value.indexOf(date.value)!=-1) {
