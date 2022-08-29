@@ -6,7 +6,8 @@
       <p>Obligatorio al crear user. Password al inscribirse</p>
       <p>Retardo en el login</p>
       <p>Retardo al guardar</p>
-      <p>Dos decimales</p> -->
+      <p>Dos decimales</p>
+      <p>Imagen no se puede actualizar</p> -->
       <q-img :src="`${taxiStore.urlServer}${imagen}`" class="imagen q-my-xl" :ratio="16 / 9">
         <template v-slot:error>
           <div class="absolute-full flex flex-center bg-negative text-white">

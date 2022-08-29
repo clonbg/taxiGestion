@@ -43,7 +43,7 @@ class IngresoDiarioCreationSerializers(serializers.ModelSerializer):
 class IngresoDiarioDetailSerializers(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(read_only=True)
     dia = serializers.DateField(read_only=True)
-    imagen = serializers.ImageField(allow_null=True, required=False)
+    imagen = serializers.ImageField(required=False,allow_null=True)
     total_efectivo = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
         MinValueValidator(1)
@@ -66,3 +66,18 @@ class IngresoDiarioDetailSerializers(serializers.ModelSerializer):
     class Meta:
         model = IngresoDiario
         fields = '__all__'
+
+    def update(self, instance, validated_data):
+        print(instance.imagen)
+        if instance.imagen:
+            print('Existe')
+        else:
+            print('No existe')
+        print(self.data['imagen'])
+        print(validated_data['imagen'])
+        validated_data['imagen']='jjjjjj'
+        # Si existe validated_data[imagen] se guarda la nueva, si no, se queda la vieja
+        updated_user = super().update(instance, validated_data)
+        print(updated_user)
+        updated_user.save()
+        return updated_user
