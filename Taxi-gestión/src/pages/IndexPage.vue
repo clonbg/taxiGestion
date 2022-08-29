@@ -87,6 +87,7 @@
     </div>
   </q-page>
 </template>
+
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref, computed } from "vue";
@@ -105,6 +106,10 @@ const simulateProgress = (number) => {
   setTimeout(() => {
     // we're done, we reset loading state
     loading.value[number] = false;
+    file.value = null;
+    getUser();
+    taxiStore.letrero.nombre = taxiStore.user.nombre;
+    taxiStore.letrero.apellidos = taxiStore.user.apellidos;
     Notify.create({
       type: "positive",
       message: "Ha sido guardado correctamente",
@@ -116,7 +121,7 @@ const taxiStore = useTaxiStore();
 
 const file = ref(null);
 
-const getUser = async () => {
+const getUser = async() => {
   await taxiStore.usuario();
 };
 
@@ -202,7 +207,7 @@ const tlfBd = (tlf) => {
   return false;
 };
 
-const subir = async () => {
+const subir = async() => {
   await taxiStore.refresToken();
   if (taxiStore.access_token) {
     let axiosConfig = {
@@ -226,11 +231,7 @@ const subir = async () => {
 
     await api
       .put(`/taxistas/${taxiStore.user.id}/`, formData, axiosConfig)
-      .then(async (res) => {
-        file.value = null;
-        getUser();
-        taxiStore.letrero.nombre = taxiStore.user.nombre;
-        taxiStore.letrero.apellidos = taxiStore.user.apellidos;
+      .then(async(res) => {
         simulateProgress(0);
       })
       .catch((err) => {
@@ -245,13 +246,12 @@ const subir = async () => {
 onMounted(() => {
   getUser();
 });
-
 </script>
+
 <style scoped>
 .imagen {
   width: 15rem;
   height: 15rem;
   border: 10px solid #666;
 }
-
 </style>

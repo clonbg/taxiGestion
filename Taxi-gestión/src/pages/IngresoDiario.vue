@@ -2,9 +2,11 @@
   <q-page class="flex flex-center">
     <q-date v-model="date" :events="events" class="float-left" style="margin-right: 15%" today-btn :options="optionsFn" />
     <q-form class="form float-right" @submit.prevent="subir()" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" style="width: 30rem">
-      <p>si ya existe put (Si existe en getEvents...)</p>
+      <!-- <p>si ya existe put (Si existe en getEvents...)</p>
       <p>Obligatorio al crear user. Password al inscribirse</p>
       <p>Retardo en el login</p>
+      <p>Retardo al guardar</p>
+      <p>Dos decimales</p> -->
       <q-img :src="`${taxiStore.urlServer}${imagen}`" class="imagen q-my-xl" :ratio="16 / 9">
         <template v-slot:error>
           <div class="absolute-full flex flex-center bg-negative text-white">
@@ -247,8 +249,6 @@ const subir = async () => {
     };
     var formData = new FormData();
     formData.append("dia", date.value.replaceAll("/", "-"));
-    console.log(typeof file.value,file.value)
-    if (file.value) {formData.append("imagen", file.value)}
     formData.append("imagen", file.value);
     formData.append("total_efectivo", total_efectivo.value);
     formData.append("total_apps", total_apps.value);
@@ -276,6 +276,7 @@ const subir = async () => {
     });
     } else {
       console.log('POST')
+      if (file.value) {formData.append("imagen", file.value)}
     await api
     .post(`/ingreso_diario/create/`, formData, axiosConfig)
     .then((res) => {
