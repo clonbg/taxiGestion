@@ -82,6 +82,7 @@
     </q-form>
   </q-page>
 </template>
+
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref, watchEffect, computed } from "vue";
@@ -149,7 +150,7 @@ const getEvents = () => {
   });
 };
 
-const getDiarios = async () => {
+const getDiarios = async() => {
   if (diario.value[0]) {
     await taxiStore.get_ingresos_diarios();
     taxiStore.diarios.forEach((element) => {
@@ -171,39 +172,30 @@ const getDiarios = async () => {
   file.value = null;
 };
 
-const validarVarios = computed(() => {
+const validarVarios = () => {
+  //console.log(typeof varios.value,varios.value,varios.value[0])
   if (varios.value) {
-    // Es mayor de 1
-    for (let i in varios.value) {
-      
-      if (i == "") {
-        //Hay alguno vacío
-        return true;
-      }
-      if (i % 2 == 0 && isNaN(i)) {
-        //Los impares del array no son un número
-        return true;
-      }
-      if (i % 2 == 0 && i > 1000000) {
-        //Los impares del array son como máximo
-        return true;
-      }
-      if (i % 2 != 0 && i.toString().length < 3) {
-        //Par mayor de 3
-        return true;
-      }
-      if (i % 2 != 0 && i.toString().length > 25) {
-        //Par menor de 25
-        return true;
-      }
+    //console.log('existe')
+    for (var i = 0; i < varios.value.length; i++) {
+      //console.log(varios.value[i])
+      if (varios.value[i] != '') { //Las dos están escritas
+        if (i % 2 == 0) {
+          console.log('concepto', varios.value[i])
+          if (isNaN(varios.value[i]) || varios.value[i] > 1000000) {
+            return true } //es un número menor de un millón
+        } else {
+          console.log('cantidad', varios.value[i])
+          if (varios.value[i].length > 25 || varios.value[i].length < 3) {
+            return true } //es un string entre 2 y 24 letras
+        }
+      } else return true
     }
   }
   return false;
-});
+}
 
 const saveState = computed(() => {
-  if (
-    !total_efectivo.value ||
+  if (!total_efectivo.value ||
     total_efectivo.value < 0 ||
     total_efectivo.value > 1000000 ||
     isNaN(total_efectivo.value) ||
@@ -215,7 +207,7 @@ const saveState = computed(() => {
     total_apps.value < 0 ||
     total_apps.value > 1000000 ||
     isNaN(total_apps.value) ||
-    validarVarios.value
+    validarVarios()
     //file.value == null
   ) {
     return true;
@@ -232,18 +224,20 @@ const borrar = (i) => {
 
 const variosMas = () => {
   let array
-  if (varios.value!=null) {
-      if (varios.value[0]=='null') {
-        array = []
-      } else { array = Object.values(varios.value);}
-  const found = array.lastIndexOf("") == -1;
-  if (found) {
-    array.push("");
-    array.push("");
-    varios.value = array;
-}}}
+  if (varios.value != null) {
+    if (varios.value[0] == 'null') {
+      array = []
+    } else { array = Object.values(varios.value); }
+    const found = array.lastIndexOf("") == -1;
+    if (found) {
+      array.push("");
+      array.push("");
+      varios.value = array;
+    }
+  }
+}
 
-const subir = async () => {
+const subir = async() => {
   await taxiStore.refresToken();
   if (taxiStore.access_token) {
     let axiosConfig = {
@@ -257,51 +251,51 @@ const subir = async () => {
     formData.append("total_apps", total_apps.value);
     formData.append("total_tpv", total_tpv.value);
 
-    if (varios.value!=null) {
-      if (varios.value[0]!='null') {
+    if (varios.value != null) {
+      if (varios.value[0] != 'null') {
         for (let i = 0; i < varios.value.length; i++) {
-        const element = varios.value[i];
-        formData.append("vario", element);
-      }
-      
+          const element = varios.value[i];
+          formData.append("vario", element);
+        }
+
       }
     } else formData.append("vario", null);
     formData.append("taxista_id", taxiStore.user.id);
-    if (file.value) {formData.append("imagen", file.value)}
-    if (events.value.indexOf(date.value)!=-1) {
+    if (file.value) { formData.append("imagen", file.value) }
+    if (events.value.indexOf(date.value) != -1) {
       console.log('PUT')
       await api
-    .put(`/ingreso_diario/${diario.value[0].id}/`, formData, axiosConfig)
-    .then((res) => {
-      imagen.value = res.data.imagen;
-      date.value = res.data.dia.replaceAll("-", "/");
-      getEvents();
-      file.value = null;
-    })
-    .catch((err) => {
-      console.log(err.response);
-    });
+        .put(`/ingreso_diario/${diario.value[0].id}/`, formData, axiosConfig)
+        .then((res) => {
+          imagen.value = res.data.imagen;
+          date.value = res.data.dia.replaceAll("-", "/");
+          getEvents();
+          file.value = null;
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
     } else {
       console.log('POST')
-      
-    await api
-    .post(`/ingreso_diario/create/`, formData, axiosConfig)
-    .then((res) => {
-      imagen.value = res.data.imagen;
-      date.value = res.data.dia.replaceAll("-", "/");
-      diariosTaxi.value.push(res.data);
-      getEvents();
-      file.value = null;
-    })
-    .catch((err) => {
-      console.log(err.response);
-    });
+
+      await api
+        .post(`/ingreso_diario/create/`, formData, axiosConfig)
+        .then((res) => {
+          imagen.value = res.data.imagen;
+          date.value = res.data.dia.replaceAll("-", "/");
+          diariosTaxi.value.push(res.data);
+          getEvents();
+          file.value = null;
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
     }
-    
+
   }
 };
 
-onMounted(async () => {
+onMounted(async() => {
   await taxiStore.get_ingresos_diarios();
   taxiStore.diarios.forEach((element) => {
     if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
@@ -317,13 +311,12 @@ onMounted(async () => {
     (dia) => dia.dia.replaceAll("-", "/") == date.value
   );
 });
-
 </script>
+
 <style scoped>
 .imagen {
   width: 15rem;
   height: 15rem;
   border: 10px solid #666;
 }
-
 </style>
