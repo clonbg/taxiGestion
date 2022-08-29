@@ -68,16 +68,10 @@ class IngresoDiarioDetailSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
     def update(self, instance, validated_data):
-        print(instance.imagen)
-        if instance.imagen:
-            print('Existe')
-        else:
-            print('No existe')
-        print(self.data['imagen'])
-        print(validated_data['imagen'])
-        validated_data['imagen']='jjjjjj'
-        # Si existe validated_data[imagen] se guarda la nueva, si no, se queda la vieja
-        updated_user = super().update(instance, validated_data)
-        print(updated_user)
-        updated_user.save()
-        return updated_user
+        # if not validated_data['imagen']:
+        #     validated_data['imagen']=instance.imagen
+        # Si existe validated_data[imagen], que es la nueva imagen se guarda la nueva, si no, se queda la vieja
+        updated_ingresoD = super().update(instance, validated_data)
+        print(updated_ingresoD)
+        updated_ingresoD.save()
+        return updated_ingresoD
