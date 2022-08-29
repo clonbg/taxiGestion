@@ -78,7 +78,7 @@
       </span>
       <q-btn class="form-submit" type="submit" :disable="saveState" :color="saveState ? 'red' : 'green'">Guardar</q-btn>
       <q-btn class="form-submit q-ml-md q-my-md" @click="getDiarios()" color="primary">Cancelar</q-btn>
-      <q-btn :disable="validarVarios" round color="purple" glossy icon="add_task" class="float-right q-mt-sm" @click="variosMas()" />
+      <q-btn :disable="validarVarios()" round color="purple" glossy icon="add_task" class="float-right q-mt-sm" @click="variosMas()" />
     </q-form>
   </q-page>
 </template>
@@ -173,18 +173,13 @@ const getDiarios = async() => {
 };
 
 const validarVarios = () => {
-  //console.log(typeof varios.value,varios.value,varios.value[0])
   if (varios.value) {
-    //console.log('existe')
     for (var i = 0; i < varios.value.length; i++) {
-      //console.log(varios.value[i])
       if (varios.value[i] != '') { //Las dos están escritas
         if (i % 2 == 0) {
-          console.log('concepto', varios.value[i])
           if (isNaN(varios.value[i]) || varios.value[i] > 1000000) {
             return true } //es un número menor de un millón
         } else {
-          console.log('cantidad', varios.value[i])
           if (varios.value[i].length > 25 || varios.value[i].length < 3) {
             return true } //es un string entre 2 y 24 letras
         }
@@ -223,18 +218,19 @@ const borrar = (i) => {
 };
 
 const variosMas = () => {
-  let array
-  if (varios.value != null) {
-    if (varios.value[0] == 'null') {
-      array = []
-    } else { array = Object.values(varios.value); }
-    const found = array.lastIndexOf("") == -1;
-    if (found) {
-      array.push("");
-      array.push("");
-      varios.value = array;
-    }
+  console.log('aqui')
+  if (varios.value) {
+    varios.value.push('')
+    varios.value.push('')
+  Object.values(varios.value).push('')
+  } else {
+        console.log('dont exist')
+
+    varios.value = []
+    varios.value.push('')
+    varios.value.push('')
   }
+
 }
 
 const subir = async() => {
