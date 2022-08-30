@@ -2,12 +2,6 @@
   <q-page class="flex flex-center">
     <q-date v-model="date" :events="events" class="float-left" style="margin-right: 15%" today-btn :options="optionsFn" />
     <q-form class="form float-right" @submit.prevent="subir()" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" style="width: 30rem">
-      <!-- <p>si ya existe put (Si existe en getEvents...)</p>
-      <p>Obligatorio al crear user. Password al inscribirse</p>
-      <p>Retardo en el login</p>
-      <p>Retardo al guardar</p>
-      <p>Dos decimales</p>
-      <p>Imagen no se puede actualizar</p> -->
       <q-img :src="`${taxiStore.urlServer}${imagen}`" class="imagen q-my-xl" :ratio="16 / 9">
         <template v-slot:error>
           <div class="absolute-full flex flex-center bg-negative text-white">
@@ -57,7 +51,7 @@
             <div class="col-4 q-mb-lm q-mr-sm">
               <q-input standout v-model="varios[index - 1]" label="Varios" dense :rules="[
                   (val) =>
-                    (val && val >= 0 && !isNaN(val) && val <= 1000000) ||
+                    (val && val >= -1000000 && !Number.isNaN(val) && val <= 1000000) ||
                     'Valor no válido',
                 ]" />
             </div>
@@ -177,7 +171,7 @@ const validarVarios = () => {
     for (var i = 0; i < varios.value.length; i++) {
       if (varios.value[i] != '') { //Las dos están escritas
         if (i % 2 == 0) {
-          if (isNaN(varios.value[i]) || varios.value[i] > 1000000) {
+          if (isNaN(varios.value[i]) || varios.value[i] > 1000000 || varios.value[i] < -1000000) {
             return true
           } //es un número menor de un millón
         } else {
