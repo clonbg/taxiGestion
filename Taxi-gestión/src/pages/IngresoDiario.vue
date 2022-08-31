@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <q-date v-model="date" :events="events" class="float-left" style="margin-right: 15%" today-btn :options="optionsFn" :locale="myLocale"/>
+    <q-date v-model="date" :events="events" class="float-left" style="margin-right: 15%" today-btn :options="optionsFn" :locale="myLocale" />
     <q-form class="form float-right" @submit.prevent="subir()" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" style="width: 30rem">
       <q-img :src="`${taxiStore.urlServer}${imagen}`" class="imagen q-my-xl" :ratio="16 / 9">
         <template v-slot:error>
@@ -72,7 +72,7 @@
       </span>
       <q-btn class="form-submit" type="submit" :disable="saveState" :color="saveState ? 'red' : 'green'">Guardar</q-btn>
       <q-btn class="form-submit q-ml-md q-my-md" @click="getDiarios()" color="primary">Cancelar</q-btn>
-      <q-btn class="form-submit q-ml-md q-my-md" @click="confirmaBorrar()" color="negative" :loading="loading[0]">Borrar</q-btn>
+      <q-btn class="form-submit q-ml-md q-my-md" @click="confirmaBorrar()" color="negative" :loading="loading[0]" :disable="diario[0] ? false : true">Borrar</q-btn>
       <q-btn :disable="validarVarios()" round color="purple" glossy icon="add_task" class="float-right q-mt-sm" @click="variosMas()" />
     </q-form>
   </q-page>
@@ -125,13 +125,13 @@ const file = ref(null);
 const hoy = ref(null);
 
 const myLocale = {
-        days: 'Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado'.split('_'),
-        daysShort: 'Dom_Lun_Mar_Mié_Jue_Vie_Sáb'.split('_'),
-        months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
-        monthsShort: 'Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic'.split('_'),
-        firstDayOfWeek: 1, // 0-6, 0 - Sunday, 1 Monday, ...
-        format24h: true,
-        pluralDay: 'dias'
+  days: 'Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado'.split('_'),
+  daysShort: 'Dom_Lun_Mar_Mié_Jue_Vie_Sáb'.split('_'),
+  months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
+  monthsShort: 'Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic'.split('_'),
+  firstDayOfWeek: 1, // 0-6, 0 - Sunday, 1 Monday, ...
+  format24h: true,
+  pluralDay: 'dias'
 }
 
 watchEffect(() => {
@@ -201,11 +201,11 @@ const getDiarios = async () => {
 };
 
 const validarVarios = () => {
-  if (varios.value) {
+  if (varios.value[0]) {
     for (var i = 0; i < varios.value.length; i++) {
       if (varios.value[i] != '') { //Las dos están escritas
         if (i % 2 == 0) {
-          if (isNaN(varios.value[i]) || varios.value[i] > 1000000 || varios.value[i] < -1000000 || !dosDecimales(varios.value[i])) {
+          if (Number.isNaN(varios.value[i]) || varios.value[i] > 1000000 || varios.value[i] < -1000000 || !dosDecimales(varios.value[i])) {
             return true
           } //es un número menor de un millón
         } else {
@@ -243,10 +243,8 @@ const saveState = computed(() => {
 });
 
 const borrar = (i) => {
-  let array = Object.values(varios.value);
-  array.splice(i - 1, 1);
-  array.splice(i - 1, 1);
-  varios.value = array;
+  varios.value.splice(i - 1, 1);
+  varios.value.splice(i - 1, 1);
 };
 
 const variosMas = () => {
@@ -284,15 +282,11 @@ const subir = async () => {
     formData.append("total_apps", total_apps.value);
     formData.append("total_tpv", total_tpv.value);
 
-    if (varios.value != null) {
-      if (varios.value[0] != 'null') {
-        for (let i = 0; i < varios.value.length; i++) {
-          const element = varios.value[i];
-          formData.append("vario", element);
-        }
+    for (let i = 0; i < varios.value.length; i++) {
+      const element = varios.value[i];
+      formData.append("vario", element);
+    }
 
-      }
-    } else formData.append("vario", null);
     formData.append("taxista_id", taxiStore.user.id);
     if (file.value) { formData.append("imagen", file.value) }
     if (events.value.indexOf(date.value) != -1) {
@@ -303,7 +297,7 @@ const subir = async () => {
           date.value = res.data.dia.replaceAll("-", "/");
           let item = diariosTaxi.value.filter((item) => item.id == diario.value[0].id)
           let pos = diariosTaxi.value.lastIndexOf(item[0])
-          diariosTaxi.value[pos]=res.data
+          diariosTaxi.value[pos] = res.data
           file.value = null;
         })
         .catch((err) => {
@@ -328,18 +322,20 @@ const subir = async () => {
 };
 
 const confirmaBorrar = () => {
-  $q.dialog({
-    title: "Cuidado",
-    message: "Está seguro de borrar este día?",
-    cancel: true,
-    persistent: true,
-  }).onOk(async() => {
-    await simulateProgressBorrar(0)
-  });
-};
+  if (diario.value[0]) {
+    $q.dialog({
+      title: "Cuidado",
+      message: "Está seguro de borrar este día?",
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      await simulateProgressBorrar(0)
+    });
+  }
+}
 
 const eliminarDiario = async () => {
-  if (diario.value[0]) {
+
   await taxiStore.refresToken();
   if (taxiStore.access_token) {
     let axiosConfig = {
@@ -347,18 +343,18 @@ const eliminarDiario = async () => {
         Authorization: `Bearer ${taxiStore.access_token}`,
       },
     };
-  let pos = diariosTaxi.value.lastIndexOf(diario.value[0])
-  if (pos!=-1) {
-    await api
+    let pos = diariosTaxi.value.lastIndexOf(diario.value[0])
+    if (pos != -1) {
+      await api
         .delete(`/ingreso_diario/${diario.value[0].id}/`, axiosConfig)
-        .then((res) => {
-        })
+        .then((res) => {})
         .catch((err) => {
           console.log(err.response);
         });
-    diariosTaxi.value.splice(pos,1)
+      diariosTaxi.value.splice(pos, 1)
+    }
   }
-}}}
+}
 
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();

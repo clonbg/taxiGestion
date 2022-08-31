@@ -22,7 +22,7 @@ class IngresoDiarioCreationSerializers(serializers.ModelSerializer):
         MinValueValidator(1)
     ], allow_null=True)
     vario = serializers.ListField(
-        child=serializers.CharField(allow_null=True, required=False), allow_null=True, required=False)
+        child=serializers.CharField(allow_null=True, required=False), allow_null=True, required=False, default = [])
     taxista = UserCreationSerializers(read_only=True)
     taxista_id = serializers.PrimaryKeyRelatedField(
         write_only=True, queryset=User.objects.all(), source='taxista')
@@ -57,7 +57,7 @@ class IngresoDiarioDetailSerializers(serializers.ModelSerializer):
         MinValueValidator(1)
     ], allow_null=True)
     vario = serializers.ListField(
-        child=serializers.CharField(allow_null=True, required=False), allow_null=True, required=False)
+        child=serializers.CharField(allow_null=True, required=False), allow_null=True, required=False, default = [])
 
     taxista = UserCreationSerializers(read_only=True)
     taxista_id = serializers.PrimaryKeyRelatedField(
