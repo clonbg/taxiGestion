@@ -266,6 +266,9 @@ const subir = async () => {
         .then((res) => {
           imagen.value = res.data.imagen;
           date.value = res.data.dia.replaceAll("-", "/");
+          let item = diariosTaxi.value.filter((item) => item.id == diario.value[0].id)
+          let pos = diariosTaxi.value.lastIndexOf(item[0])
+          diariosTaxi.value[pos]=res.data
           file.value = null;
         })
         .catch((err) => {
