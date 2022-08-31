@@ -72,6 +72,7 @@
       </span>
       <q-btn class="form-submit" type="submit" :disable="saveState" :color="saveState ? 'red' : 'green'">Guardar</q-btn>
       <q-btn class="form-submit q-ml-md q-my-md" @click="getDiarios()" color="primary">Cancelar</q-btn>
+      <q-btn class="form-submit q-ml-md q-my-md" @click="eliminarDiario()" color="negative">Borrar</q-btn>
       <q-btn :disable="validarVarios()" round color="purple" glossy icon="add_task" class="float-right q-mt-sm" @click="variosMas()" />
     </q-form>
   </q-page>
@@ -301,6 +302,29 @@ const subir = async () => {
 
   }
 };
+
+const eliminarDiario = async () => {
+  await taxiStore.refresToken();
+  if (taxiStore.access_token) {
+    let axiosConfig = {
+      headers: {
+        Authorization: `Bearer ${taxiStore.access_token}`,
+      },
+    };
+  let pos = diariosTaxi.value.lastIndexOf(diario.value[0])
+  if (pos!=-1) {
+    await api
+        .delete(`/ingreso_diario/${diario.value[0].id}/`, axiosConfig)
+        .then((res) => {
+          events.value = events.value.filter((dia) => dia != date.value)
+          console.log(events.value, date.value)
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    diariosTaxi.value.splice(pos,1)
+  }
+}}
 
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
