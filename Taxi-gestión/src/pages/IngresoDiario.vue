@@ -9,7 +9,7 @@
           </div>
         </template>
       </q-img>
-      <q-file v-model="file" label="Inserte o cambie la imagen" filled :rules="[
+      <q-file v-model="file" :label="events.indexOf(date) == -1 ? 'Inserte la imagen' : 'Puede cambiar la imagen'" filled :rules="[
               (val) =>
                 (events.indexOf(date)==-1 ? val : true) ||
                 'La imagen es obligatoria',
@@ -76,7 +76,6 @@
     </q-form>
   </q-page>
 </template>
-
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref, watchEffect, computed } from "vue";
@@ -144,7 +143,7 @@ const getEvents = () => {
   });
 };
 
-const getDiarios = async() => {
+const getDiarios = async () => {
   if (diario.value[0]) {
     await taxiStore.get_ingresos_diarios();
     taxiStore.diarios.forEach((element) => {
@@ -224,7 +223,7 @@ const variosMas = () => {
 
 }
 
-const subir = async() => {
+const subir = async () => {
   await taxiStore.refresToken();
   if (taxiStore.access_token) {
     let axiosConfig = {
@@ -279,7 +278,7 @@ const subir = async() => {
   }
 };
 
-onMounted(async() => {
+onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
   taxiStore.diarios.forEach((element) => {
     if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
@@ -295,12 +294,13 @@ onMounted(async() => {
     (dia) => dia.dia.replaceAll("-", "/") == date.value
   );
 });
-</script>
 
+</script>
 <style scoped>
 .imagen {
   width: 15rem;
   height: 15rem;
   border: 10px solid #666;
 }
+
 </style>
