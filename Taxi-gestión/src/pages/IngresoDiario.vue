@@ -212,14 +212,11 @@ const borrar = (i) => {
 };
 
 const variosMas = () => {
-  if (varios.value) {
-    varios.value.push('')
-    varios.value.push('')
-  } else {
+  if (!varios.value) {
     varios.value = []
-    varios.value.push('')
-    varios.value.push('')
   }
+  varios.value.push('')
+  varios.value.push('')
 
 }
 
