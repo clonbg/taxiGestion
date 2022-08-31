@@ -72,7 +72,7 @@
       </span>
       <q-btn class="form-submit" type="submit" :disable="saveState" :color="saveState ? 'red' : 'green'">Guardar</q-btn>
       <q-btn class="form-submit q-ml-md q-my-md" @click="getDiarios()" color="primary">Cancelar</q-btn>
-      <q-btn class="form-submit q-ml-md q-my-md" @click="confirmaBorrar()" color="negative">Borrar</q-btn>
+      <q-btn class="form-submit q-ml-md q-my-md" @click="confirmaBorrar()" color="negative" :loading="loading[0]">Borrar</q-btn>
       <q-btn :disable="validarVarios()" round color="purple" glossy icon="add_task" class="float-right q-mt-sm" @click="variosMas()" />
     </q-form>
   </q-page>
@@ -81,7 +81,28 @@
 import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref, watchEffect, computed } from "vue";
 import { api } from "../boot/axios";
-import { useQuasar } from "quasar";
+import { useQuasar, Notify } from "quasar";
+
+const loading = ref([false, false, false, false, false, false]);
+
+const progress = ref(false);
+
+const simulateProgressBorrar = (number) => {
+  // we set loading state
+  loading.value[number] = true;
+
+  // simulate a delay
+  setTimeout(() => {
+    // we're done, we reset loading state
+    loading.value[number] = false;
+    events.value = events.value.filter((dia) => dia != date.value)
+    eliminarDiario();
+    Notify.create({
+      type: "positive",
+      message: "Ha sido eliminado correctamente",
+    });
+  }, 3000);
+};
 
 const $q = useQuasar();
 
@@ -312,12 +333,13 @@ const confirmaBorrar = () => {
     message: "Está seguro de borrar este día?",
     cancel: true,
     persistent: true,
-  }).onOk(() => {
-    eliminarDiario();
+  }).onOk(async() => {
+    await simulateProgressBorrar(0)
   });
 };
 
 const eliminarDiario = async () => {
+  if (diario.value[0]) {
   await taxiStore.refresToken();
   if (taxiStore.access_token) {
     let axiosConfig = {
@@ -330,14 +352,13 @@ const eliminarDiario = async () => {
     await api
         .delete(`/ingreso_diario/${diario.value[0].id}/`, axiosConfig)
         .then((res) => {
-          events.value = events.value.filter((dia) => dia != date.value)
         })
         .catch((err) => {
           console.log(err.response);
         });
     diariosTaxi.value.splice(pos,1)
   }
-}}
+}}}
 
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
