@@ -251,7 +251,6 @@ const subir = async () => {
         .then((res) => {
           imagen.value = res.data.imagen;
           date.value = res.data.dia.replaceAll("-", "/");
-          getEvents();
           file.value = null;
         })
         .catch((err) => {
@@ -264,7 +263,7 @@ const subir = async () => {
           imagen.value = res.data.imagen;
           date.value = res.data.dia.replaceAll("-", "/");
           diariosTaxi.value.push(res.data);
-          getEvents();
+          events.value.push(res.data.dia.replaceAll("-", "/"));
           file.value = null;
         })
         .catch((err) => {
