@@ -72,7 +72,7 @@
       </span>
       <q-btn class="form-submit" type="submit" :disable="saveState" :color="saveState ? 'red' : 'green'">Guardar</q-btn>
       <q-btn class="form-submit q-ml-md q-my-md" @click="getDiarios()" color="primary">Cancelar</q-btn>
-      <q-btn class="form-submit q-ml-md q-my-md" @click="eliminarDiario()" color="negative">Borrar</q-btn>
+      <q-btn class="form-submit q-ml-md q-my-md" @click="confirmaBorrar()" color="negative">Borrar</q-btn>
       <q-btn :disable="validarVarios()" round color="purple" glossy icon="add_task" class="float-right q-mt-sm" @click="variosMas()" />
     </q-form>
   </q-page>
@@ -81,6 +81,9 @@
 import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref, watchEffect, computed } from "vue";
 import { api } from "../boot/axios";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
 
 const taxiStore = useTaxiStore();
 
@@ -303,6 +306,17 @@ const subir = async () => {
   }
 };
 
+const confirmaBorrar = () => {
+  $q.dialog({
+    title: "Cuidado",
+    message: "Está seguro de borrar este día?",
+    cancel: true,
+    persistent: true,
+  }).onOk(() => {
+    eliminarDiario();
+  });
+};
+
 const eliminarDiario = async () => {
   await taxiStore.refresToken();
   if (taxiStore.access_token) {
@@ -317,7 +331,6 @@ const eliminarDiario = async () => {
         .delete(`/ingreso_diario/${diario.value[0].id}/`, axiosConfig)
         .then((res) => {
           events.value = events.value.filter((dia) => dia != date.value)
-          console.log(events.value, date.value)
         })
         .catch((err) => {
           console.log(err.response);
