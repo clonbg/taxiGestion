@@ -22,7 +22,7 @@
         <div class="col-12">
           <q-input class="q-mt-md" standout v-model="total_efectivo" label="Efectivo" dense :rules="[
               (val) =>
-                (val && val >= 0 && !isNaN(val) && val <= 1000000) ||
+                (val && val >= 0 && !isNaN(val) && val <= 1000000 && dosDecimales(val)) ||
                 'Valor no válido',
             ]" />
         </div>
@@ -31,7 +31,7 @@
         <div class="col-12">
           <q-input standout v-model="total_tpv" label="TPV" dense :rules="[
               (val) =>
-                (val && val >= 0 && !isNaN(val) && val <= 1000000) ||
+                (val && val >= 0 && !isNaN(val) && val <= 1000000 && dosDecimales(val)) ||
                 'Valor no válido',
             ]" />
         </div>
@@ -40,7 +40,7 @@
         <div class="col-12">
           <q-input standout v-model="total_apps" label="Apps" dense :rules="[
               (val) =>
-                (val && val >= 0 && !isNaN(val) && val <= 1000000) ||
+                (val && val >= 0 && !isNaN(val) && val <= 1000000 && dosDecimales(val)) ||
                 'Valor no válido',
             ]" />
         </div>
@@ -51,7 +51,7 @@
             <div class="col-4 q-mb-lm q-mr-sm">
               <q-input standout v-model="varios[index - 1]" label="Varios" dense :rules="[
                   (val) =>
-                    (val && val >= -1000000 && !Number.isNaN(val) && val <= 1000000) ||
+                    (val && val >= -1000000 && !Number.isNaN(val) && val <= 1000000 && dosDecimales(val)) ||
                     'Valor no válido',
                 ]" />
             </div>
@@ -170,7 +170,7 @@ const validarVarios = () => {
     for (var i = 0; i < varios.value.length; i++) {
       if (varios.value[i] != '') { //Las dos están escritas
         if (i % 2 == 0) {
-          if (isNaN(varios.value[i]) || varios.value[i] > 1000000 || varios.value[i] < -1000000) {
+          if (isNaN(varios.value[i]) || varios.value[i] > 1000000 || varios.value[i] < -1000000 || !dosDecimales(varios.value[i])) {
             return true
           } //es un número menor de un millón
         } else {
@@ -188,14 +188,17 @@ const saveState = computed(() => {
   if (!total_efectivo.value ||
     total_efectivo.value < 0 ||
     total_efectivo.value > 1000000 ||
+    !dosDecimales(total_efectivo.value) ||
     isNaN(total_efectivo.value) ||
     !total_tpv.value ||
     total_tpv.value < 0 ||
     total_tpv.value > 1000000 ||
+    !dosDecimales(total_tpv.value) ||
     isNaN(total_tpv.value) ||
     !total_apps.value ||
     total_apps.value < 0 ||
     total_apps.value > 1000000 ||
+    !dosDecimales(total_apps.value) ||
     isNaN(total_apps.value) ||
     validarVarios() || (events.value.indexOf(date.value) == -1 && file.value == null)
   ) {
@@ -218,6 +221,18 @@ const variosMas = () => {
   varios.value.push('')
   varios.value.push('')
 
+}
+
+const dosDecimales = (num) => {
+  let pos = num.toString().lastIndexOf(".");
+  if (num && pos != -1) {
+    let cantDecimales = num.toString().length - pos
+    if (cantDecimales == 3 || cantDecimales == 2) {
+      return true
+    }
+  }
+  if (pos == -1) { return true }
+  return false
 }
 
 const subir = async () => {
