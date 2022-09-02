@@ -166,8 +166,12 @@ const getHoy = () => {
     month = "0" + month;
   }
   let day = today.getDate();
+  if (day < 10) {
+    day = "0" + day;
+  }
   date.value = year + "/" + month + "/" + day;
   hoy.value = date.value
+  console.log(date.value)
 };
 
 const events = ref([]);
