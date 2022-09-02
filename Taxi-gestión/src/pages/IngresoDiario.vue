@@ -72,7 +72,7 @@
       </span>
       <q-btn class="form-submit" type="submit" :disable="saveState" :color="saveState ? 'red' : 'green'">Guardar</q-btn>
       <q-btn class="form-submit q-ml-md q-my-md" @click="getDiarios()" color="primary">Cancelar</q-btn>
-      <q-btn class="form-submit q-ml-md q-my-md" @click="confirmaBorrar()" color="negative" :loading="loading[0]" :disable="diario[0] ? false : true">Borrar</q-btn>
+      <q-btn  v-if="diario[0] ? true : false" class="form-submit q-ml-md q-my-md" @click="confirmaBorrar()" color="negative" :loading="loading[0]" >Eliminar</q-btn>
       <q-btn :disable="validarVarios()" round color="purple" glossy icon="add_task" class="float-right q-mt-sm" @click="variosMas()" />
     </q-form>
   </q-page>
@@ -329,7 +329,7 @@ const confirmaBorrar = () => {
   if (diario.value[0]) {
     $q.dialog({
       title: "Cuidado",
-      message: "Está seguro de borrar este día?",
+      message: "¿Está seguro de eliminar este día?",
       cancel: true,
       persistent: true,
     }).onOk(async () => {

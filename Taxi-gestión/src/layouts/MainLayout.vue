@@ -108,7 +108,7 @@ const logout = async () => {
 const confirmaLogout = () => {
   $q.dialog({
     title: "Cuidado",
-    message: "Está seguro de abandonar la sesión?",
+    message: "¿Está seguro de abandonar la sesión?",
     cancel: true,
     persistent: true,
   }).onOk(() => {
