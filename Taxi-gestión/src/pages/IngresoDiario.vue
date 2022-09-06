@@ -1,79 +1,186 @@
 <template>
   <q-page class="flex flex-center">
-    <q-date v-model="date" :events="events" class="float-left" style="margin-right: 15%" today-btn :options="optionsFn" :locale="myLocale" />
-    <q-form class="form float-right" @submit.prevent="subir()" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" style="width: 30rem">
-      <q-img :src="`${taxiStore.urlServer}${imagen}`" class="imagen q-my-xl" :ratio="16 / 9">
+    <q-date
+      v-model="date"
+      :events="events"
+      class="float-left"
+      style="margin-right: 15%"
+      today-btn
+      :options="optionsFn"
+      :locale="myLocale"
+    />
+    <q-form
+      class="form float-right"
+      @submit.prevent="subir()"
+      autocorrect="off"
+      autocapitalize="off"
+      autocomplete="off"
+      spellcheck="false"
+      style="width: 30rem"
+    >
+      <q-img
+        :src="`${taxiStore.urlServer}${imagen}`"
+        class="imagen q-my-xl"
+        :ratio="16 / 9"
+      >
         <template v-slot:error>
           <div class="absolute-full flex flex-center bg-negative text-white">
             No se puede cargar la imagen
           </div>
         </template>
       </q-img>
-      <q-file v-model="file" :label="events.indexOf(date) == -1 ? 'Inserte la imagen' : 'Puede cambiar la imagen'" filled :rules="[
-              (val) =>
-                (events.indexOf(date)==-1 ? val : true) ||
-                'La imagen es obligatoria',
-            ]">
+      <q-file
+        v-model="file"
+        :label="
+          events.indexOf(date) == -1
+            ? 'Inserte la imagen'
+            : 'Puede cambiar la imagen'
+        "
+        filled
+        :rules="[
+          (val) =>
+            (events.indexOf(date) == -1 ? val : true) ||
+            'La imagen es obligatoria',
+        ]"
+      >
         <template v-slot:prepend>
           <q-icon name="attach_file" />
         </template>
       </q-file>
       <div class="row">
         <div class="col-12">
-          <q-input class="q-mt-md" standout v-model="total_efectivo" label="Efectivo" dense :rules="[
+          <q-input
+            class="q-mt-md"
+            standout
+            v-model="total_efectivo"
+            label="Efectivo"
+            dense
+            :rules="[
               (val) =>
-                (val && val >= 0 && !isNaN(val) && val <= 1000000 && dosDecimales(val)) ||
+                (val &&
+                  val >= 0 &&
+                  !isNaN(val) &&
+                  val <= 1000000 &&
+                  dosDecimales(val)) ||
                 'Valor no válido',
-            ]" />
+            ]"
+          />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <q-input standout v-model="total_tpv" label="TPV" dense :rules="[
+          <q-input
+            standout
+            v-model="total_tpv"
+            label="TPV"
+            dense
+            :rules="[
               (val) =>
-                (val && val >= 0 && !isNaN(val) && val <= 1000000 && dosDecimales(val)) ||
+                (val &&
+                  val >= 0 &&
+                  !isNaN(val) &&
+                  val <= 1000000 &&
+                  dosDecimales(val)) ||
                 'Valor no válido',
-            ]" />
+            ]"
+          />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <q-input standout v-model="total_apps" label="Apps" dense :rules="[
+          <q-input
+            standout
+            v-model="total_apps"
+            label="Apps"
+            dense
+            :rules="[
               (val) =>
-                (val && val >= 0 && !isNaN(val) && val <= 1000000 && dosDecimales(val)) ||
+                (val &&
+                  val >= 0 &&
+                  !isNaN(val) &&
+                  val <= 1000000 &&
+                  dosDecimales(val)) ||
                 'Valor no válido',
-            ]" />
+            ]"
+          />
         </div>
       </div>
       <span v-for="(item, index) in varios" :key="index">
         <div v-if="index % 2 != 0">
           <div class="row no-wrap">
             <div class="col-4 q-mb-lm q-mr-sm">
-              <q-input standout v-model="varios[index - 1]" label="Varios" dense :rules="[
+              <q-input
+                standout
+                v-model="varios[index - 1]"
+                label="Varios"
+                dense
+                :rules="[
                   (val) =>
-                    (val && val >= -1000000 && !Number.isNaN(val) && val <= 1000000 && dosDecimales(val)) ||
+                    (val &&
+                      val >= -1000000 &&
+                      !Number.isNaN(val) &&
+                      val <= 1000000 &&
+                      dosDecimales(val)) ||
                     'Valor no válido',
-                ]" />
+                ]"
+              />
             </div>
             <div class="col-7">
-              <q-input standout v-model="varios[index]" label="Varios" dense :rules="[
+              <q-input
+                standout
+                v-model="varios[index]"
+                label="Varios"
+                dense
+                :rules="[
                   (val) =>
                     (val &&
                       val.toString().length >= 3 &&
                       val.toString().length <= 25) ||
                     'Valor no válido',
-                ]" />
+                ]"
+              />
             </div>
             <div class="col-2 nowrap">
-              <q-icon name="delete" color="teal" size="3em" @click="borrar(index)" />
+              <q-icon
+                name="delete"
+                color="teal"
+                size="3em"
+                @click="borrar(index)"
+              />
             </div>
           </div>
         </div>
       </span>
-      <q-btn class="form-submit" type="submit" :disable="saveState" :color="saveState ? 'red' : 'green'">Guardar</q-btn>
-      <q-btn class="form-submit q-ml-md q-my-md" @click="getDiarios()" color="primary">Cancelar</q-btn>
-      <q-btn  v-if="diario[0] ? true : false" class="form-submit q-ml-md q-my-md" @click="confirmaBorrar()" color="negative" :loading="loading[0]" >Eliminar</q-btn>
-      <q-btn :disable="validarVarios()" round color="purple" glossy icon="add_task" class="float-right q-mt-sm" @click="variosMas()" />
+      <q-btn
+        class="form-submit"
+        type="submit"
+        :disable="saveState"
+        :color="saveState ? 'red' : 'green'"
+        >Guardar</q-btn
+      >
+      <q-btn
+        class="form-submit q-ml-md q-my-md"
+        @click="getDiarios()"
+        color="primary"
+        >Cancelar</q-btn
+      >
+      <q-btn
+        v-if="diario[0] ? true : false"
+        class="form-submit q-ml-md q-my-md"
+        @click="confirmaBorrar()"
+        color="negative"
+        :loading="loading[0]"
+        >Eliminar</q-btn
+      >
+      <q-btn
+        :disable="validarVarios()"
+        round
+        color="purple"
+        glossy
+        icon="add_task"
+        class="float-right q-mt-sm"
+        @click="variosMas()"
+      />
     </q-form>
   </q-page>
 </template>
@@ -95,7 +202,7 @@ const simulateProgressBorrar = (number) => {
   setTimeout(() => {
     // we're done, we reset loading state
     loading.value[number] = false;
-    events.value = events.value.filter((dia) => dia != date.value)
+    events.value = events.value.filter((dia) => dia != date.value);
     eliminarDiario();
     Notify.create({
       type: "positive",
@@ -125,14 +232,17 @@ const file = ref(null);
 const hoy = ref(null);
 
 const myLocale = {
-  days: 'Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado'.split('_'),
-  daysShort: 'Dom_Lun_Mar_Mié_Jue_Vie_Sáb'.split('_'),
-  months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
-  monthsShort: 'Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic'.split('_'),
+  days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
+  daysShort: "Dom_Lun_Mar_Mié_Jue_Vie_Sáb".split("_"),
+  months:
+    "Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre".split(
+      "_"
+    ),
+  monthsShort: "Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic".split("_"),
   firstDayOfWeek: 1, // 0-6, 0 - Sunday, 1 Monday, ...
   format24h: true,
-  pluralDay: 'dias'
-}
+  pluralDay: "dias",
+};
 
 watchEffect(() => {
   diario.value = diariosTaxi.value.filter(
@@ -155,8 +265,8 @@ watchEffect(() => {
 });
 
 const optionsFn = (fecha) => {
-  return fecha >= '2022/01/01' && fecha <= hoy.value
-}
+  return fecha >= "2022/01/01" && fecha <= hoy.value;
+};
 
 const getHoy = () => {
   let today = new Date();
@@ -170,8 +280,8 @@ const getHoy = () => {
     day = "0" + day;
   }
   date.value = year + "/" + month + "/" + day;
-  hoy.value = date.value
-  console.log(date.value)
+  hoy.value = date.value;
+  console.log(date.value);
 };
 
 const events = ref([]);
@@ -207,24 +317,31 @@ const getDiarios = async () => {
 const validarVarios = () => {
   if (varios.value[0]) {
     for (var i = 0; i < varios.value.length; i++) {
-      if (varios.value[i] != '') { //Las dos están escritas
+      if (varios.value[i] != "") {
+        //Las dos están escritas
         if (i % 2 == 0) {
-          if (Number.isNaN(varios.value[i]) || varios.value[i] > 1000000 || varios.value[i] < -1000000 || !dosDecimales(varios.value[i])) {
-            return true
+          if (
+            Number.isNaN(varios.value[i]) ||
+            varios.value[i] > 1000000 ||
+            varios.value[i] < -1000000 ||
+            !dosDecimales(varios.value[i])
+          ) {
+            return true;
           } //es un número menor de un millón
         } else {
           if (varios.value[i].length > 25 || varios.value[i].length < 3) {
-            return true
+            return true;
           } //es un string entre 2 y 24 letras
         }
-      } else return true
+      } else return true;
     }
   }
   return false;
-}
+};
 
 const saveState = computed(() => {
-  if (!total_efectivo.value ||
+  if (
+    !total_efectivo.value ||
     total_efectivo.value < 0 ||
     total_efectivo.value > 1000000 ||
     !dosDecimales(total_efectivo.value) ||
@@ -239,7 +356,8 @@ const saveState = computed(() => {
     total_apps.value > 1000000 ||
     !dosDecimales(total_apps.value) ||
     isNaN(total_apps.value) ||
-    validarVarios() || (events.value.indexOf(date.value) == -1 && file.value == null)
+    validarVarios() ||
+    (events.value.indexOf(date.value) == -1 && file.value == null)
   ) {
     return true;
   }
@@ -253,24 +371,25 @@ const borrar = (i) => {
 
 const variosMas = () => {
   if (!varios.value) {
-    varios.value = []
+    varios.value = [];
   }
-  varios.value.push('')
-  varios.value.push('')
-
-}
+  varios.value.push("");
+  varios.value.push("");
+};
 
 const dosDecimales = (num) => {
   let pos = num.toString().lastIndexOf(".");
   if (num && pos != -1) {
-    let cantDecimales = num.toString().length - pos
+    let cantDecimales = num.toString().length - pos;
     if (cantDecimales == 3 || cantDecimales == 2) {
-      return true
+      return true;
     }
   }
-  if (pos == -1) { return true }
-  return false
-}
+  if (pos == -1) {
+    return true;
+  }
+  return false;
+};
 
 const subir = async () => {
   await taxiStore.refresToken();
@@ -292,16 +411,20 @@ const subir = async () => {
     }
 
     formData.append("taxista_id", taxiStore.user.id);
-    if (file.value) { formData.append("imagen", file.value) }
+    if (file.value) {
+      formData.append("imagen", file.value);
+    }
     if (events.value.indexOf(date.value) != -1) {
       await api
         .put(`/ingreso_diario/${diario.value[0].id}/`, formData, axiosConfig)
         .then((res) => {
           imagen.value = res.data.imagen;
           date.value = res.data.dia.replaceAll("-", "/");
-          let item = diariosTaxi.value.filter((item) => item.id == diario.value[0].id)
-          let pos = diariosTaxi.value.lastIndexOf(item[0])
-          diariosTaxi.value[pos] = res.data
+          let item = diariosTaxi.value.filter(
+            (item) => item.id == diario.value[0].id
+          );
+          let pos = diariosTaxi.value.lastIndexOf(item[0]);
+          diariosTaxi.value[pos] = res.data;
           file.value = null;
         })
         .catch((err) => {
@@ -321,7 +444,6 @@ const subir = async () => {
           console.log(err.response);
         });
     }
-
   }
 };
 
@@ -333,13 +455,12 @@ const confirmaBorrar = () => {
       cancel: true,
       persistent: true,
     }).onOk(async () => {
-      await simulateProgressBorrar(0)
+      await simulateProgressBorrar(0);
     });
   }
-}
+};
 
 const eliminarDiario = async () => {
-
   await taxiStore.refresToken();
   if (taxiStore.access_token) {
     let axiosConfig = {
@@ -347,7 +468,7 @@ const eliminarDiario = async () => {
         Authorization: `Bearer ${taxiStore.access_token}`,
       },
     };
-    let pos = diariosTaxi.value.lastIndexOf(diario.value[0])
+    let pos = diariosTaxi.value.lastIndexOf(diario.value[0]);
     if (pos != -1) {
       await api
         .delete(`/ingreso_diario/${diario.value[0].id}/`, axiosConfig)
@@ -355,10 +476,10 @@ const eliminarDiario = async () => {
         .catch((err) => {
           console.log(err.response);
         });
-      diariosTaxi.value.splice(pos, 1)
+      diariosTaxi.value.splice(pos, 1);
     }
   }
-}
+};
 
 onMounted(async () => {
   await taxiStore.get_ingresos_diarios();
@@ -368,7 +489,7 @@ onMounted(async () => {
     }
   });
   getHoy();
-  diariosTaxi.value.sort(function(a, b) {
+  diariosTaxi.value.sort(function (a, b) {
     return new Date(b.dia) - new Date(a.dia);
   });
   getEvents();
@@ -376,7 +497,6 @@ onMounted(async () => {
     (dia) => dia.dia.replaceAll("-", "/") == date.value
   );
 });
-
 </script>
 <style scoped>
 .imagen {
@@ -384,5 +504,4 @@ onMounted(async () => {
   height: 15rem;
   border: 10px solid #666;
 }
-
 </style>
