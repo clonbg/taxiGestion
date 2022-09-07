@@ -43,7 +43,6 @@ class User(AbstractUser):
     username = None
     first_name = None
     last_name = None
-    is_staff = None
     dni = models.CharField(max_length=25, unique=True)
     nombre = models.CharField(max_length=20)
     apellidos = models.CharField(max_length=50)

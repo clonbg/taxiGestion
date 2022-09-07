@@ -39,7 +39,6 @@ class UserCreationSerializers(serializers.ModelSerializer):
         user = User(**validated_data)
         user.set_password(validated_data['password'])
         user.save()
-        updated_user.set_password('')
         return user
 
     def validate(self, attrs):
@@ -86,5 +85,4 @@ class UserDetailSerializers(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         updated_user = super().update(instance, validated_data)
         updated_user.save()
-        updated_user.set_password('')
         return updated_user
