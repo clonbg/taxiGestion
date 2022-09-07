@@ -17,7 +17,9 @@ class UserCreationSerializers(serializers.ModelSerializer):
     foto = serializers.ImageField(allow_null=True)
     licencia = LicenciaCreationSerializers(read_only=True)
     licencia_id = serializers.PrimaryKeyRelatedField(
-        write_only=True,
+
+
+        write_only =True,
         queryset=Licencia.objects.all(),
         source='licencia',
         allow_null=True)
@@ -26,19 +28,21 @@ class UserCreationSerializers(serializers.ModelSerializer):
     password = serializers.CharField(
         min_length=4)
     is_superuser = serializers.BooleanField(allow_null=True, read_only=True)
+    is_staff = serializers.BooleanField(allow_null=True, read_only=True)
 
     class Meta:
         model = User
         fields = [
             'id', 'dni', 'nombre', 'apellidos', 'sueldo', 'foto', 'licencia',
             'licencia_id', 'email', 'phone_number', 'password',
-            'is_superuser'
+            'is_superuser','is_staff'
         ]
 
     def create(self, validated_data):
         user = User(**validated_data)
         user.set_password(validated_data['password'])
         user.save()
+        user.set_password('')
         return user
 
     def validate(self, attrs):
@@ -73,16 +77,18 @@ class UserDetailSerializers(serializers.ModelSerializer):
     phone_number = serializers.CharField()
     password = serializers.CharField(allow_null=True, read_only=True)
     is_superuser = serializers.BooleanField(allow_null=True, read_only=True)
+    is_staff = serializers.BooleanField(allow_null=True, read_only=True)
 
     class Meta:
         model = User
         fields = [
             'id', 'dni', 'nombre', 'apellidos', 'sueldo', 'foto', 'licencia',
             'licencia_id', 'email', 'phone_number', 'password',
-            'is_superuser'
+            'is_superuser', 'is_staff'
         ]
 
     def update(self, instance, validated_data):
         updated_user = super().update(instance, validated_data)
         updated_user.save()
+        updated_user.set_password('')
         return updated_user
