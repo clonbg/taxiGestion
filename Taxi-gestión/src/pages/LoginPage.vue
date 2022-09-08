@@ -31,6 +31,12 @@
       />
       <q-btn class="form-submit" type="submit">Login</q-btn>
     </form>
+    <p
+      @click="openURL(`${taxiStore.urlServer}/reset_password/`)"
+      class="title cursor-pointer text-secondary"
+    >
+      ¿Ha perdido la contraseña o tiene que activar la cuenta?
+    </p>
   </div>
 </template>
 
@@ -38,6 +44,7 @@
 import { ref } from "vue";
 import { useTaxiStore } from "../stores/taxi-store";
 import { useRouter } from "vue-router";
+import { openURL } from "quasar";
 
 const router = useRouter();
 
