@@ -1,6 +1,5 @@
 from .models import User
 from rest_framework import serializers
-from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from licencias.models import Licencia
 from licencias.serializers import LicenciaCreationSerializers
@@ -17,16 +16,13 @@ class UserCreationSerializers(serializers.ModelSerializer):
     foto = serializers.ImageField(allow_null=True)
     licencia = LicenciaCreationSerializers(read_only=True)
     licencia_id = serializers.PrimaryKeyRelatedField(
-
-
-        write_only =True,
+        write_only=True,
         queryset=Licencia.objects.all(),
         source='licencia',
         allow_null=True)
     email = serializers.EmailField(max_length=80)
     phone_number = serializers.CharField()
-    password = serializers.CharField(
-        min_length=4)
+    password = serializers.CharField(min_length=4)
     is_superuser = serializers.BooleanField(allow_null=True, read_only=True)
     is_staff = serializers.BooleanField(allow_null=True, read_only=True)
 
@@ -35,7 +31,7 @@ class UserCreationSerializers(serializers.ModelSerializer):
         fields = [
             'id', 'dni', 'nombre', 'apellidos', 'sueldo', 'foto', 'licencia',
             'licencia_id', 'email', 'phone_number', 'password',
-            'is_superuser','is_staff'
+            'is_superuser', 'is_staff'
         ]
 
     def create(self, validated_data):
