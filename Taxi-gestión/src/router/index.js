@@ -35,27 +35,26 @@ export default route(function (/* { store, ssrContext } */) {
       return next("/login"); //Si es protegida y NO existe el access_token
     }
 
-    if (to.path == "/login") {
+    if (to.path == "/login" || to.path == "/login/") {
       if (taxiStore.access_token) {
         return next("/"); //Si es la página de login y existe el access_token
       }
     }
-    console.log(to.path)
-    if (to.path == "/graficas/") {
+    console.log(to.path);
+    if (to.path == "/graficas" || to.path == "/graficas/") {
       await taxiStore.refresToken();
 
-      if (taxiStore.access_token) {
-        if (taxiStore.user == null) {
+      if (!taxiStore.access_token) {
+        return next("/");
+      } else {
+        if (!taxiStore.user.is_superuser) {
           return next("/");
         }
-        if (taxiStore.user.is_superuser) {
-          return next();
-        } else return next("/");
       }
     }
 
     next();
-  })
+  });
 
   return Router;
 });
