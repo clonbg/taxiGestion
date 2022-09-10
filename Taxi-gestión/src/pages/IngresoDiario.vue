@@ -207,7 +207,7 @@ const simulateProgressBorrar = (number) => {
     events.value = events.value.filter((dia) => dia != date.value);
     eliminarDiario();
     Notify.create({
-      type: "positive",
+      type: "warning",
       message: "Ha sido eliminado correctamente",
     });
   }, 3000);
@@ -237,6 +237,10 @@ const simulateProgressGuardar = (number, res) => {
       events.value.push(res.data.dia.replaceAll("-", "/"));
       file.value = null;
     }
+    Notify.create({
+      type: "positive",
+      message: "Ha sido guardado correctamente",
+    });
   }, 3000);
 };
 
@@ -451,6 +455,10 @@ const subir = async () => {
         })
         .catch((err) => {
           console.log(err.response);
+          Notify.create({
+            type: "negative",
+            message: "Halgo ha fallado",
+          });
         });
     } else {
       await api
@@ -460,6 +468,10 @@ const subir = async () => {
         })
         .catch((err) => {
           console.log(err.response);
+          Notify.create({
+            type: "negative",
+            message: "Halgo ha fallado",
+          });
         });
     }
   }
