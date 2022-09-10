@@ -156,6 +156,7 @@
         type="submit"
         :disable="saveState"
         :color="saveState ? 'red' : 'green'"
+        :loading="loadingGuardar[0]"
         >Guardar</q-btn
       >
       <q-btn
@@ -169,7 +170,7 @@
         class="form-submit q-ml-md q-my-md"
         @click="confirmaBorrar()"
         color="negative"
-        :loading="loading[0]"
+        :loading="loadingBorrar[0]"
         >Eliminar</q-btn
       >
       <q-btn
@@ -190,24 +191,52 @@ import { onMounted, ref, watchEffect, computed } from "vue";
 import { api } from "../boot/axios";
 import { useQuasar, Notify } from "quasar";
 
-const loading = ref([false, false, false, false, false, false]);
+const loadingBorrar = ref([false, false, false, false, false, false]);
+const loadingGuardar = ref([false, false, false, false, false, false]);
 
 const progress = ref(false);
 
 const simulateProgressBorrar = (number) => {
   // we set loading state
-  loading.value[number] = true;
+  loadingBorrar.value[number] = true;
 
   // simulate a delay
   setTimeout(() => {
     // we're done, we reset loading state
-    loading.value[number] = false;
+    loadingBorrar.value[number] = false;
     events.value = events.value.filter((dia) => dia != date.value);
     eliminarDiario();
     Notify.create({
       type: "positive",
       message: "Ha sido eliminado correctamente",
     });
+  }, 3000);
+};
+
+const simulateProgressGuardar = (number, res) => {
+  // we set loading state
+  loadingGuardar.value[number] = true;
+
+  // simulate a delay
+  setTimeout(() => {
+    // we're done, we reset loading state
+    loadingGuardar.value[number] = false;
+    if (events.value.indexOf(date.value) != -1) {
+      imagen.value = res.data.imagen;
+      date.value = res.data.dia.replaceAll("-", "/");
+      let item = diariosTaxi.value.filter(
+        (item) => item.id == diario.value[0].id
+      );
+      let pos = diariosTaxi.value.lastIndexOf(item[0]);
+      diariosTaxi.value[pos] = res.data;
+      file.value = null;
+    } else {
+      imagen.value = res.data.imagen;
+      date.value = res.data.dia.replaceAll("-", "/");
+      diariosTaxi.value.push(res.data);
+      events.value.push(res.data.dia.replaceAll("-", "/"));
+      file.value = null;
+    }
   }, 3000);
 };
 
@@ -418,14 +447,7 @@ const subir = async () => {
       await api
         .put(`/ingreso_diario/${diario.value[0].id}/`, formData, axiosConfig)
         .then((res) => {
-          imagen.value = res.data.imagen;
-          date.value = res.data.dia.replaceAll("-", "/");
-          let item = diariosTaxi.value.filter(
-            (item) => item.id == diario.value[0].id
-          );
-          let pos = diariosTaxi.value.lastIndexOf(item[0]);
-          diariosTaxi.value[pos] = res.data;
-          file.value = null;
+          simulateProgressGuardar(0, res);
         })
         .catch((err) => {
           console.log(err.response);
@@ -434,11 +456,7 @@ const subir = async () => {
       await api
         .post(`/ingreso_diario/create/`, formData, axiosConfig)
         .then((res) => {
-          imagen.value = res.data.imagen;
-          date.value = res.data.dia.replaceAll("-", "/");
-          diariosTaxi.value.push(res.data);
-          events.value.push(res.data.dia.replaceAll("-", "/"));
-          file.value = null;
+          simulateProgressGuardar(0, res);
         })
         .catch((err) => {
           console.log(err.response);
