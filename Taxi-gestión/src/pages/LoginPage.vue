@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <h3 class="title">Gestión de taxis</h3>
+    <h5 class="title">Gestión de taxis</h5>
     <form class="form" @submit.prevent="login()">
       <q-input
         class="q-mb-md"
@@ -29,7 +29,13 @@
           (val) => (val && val.length > 3) || 'Password mínimo 4 caracteres',
         ]"
       />
-      <q-btn class="form-submit" type="submit">Login</q-btn>
+      <q-btn
+        class="form-submit"
+        type="submit"
+        :loading="loading[0]"
+        @click="progress = true"
+        >Login</q-btn
+      >
     </form>
     <p
       @click="openURL(`${taxiStore.urlServer}/reset_password/`)"
@@ -45,6 +51,26 @@ import { ref } from "vue";
 import { useTaxiStore } from "../stores/taxi-store";
 import { useRouter } from "vue-router";
 import { openURL } from "quasar";
+const loading = ref([false, false, false, false, false, false]);
+
+const progress = ref(false);
+
+const simulateProgress = (number) => {
+  // we set loading state
+  loading.value[number] = true;
+
+  // simulate a delay
+  setTimeout(async () => {
+    // we're done, we reset loading state
+    loading.value[number] = false;
+    if (email.value && password.value) {
+      await taxiStore.access(email.value, password.value);
+      if (taxiStore.access_token) {
+        router.push("/");
+      }
+    }
+  }, 3000);
+};
 
 const router = useRouter();
 
@@ -53,13 +79,8 @@ const taxiStore = useTaxiStore();
 const email = ref(null);
 const password = ref(null);
 
-const login = async () => {
-  if (email.value && password.value) {
-    await taxiStore.access(email.value, password.value);
-    if (taxiStore.access_token) {
-      router.push("/");
-    }
-  }
+const login = () => {
+  simulateProgress(0);
 };
 </script>
 
