@@ -20,7 +20,7 @@
     >
       <q-img
         :src="`${taxiStore.urlServer}${imagen}`"
-        class="imagen q-my-xl"
+        class="q-my-xl zoom"
         :ratio="16 / 9"
       >
         <template v-slot:error>
@@ -190,6 +190,8 @@ import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref, watchEffect, computed } from "vue";
 import { api } from "../boot/axios";
 import { useQuasar, Notify } from "quasar";
+
+const esverdad = true;
 
 const loadingBorrar = ref([false, false, false, false, false, false]);
 const loadingGuardar = ref([false, false, false, false, false, false]);
@@ -529,9 +531,11 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
-.imagen {
-  width: 15rem;
-  height: 15rem;
-  border: 10px solid #666;
+.zoom {
+  transition: transform 0.2s;
+}
+
+.zoom:hover {
+  transform: scale(1.2);
 }
 </style>
