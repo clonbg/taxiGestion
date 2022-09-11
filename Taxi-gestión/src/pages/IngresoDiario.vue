@@ -20,9 +20,17 @@
     >
       <q-img
         :src="`${taxiStore.urlServer}${imagen}`"
-        class="q-my-xl zoom"
+        class="q-my-xl"
+        :class="{
+          zoom: `${taxiStore.urlServer}${imagen}` != `${taxiStore.urlServer}`,
+        }"
         :ratio="16 / 9"
-      >
+        ><div
+          class="absolute-bottom-right text-subtitle2 cursor-pointer"
+          @click="openURL(`${taxiStore.urlServer}${imagen}`)"
+        >
+          Abrir
+        </div>
         <template v-slot:error>
           <div class="absolute-full flex flex-center bg-negative text-white">
             No se puede cargar la imagen
@@ -189,9 +197,7 @@
 import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, ref, watchEffect, computed } from "vue";
 import { api } from "../boot/axios";
-import { useQuasar, Notify } from "quasar";
-
-const esverdad = true;
+import { useQuasar, Notify, openURL } from "quasar";
 
 const loadingBorrar = ref([false, false, false, false, false, false]);
 const loadingGuardar = ref([false, false, false, false, false, false]);
@@ -265,6 +271,10 @@ const date = ref(null);
 const file = ref(null);
 
 const hoy = ref(null);
+
+const abrirImagen = () => {
+  openURL(`http://localhost:8000/imgs/2022/09/11/captur.jpg`);
+};
 
 const myLocale = {
   days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
@@ -534,7 +544,6 @@ onMounted(async () => {
 .zoom {
   transition: transform 0.2s;
 }
-
 .zoom:hover {
   transform: scale(1.2);
 }
