@@ -1,15 +1,11 @@
 <template>
   <q-page padding>
     <h3>Página de ingresos semanales</h3>
+        <p><pre>{{ semanalesTaxi }}</pre></p>
+
   </q-page>
 </template>
 
-<!-- <template>
-  <q-page padding>
-    <h3>Página de ingresos diarios</h3>
-    <p><pre>{{ diariosTaxi }}</pre></p>
-  </q-page>
-</template>
 
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
@@ -17,15 +13,14 @@ import { onMounted, computed, ref } from "vue";
 
 const taxiStore = useTaxiStore();
 
-const diariosTaxi = ref([]);
+const semanalesTaxi = ref([]);
 
 onMounted(async () => {
-  await taxiStore.get_ingresos_diarios();
-  const tmp = taxiStore.diarios.forEach((element) => {
-console.log(localStorage.getItem('email_taxi_user'))
-    if (element.taxista?.email == localStorage.getItem('email_taxi_user')) {
-      diariosTaxi.value.push(element);
+  await taxiStore.get_ingresos_semanales()
+  taxiStore.semanales.forEach((element) => {
+    if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
+      semanalesTaxi.value.push(element);
     }
   });
 });
-</script> -->
+</script>
