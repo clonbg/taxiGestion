@@ -124,7 +124,6 @@ export const useTaxiStore = defineStore("taxi", () => {
       await api
         .get("/ingreso_semanal/create/", axiosConfig)
         .then((res) => {
-          console.log(res.data)
           semanales.value = res.data;
         })
         .catch((err) => {
