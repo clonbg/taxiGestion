@@ -5,11 +5,11 @@
       class="float-left"
       style="margin-right: 15%"
       :locale="myLocale"
-      range multiple
+      range
+      multiple
     />
   </q-page>
 </template>
-
 
 <script setup>
 import { useTaxiStore } from "../stores/taxi-store";
@@ -19,8 +19,7 @@ const taxiStore = useTaxiStore();
 
 const semanalesTaxi = ref([]);
 
-const dates = ref([{ from: '2022/09/01', to: '2022/09/10' },
-        { from: '2022/09/21', to: '2022/09/25' }])
+const dates = ref([]);
 
 const myLocale = {
   days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
@@ -36,11 +35,20 @@ const myLocale = {
 };
 
 onMounted(async () => {
-  await taxiStore.get_ingresos_semanales()
+  await taxiStore.get_ingresos_semanales();
   taxiStore.semanales.forEach((element) => {
     if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
       semanalesTaxi.value.push(element);
     }
   });
+  if (semanalesTaxi.value.length > 0) {
+    for (var i = semanalesTaxi.value.length - 1; i >= 0; i--) {
+      let item = {
+        from: semanalesTaxi.value[i].dia_inicio.replaceAll("-", "/"),
+        to: semanalesTaxi.value[i].dia_fin.replaceAll("-", "/"),
+      };
+      dates.value.push(item);
+    }
+  }
 });
 </script>
