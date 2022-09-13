@@ -55,12 +55,11 @@ import { onMounted, computed, ref, watchEffect } from "vue";
 import moment from "moment";
 import { useQuasar, Notify, openURL } from "quasar";
 
-
 const taxiStore = useTaxiStore();
 const semanalesTaxi = ref([]);
 const semanal = ref(null);
 const imagen_semana = ref(null);
-const date = ref([]);
+const date = ref(null);
 const hoy = ref(null);
 const events = ref([]);
 
@@ -108,15 +107,17 @@ const optionsFn = (fecha) => {
 };
 
 watchEffect(() => {
-  semanal.value = semanalesTaxi.value.filter(
-    (dia) =>
-      moment(dia.dia_inicio) <= moment(date.value) &&
-      moment(dia.dia_fin) >= moment(date.value)
-  );
-  if (semanal.value[0]) {
-    imagen_semana.value = semanal.value[0].imagen_semana;
-  } else {
-    imagen_semana.value = "";
+  if (date.value) {
+    semanal.value = semanalesTaxi.value.filter(
+      (dia) =>
+        moment(dia.dia_inicio) <= new Date(date.value) &&
+        moment(dia.dia_fin) >= new Date(date.value)
+    );
+    if (semanal.value[0]) {
+      imagen_semana.value = semanal.value[0].imagen_semana;
+    } else {
+      imagen_semana.value = "";
+    }
   }
 });
 
@@ -134,8 +135,8 @@ onMounted(async () => {
   getEvents();
   semanal.value = semanalesTaxi.value.filter(
     (dia) =>
-      moment(dia.dia_inicio) <= moment(date.value) &&
-      moment(dia.dia_fin) >= moment(date.value)
+      moment(dia.dia_inicio) <= new Date(date.value) &&
+      moment(dia.dia_fin) >= new Date(date.value)
   );
 });
 </script>
