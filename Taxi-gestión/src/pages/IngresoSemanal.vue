@@ -1,7 +1,5 @@
 <template>
   <q-page class="flex flex-center">
-    <p><pre>{{ date }}</pre></p>
-    <p><pre>{{ semanalesTaxi }}</pre></p>
     <q-date
       v-model="date"
       :events="events"
@@ -11,6 +9,17 @@
       :options="optionsFn"
       :locale="myLocale"
     />
+    <q-form
+      class="form float-right"
+      @submit.prevent="subir()"
+      autocorrect="off"
+      autocapitalize="off"
+      autocomplete="off"
+      spellcheck="false"
+      style="width: 30rem"
+    >
+      Aquí va el formulario
+    </q-form>
   </q-page>
 </template>
 
@@ -58,14 +67,15 @@ const getEvents = () => {
   semanalesTaxi.value.forEach((element) => {
     let fecha1 = moment(element.dia_inicio)
     let fecha2 = moment(element.dia_fin)
-    let resta = fecha2.from(fecha1)
-    console.log(fecha1.format(), fecha2.format(), resta);
-    for (var i = 0; fecha1<=fecha2; i++) {
+    for (;fecha1<=fecha2;) {
       events.value.push(fecha1.format("YYYY/MM/DD"))
       fecha1.add(1,'day')
     }
   });
-  //events.value.push(element.dia.replaceAll("-", "/"));
+};
+
+const optionsFn = (fecha) => {
+  return fecha >= "2022/01/01" && fecha <= hoy.value;
 };
 
 onMounted(async () => {
