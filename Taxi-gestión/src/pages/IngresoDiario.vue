@@ -19,7 +19,11 @@
       style="width: 30rem"
     >
       <q-img
-        :src="`${taxiStore.urlServer}${imagen}`"
+        :src="
+          `${taxiStore.urlServer}${imagen}` != `${taxiStore.urlServer}`
+            ? `${taxiStore.urlServer}${imagen}`
+            : ' '
+        "
         class="q-my-xl"
         :class="{
           zoom: `${taxiStore.urlServer}${imagen}` != `${taxiStore.urlServer}`,
