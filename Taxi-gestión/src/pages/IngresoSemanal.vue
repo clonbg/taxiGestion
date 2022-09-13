@@ -45,6 +45,52 @@
           </div>
         </template>
       </q-img>
+      <q-file
+        v-model="file"
+        :label="
+          events.indexOf(date) == -1
+            ? 'Inserte la imagen'
+            : 'Puede cambiar la imagen'
+        "
+        filled
+        :rules="[
+          (val) =>
+            (events.indexOf(date) == -1 ? val : true) ||
+            'La imagen es obligatoria',
+        ]"
+      >
+        <template v-slot:prepend>
+          <q-icon name="attach_file" />
+        </template>
+      </q-file>
+      <div class="row">
+        <div class="col-6">
+          <div class="q-mt-md" style="max-width: 300px">
+            <q-input filled v-model="dia_inicio" mask="date" :rules="['date']" :locale="myLocale">
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy
+                    cover
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-date v-model="dia_inicio">
+                      <div class="row items-center justify-end">
+                        <q-btn
+                          v-close-popup
+                          label="Close"
+                          color="primary"
+                          flat
+                        />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+        </div>
+      </div>
     </q-form>
   </q-page>
 </template>
@@ -62,6 +108,8 @@ const imagen_semana = ref(null);
 const date = ref(null);
 const hoy = ref(null);
 const events = ref([]);
+const file = ref(null);
+const dia_inicio = ref(null);
 
 const myLocale = {
   days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
@@ -115,8 +163,10 @@ watchEffect(() => {
     );
     if (semanal.value[0]) {
       imagen_semana.value = semanal.value[0].imagen_semana;
+      dia_inicio.value = moment(semanalesTaxi.value[0].dia_inicio).format()
     } else {
       imagen_semana.value = "";
+      dia_inicio.value = "";
     }
   }
 });
@@ -140,3 +190,12 @@ onMounted(async () => {
   );
 });
 </script>
+
+<style scoped>
+.zoom {
+  transition: transform 0.2s;
+}
+.zoom:hover {
+  transform: scale(1.2);
+}
+</style>
