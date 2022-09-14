@@ -66,7 +66,11 @@
       <div class="row">
         <div class="col-6">
           <div class="q-mt-md" style="max-width: 300px">
-            <q-input filled v-model="dia_inicio" mask="date" :rules="['date']" :locale="myLocale">
+            <q-input filled v-model="dia_inicio" mask="##/##/####" :rules="[
+          (val) =>
+            (fechaValida(val)) ||
+            'La fecha no es válida',
+        ]" :locale="myLocale">
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy
@@ -74,7 +78,7 @@
                     transition-show="scale"
                     transition-hide="scale"
                   >
-                    <q-date v-model="dia_inicio">
+                    <q-date v-model="dia_inicio" mask="DD-MM-YYYY">
                       <div class="row items-center justify-end">
                         <q-btn
                           v-close-popup
@@ -163,13 +167,17 @@ watchEffect(() => {
     );
     if (semanal.value[0]) {
       imagen_semana.value = semanal.value[0].imagen_semana;
-      dia_inicio.value = moment(semanalesTaxi.value[0].dia_inicio).format()
+      dia_inicio.value = moment(semanalesTaxi.value[0].dia_inicio).format('DD/MM/YYYY')
     } else {
       imagen_semana.value = "";
       dia_inicio.value = "";
     }
   }
 });
+
+const fechaValida = (f) => {
+  return true
+}
 
 onMounted(async () => {
   await taxiStore.get_ingresos_semanales();
