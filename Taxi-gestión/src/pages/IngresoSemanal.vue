@@ -80,7 +80,7 @@
                     transition-show="scale"
                     transition-hide="scale"
                   >
-                    <q-date v-model="dia_inicio" mask="DD-MM-YYYY">
+                    <q-date v-model="dia_inicio" mask="DD/MM/YYYY">
                       <div class="row items-center justify-end">
                         <q-btn
                           v-close-popup
@@ -112,7 +112,7 @@
                     transition-show="scale"
                     transition-hide="scale"
                   >
-                    <q-date v-model="dia_fin" mask="DD-MM-YYYY">
+                    <q-date v-model="dia_fin" mask="DD/MM/YYYY">
                       <div class="row items-center justify-end">
                         <q-btn
                           v-close-popup
