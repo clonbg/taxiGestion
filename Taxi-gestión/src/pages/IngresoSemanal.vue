@@ -67,11 +67,11 @@
         <div class="col-6">
           <div class="q-mt-md" style="max-width: 300px">
             <q-input
+              label="día inicial"
               filled
               v-model="dia_inicio"
               mask="##/##/####"
               :rules="[(val) => fechaValida(val) || 'La fecha no es válida']"
-              :locale="myLocale"
             >
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -81,6 +81,38 @@
                     transition-hide="scale"
                   >
                     <q-date v-model="dia_inicio" mask="DD-MM-YYYY">
+                      <div class="row items-center justify-end">
+                        <q-btn
+                          v-close-popup
+                          label="Close"
+                          color="primary"
+                          flat
+                        />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="q-mt-md q-ml-sm" style="max-width: 300px">
+            <q-input
+              label="día final"
+              filled
+              v-model="dia_fin"
+              mask="##/##/####"
+              :rules="[(val) => fechaValida(val) || 'La fecha no es válida']"
+            >
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy
+                    cover
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-date v-model="dia_fin" mask="DD-MM-YYYY">
                       <div class="row items-center justify-end">
                         <q-btn
                           v-close-popup
@@ -116,6 +148,7 @@ const hoy = ref(null);
 const events = ref([]);
 const file = ref(null);
 const dia_inicio = ref(null);
+const dia_fin = ref(null);
 
 const myLocale = {
   days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
@@ -172,16 +205,20 @@ watchEffect(() => {
       dia_inicio.value = moment(semanalesTaxi.value[0].dia_inicio).format(
         "DD/MM/YYYY"
       );
+      dia_fin.value = moment(semanalesTaxi.value[0].dia_fin).format(
+        "DD/MM/YYYY"
+      );
     } else {
       imagen_semana.value = "";
       dia_inicio.value = "";
+      dia_fin.value=''
     }
   }
 });
 
 const fechaValida = (f) => {
   if (moment(f.split("/").reverse().join("-")).isValid() && f.length == 10) {
-    return true
+    return true;
   }
   return false;
 };
