@@ -1,7 +1,5 @@
 <template>
   <q-page class="flex flex-center">
-    {{ semanalesTaxi }}
-    {{ semanal }}
     <q-date
       v-model="date"
       :events="events"
@@ -135,6 +133,63 @@
           />
         </div>
       </div>
+      <div class="row">
+        <div class="col-12">
+          <q-input
+            standout
+            v-model="total_tpv_semana"
+            label="TPV"
+            dense
+            :rules="[
+              (val) =>
+                (val &&
+                  val >= 0 &&
+                  !isNaN(val) &&
+                  val <= 1000000 &&
+                  dosDecimales(val)) ||
+                'Valor no válido',
+            ]"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <q-input
+            standout
+            v-model="total_apps_semana"
+            label="Apps"
+            dense
+            :rules="[
+              (val) =>
+                (val &&
+                  val >= 0 &&
+                  !isNaN(val) &&
+                  val <= 1000000 &&
+                  dosDecimales(val)) ||
+                'Valor no válido',
+            ]"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <q-input
+            standout
+            v-model="varios_semana"
+            label="Varios"
+            dense
+            :rules="[
+              (val) =>
+                (val &&
+                  val >= -1000000 &&
+                  !Number.isNaN(val) &&
+                  val <= 1000000 &&
+                  dosDecimales(val)) ||
+                'Valor no válido',
+            ]"
+          />
+        </div>
+      </div>
     </q-form>
   </q-page>
 </template>
@@ -156,6 +211,9 @@ const file = ref(null);
 const dia_inicio = ref(null);
 const dia_fin = ref(null);
 const total_efectivo_semana = ref(null);
+const total_tpv_semana = ref(null);
+const total_apps_semana = ref(null);
+const varios_semana = ref(null);
 
 const myLocale = {
   days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
@@ -216,11 +274,17 @@ watchEffect(() => {
         "DD/MM/YYYY"
       );
       total_efectivo_semana.value = semanal.value[0].total_efectivo_semana;
+      total_tpv_semana.value = semanal.value[0].total_tpv_semana;
+      total_apps_semana.value = semanal.value[0].total_apps_semana;
+      varios_semana.value = semanal.value[0].varios_semana;
     } else {
       imagen_semana.value = "";
       dia_inicio.value = "";
       dia_fin.value = "";
       total_efectivo_semana.value = "";
+      total_tpv_semana.value = "";
+      total_apps_semana.value = "";
+      varios_semana.value = "";
     }
   }
 });
