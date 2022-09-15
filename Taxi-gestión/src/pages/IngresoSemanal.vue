@@ -69,10 +69,7 @@
             filled
             v-model="dia_inicio"
             mask="##/##/####"
-            :rules="[
-              (val) =>
-                (fechaValida(val) && val <= dia_fin) || 'La fecha no es válida',
-            ]"
+            :rules="[(val) => fechaValida(val) || 'La fecha no es válida']"
           >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -102,11 +99,7 @@
             filled
             v-model="dia_fin"
             mask="##/##/####"
-            :rules="[
-              (val) =>
-                (fechaValida(val) && val >= dia_inicio) ||
-                'La fecha no es válida',
-            ]"
+            :rules="[(val) => fechaValida(val) || 'La fecha no es válida']"
           >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -206,6 +199,26 @@
           />
         </div>
       </div>
+      <q-btn
+        class="form-submit"
+        type="submit"
+        :disable="saveState"
+        :color="saveState ? 'red' : 'green'"
+        >Guardar</q-btn
+      >
+      <q-btn
+        class="form-submit q-ml-md q-my-md"
+        @click="getDiarios()"
+        color="primary"
+        >Cancelar</q-btn
+      >
+      <q-btn
+        v-if="semanal?.length == 1 ? true : false"
+        class="form-submit q-ml-md q-my-md"
+        @click="confirmaBorrar()"
+        color="negative"
+        >Eliminar</q-btn
+      >
     </q-form>
   </q-page>
 </template>
@@ -215,6 +228,7 @@ import { useTaxiStore } from "../stores/taxi-store";
 import { onMounted, computed, ref, watchEffect } from "vue";
 import moment from "moment";
 import { useQuasar, Notify, openURL } from "quasar";
+import { api } from "../boot/axios";
 
 const taxiStore = useTaxiStore();
 const semanalesTaxi = ref([]);
@@ -306,7 +320,18 @@ watchEffect(() => {
 });
 
 const fechaValida = (f) => {
-  if (moment(f.split("/").reverse().join("-")).isValid() && f.length == 10) {
+  let fechaGeneral = moment(f.split("/").reverse().join("-"));
+  let fechaDeInicio = moment(dia_inicio.value.split("/").reverse().join("-"));
+  let fechaFinal = moment(dia_fin.value.split("/").reverse().join("-"));
+  console.log(fechaDeInicio.diff(fechaFinal));
+  if (
+    f &&
+    fechaGeneral.isValid() &&
+    f.length == 10 &&
+    fechaDeInicio.diff(fechaFinal) <= 0
+  ) {
+    dia_inicio.value.resetValidation();
+    dia_fin.value.resetValidation();
     return true;
   }
   return false;
@@ -324,6 +349,88 @@ const dosDecimales = (num) => {
     return true;
   }
   return false;
+};
+
+const saveState = computed(() => {
+  if (
+    !total_efectivo_semana.value ||
+    total_efectivo_semana.value < 0 ||
+    total_efectivo_semana.value > 1000000 ||
+    !dosDecimales(total_efectivo_semana.value) ||
+    isNaN(total_efectivo_semana.value) ||
+    !total_tpv_semana.value ||
+    total_tpv_semana.value < 0 ||
+    total_tpv_semana.value > 1000000 ||
+    !dosDecimales(total_tpv_semana.value) ||
+    isNaN(total_tpv_semana.value) ||
+    !total_apps_semana.value ||
+    total_apps_semana.value < 0 ||
+    total_apps_semana.value > 1000000 ||
+    !dosDecimales(total_apps_semana.value) ||
+    isNaN(total_apps_semana.value) ||
+    !varios_semana.value ||
+    varios_semana.value < 0 ||
+    varios_semana.value > 1000000 ||
+    !dosDecimales(varios_semana.value) ||
+    isNaN(varios_semana.value) ||
+    (events.value.indexOf(date.value) == -1 && file.value == null)
+  ) {
+    return true;
+  }
+  return false;
+});
+
+const subir = async () => {
+  await taxiStore.refresToken();
+  if (taxiStore.access_token) {
+    let axiosConfig = {
+      headers: {
+        Authorization: `Bearer ${taxiStore.access_token}`,
+      },
+    };
+    var formData = new FormData();
+    formData.append("dia", date.value.replaceAll("/", "-"));
+    formData.append("total_efectivo", total_efectivo.value);
+    formData.append("total_apps", total_apps.value);
+    formData.append("total_tpv", total_tpv.value);
+
+    for (let i = 0; i < varios.value.length; i++) {
+      const element = varios.value[i];
+      formData.append("vario", element);
+    }
+
+    formData.append("taxista_id", taxiStore.user.id);
+    if (file.value) {
+      formData.append("imagen", file.value);
+    }
+    if (events.value.indexOf(date.value) != -1) {
+      await api
+        .put(`/ingreso_diario/${diario.value[0].id}/`, formData, axiosConfig)
+        .then((res) => {
+          simulateProgressGuardar(0, res);
+        })
+        .catch((err) => {
+          console.log(err.response);
+          Notify.create({
+            type: "negative",
+            message: "Halgo ha fallado",
+          });
+        });
+    } else {
+      await api
+        .post(`/ingreso_diario/create/`, formData, axiosConfig)
+        .then((res) => {
+          simulateProgressGuardar(0, res);
+        })
+        .catch((err) => {
+          console.log(err.response);
+          Notify.create({
+            type: "negative",
+            message: "Halgo ha fallado",
+          });
+        });
+    }
+  }
 };
 
 onMounted(async () => {
