@@ -64,11 +64,15 @@
       <div class="row">
         <div class="col-6">
           <q-input
+            class="q-mt-md"
             label="día inicial"
             filled
             v-model="dia_inicio"
             mask="##/##/####"
-            :rules="[(val) => fechaValida(val) || 'La fecha no es válida']"
+            :rules="[
+              (val) =>
+                (fechaValida(val) && val <= dia_fin) || 'La fecha no es válida',
+            ]"
           >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -77,7 +81,11 @@
                   transition-show="scale"
                   transition-hide="scale"
                 >
-                  <q-date v-model="dia_inicio" mask="DD/MM/YYYY">
+                  <q-date
+                    v-model="dia_inicio"
+                    mask="DD/MM/YYYY"
+                    :options="optionsFn"
+                  >
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -89,12 +97,16 @@
         </div>
         <div class="col-6">
           <q-input
-            class="q-ml-sm"
+            class="q-ml-sm q-mt-md"
             label="día final"
             filled
             v-model="dia_fin"
             mask="##/##/####"
-            :rules="[(val) => fechaValida(val) || 'La fecha no es válida']"
+            :rules="[
+              (val) =>
+                (fechaValida(val) && val >= dia_inicio) ||
+                'La fecha no es válida',
+            ]"
           >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -103,7 +115,11 @@
                   transition-show="scale"
                   transition-hide="scale"
                 >
-                  <q-date v-model="dia_fin" mask="DD/MM/YYYY">
+                  <q-date
+                    v-model="dia_fin"
+                    mask="DD/MM/YYYY"
+                    :options="optionsFn"
+                  >
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
