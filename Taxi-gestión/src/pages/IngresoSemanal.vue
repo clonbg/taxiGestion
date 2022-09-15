@@ -64,12 +64,13 @@
       <div class="row">
         <div class="col-6">
           <q-input
+            ref="inicioRef"
             class="q-mt-md"
             label="día inicial"
             filled
             v-model="dia_inicio"
             mask="##/##/####"
-            :rules="[(val) => fechaValida(val) || 'La fecha no es válida']"
+            :error="!validaFechaInicio"
           >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -94,12 +95,13 @@
         </div>
         <div class="col-6">
           <q-input
+            ref="finRef"
             class="q-ml-sm q-mt-md"
             label="día final"
             filled
             v-model="dia_fin"
             mask="##/##/####"
-            :rules="[(val) => fechaValida(val) || 'La fecha no es válida']"
+            :error="!validaFechaFinal"
           >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -239,7 +241,9 @@ const hoy = ref(null);
 const events = ref([]);
 const file = ref(null);
 const dia_inicio = ref(null);
+const inicioRef = ref(null);
 const dia_fin = ref(null);
+const finRef = ref(null);
 const total_efectivo_semana = ref(null);
 const total_tpv_semana = ref(null);
 const total_apps_semana = ref(null);
@@ -319,23 +323,41 @@ watchEffect(() => {
   }
 });
 
-const fechaValida = (f) => {
-  let fechaGeneral = moment(f.split("/").reverse().join("-"));
-  let fechaDeInicio = moment(dia_inicio.value.split("/").reverse().join("-"));
-  let fechaFinal = moment(dia_fin.value.split("/").reverse().join("-"));
-  console.log(fechaDeInicio.diff(fechaFinal));
-  if (
-    f &&
-    fechaGeneral.isValid() &&
-    f.length == 10 &&
-    fechaDeInicio.diff(fechaFinal) <= 0
-  ) {
-    dia_inicio.value.resetValidation();
-    dia_fin.value.resetValidation();
-    return true;
+const validaFechaInicio = computed(() => {
+  if (dia_inicio.value && dia_fin.value) {
+    let fechaDeInicio = moment(dia_inicio.value.split("/").reverse().join("-"));
+    let fechaFinal = moment(dia_fin.value.split("/").reverse().join("-"));
+    console.log(fechaDeInicio.diff(fechaFinal));
+    finRef.value.resetValidation();
+    if (
+      fechaDeInicio.isValid() &&
+      dia_inicio.value.length == 10 &&
+      fechaDeInicio.diff(fechaFinal) <= 0
+    ) {
+      return true;
+    }
+    return false;
   }
   return false;
-};
+});
+
+const validaFechaFinal = computed(() => {
+  if (dia_inicio.value && dia_fin.value) {
+    let fechaDeInicio = moment(dia_inicio.value.split("/").reverse().join("-"));
+    let fechaFinal = moment(dia_fin.value.split("/").reverse().join("-"));
+    console.log(fechaDeInicio.diff(fechaFinal));
+    inicioRef.value.resetValidation();
+    if (
+      fechaFinal.isValid() &&
+      dia_fin.value.length == 10 &&
+      fechaDeInicio.diff(fechaFinal) <= 0
+    ) {
+      return true;
+    }
+    return false;
+  }
+  return false;
+});
 
 const dosDecimales = (num) => {
   let pos = num.toString().lastIndexOf(".");
