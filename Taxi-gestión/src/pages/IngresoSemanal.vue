@@ -70,7 +70,7 @@
             filled
             v-model="dia_inicio"
             mask="##/##/####"
-            :error="!validaFechaInicio"
+            :error="!validaFecha"
           >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -101,7 +101,7 @@
             filled
             v-model="dia_fin"
             mask="##/##/####"
-            :error="!validaFechaFinal"
+            :error="!validaFecha"
           >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -323,14 +323,14 @@ watchEffect(() => {
   }
 });
 
-const validaFechaInicio = computed(() => {
+const validaFecha = computed(() => {
   if (dia_inicio.value && dia_fin.value) {
     let fechaDeInicio = moment(dia_inicio.value.split("/").reverse().join("-"));
     let fechaFinal = moment(dia_fin.value.split("/").reverse().join("-"));
-    console.log(fechaDeInicio.diff(fechaFinal));
-    finRef.value.resetValidation();
     if (
       fechaDeInicio.isValid() &&
+      fechaFinal.isValid() &&
+      dia_fin.value.length == 10 &&
       dia_inicio.value.length == 10 &&
       fechaDeInicio.diff(fechaFinal) <= 0
     ) {
@@ -341,26 +341,8 @@ const validaFechaInicio = computed(() => {
   return false;
 });
 
-const validaFechaFinal = computed(() => {
-  if (dia_inicio.value && dia_fin.value) {
-    let fechaDeInicio = moment(dia_inicio.value.split("/").reverse().join("-"));
-    let fechaFinal = moment(dia_fin.value.split("/").reverse().join("-"));
-    console.log(fechaDeInicio.diff(fechaFinal));
-    inicioRef.value.resetValidation();
-    if (
-      fechaFinal.isValid() &&
-      dia_fin.value.length == 10 &&
-      fechaDeInicio.diff(fechaFinal) <= 0
-    ) {
-      return true;
-    }
-    return false;
-  }
-  return false;
-});
-
 const dosDecimales = (num) => {
-  let pos = num.toString().lastIndexOf(".");
+  let pos = num?.toString().lastIndexOf(".");
   if (num && pos != -1) {
     let cantDecimales = num.toString().length - pos;
     if (cantDecimales == 3 || cantDecimales == 2) {
@@ -374,6 +356,30 @@ const dosDecimales = (num) => {
 };
 
 const saveState = computed(() => {
+  console.log(
+    !total_efectivo_semana.value,
+    total_efectivo_semana.value < 0,
+    total_efectivo_semana.value > 1000000,
+    !dosDecimales(total_efectivo_semana.value),
+    isNaN(total_efectivo_semana.value),
+    !total_tpv_semana.value,
+    total_tpv_semana.value < 0,
+    total_tpv_semana.value > 1000000,
+    !dosDecimales(total_tpv_semana.value),
+    isNaN(total_tpv_semana.value),
+    !total_apps_semana.value,
+    total_apps_semana.value < 0,
+    total_apps_semana.value > 1000000,
+    !dosDecimales(total_apps_semana.value),
+    isNaN(total_apps_semana.value),
+    !varios_semana.value,
+    varios_semana.value < -1000000,
+    varios_semana.value > 1000000,
+    !dosDecimales(varios_semana.value),
+    isNaN(varios_semana.value),
+    events.value.indexOf(date.value) == -1 && file.value == null,
+    !validaFecha.value
+  );
   if (
     !total_efectivo_semana.value ||
     total_efectivo_semana.value < 0 ||
@@ -391,11 +397,12 @@ const saveState = computed(() => {
     !dosDecimales(total_apps_semana.value) ||
     isNaN(total_apps_semana.value) ||
     !varios_semana.value ||
-    varios_semana.value < 0 ||
+    varios_semana.value < -1000000 ||
     varios_semana.value > 1000000 ||
     !dosDecimales(varios_semana.value) ||
     isNaN(varios_semana.value) ||
-    (events.value.indexOf(date.value) == -1 && file.value == null)
+    (events.value.indexOf(date.value) == -1 && file.value == null) ||
+    !validaFecha.value
   ) {
     return true;
   }
