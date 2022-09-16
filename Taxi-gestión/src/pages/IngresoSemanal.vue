@@ -340,8 +340,10 @@ const noFechasIncludes = () => {
 
 const validaFecha = computed(() => {
   if (dia_inicio.value && dia_fin.value) {
-    let fechaDeInicio = moment(dia_inicio.value.split("/").reverse().join("/"));
-    let fechaFinal = moment(dia_fin.value.split("/").reverse().join("/"));
+    let fecha = new Date(dia_inicio.value.split("/").reverse().join("/"));
+    let fechaDeInicio = moment(fecha);
+    fecha = new Date(dia_fin.value.split("/").reverse().join("/"))
+    let fechaFinal = moment(fecha);
     if (
       fechaDeInicio.isValid() &&
       fechaFinal.isValid() &&
