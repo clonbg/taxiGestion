@@ -221,6 +221,12 @@
         color="negative"
         >Eliminar</q-btn
       >
+      <q-btn
+        class="form-submit q-ml-md q-my-md text-black"
+        @click="nuevo()"
+        color="white"
+        >Nuevo</q-btn
+      >
     </q-form>
   </q-page>
 </template>
@@ -301,12 +307,10 @@ watchEffect(() => {
     );
     if (semanal.value[0]) {
       imagen_semana.value = semanal.value[0].imagen_semana;
-      dia_inicio.value = moment(semanalesTaxi.value[0].dia_inicio).format(
+      dia_inicio.value = moment(semanal.value[0].dia_inicio).format(
         "DD/MM/YYYY"
       );
-      dia_fin.value = moment(semanalesTaxi.value[0].dia_fin).format(
-        "DD/MM/YYYY"
-      );
+      dia_fin.value = moment(semanal.value[0].dia_fin).format("DD/MM/YYYY");
       total_efectivo_semana.value = semanal.value[0].total_efectivo_semana;
       total_tpv_semana.value = semanal.value[0].total_tpv_semana;
       total_apps_semana.value = semanal.value[0].total_apps_semana;
@@ -323,6 +327,17 @@ watchEffect(() => {
   }
 });
 
+const noFechasIncludes = () => {
+  let existe = taxiStore.semanales.filter(
+    (entrada) => entrada.id == semanal.value[0]?.id
+  );
+  if (existe[0].id == semanal.value[0].id) {
+    //Editando, copia de events sin sus dias
+  }
+  //Comprueba
+  return true
+};
+
 const validaFecha = computed(() => {
   if (dia_inicio.value && dia_fin.value) {
     let fechaDeInicio = moment(dia_inicio.value.split("/").reverse().join("/"));
@@ -332,7 +347,8 @@ const validaFecha = computed(() => {
       fechaFinal.isValid() &&
       dia_fin.value.length == 10 &&
       dia_inicio.value.length == 10 &&
-      fechaDeInicio.diff(fechaFinal) <= 0
+      fechaDeInicio.diff(fechaFinal) <= 0 &&
+      noFechasIncludes()
     ) {
       return true;
     }
@@ -385,6 +401,16 @@ const saveState = computed(() => {
   return false;
 });
 
+const nuevo = () => {
+  imagen_semana.value = "";
+  dia_inicio.value = "";
+  dia_fin.value = "";
+  total_efectivo_semana.value = "";
+  total_tpv_semana.value = "";
+  total_apps_semana.value = "";
+  varios_semana.value = "";
+};
+
 const subir = async () => {
   await taxiStore.refresToken();
   if (taxiStore.access_token) {
@@ -394,23 +420,29 @@ const subir = async () => {
       },
     };
     var formData = new FormData();
-    console.log(dia_inicio.value.split("/").reverse().join("/"))
-    formData.append("dia_inicio", dia_inicio.value.split("/").reverse().join("-"));
-    formData.append("dia_fin", dia_fin.value.split("/").reverse().join("-")); 
+    formData.append(
+      "dia_inicio",
+      dia_inicio.value.split("/").reverse().join("-")
+    );
+    formData.append("dia_fin", dia_fin.value.split("/").reverse().join("-"));
     if (file.value) {
       formData.append("imagen_semana", file.value);
     }
     formData.append("total_efectivo_semana", total_efectivo_semana.value);
     formData.append("total_apps_semana", total_apps_semana.value);
     formData.append("total_tpv_semana", total_tpv_semana.value);
-    formData.append("varios_semana", varios_semana.value)
+    formData.append("varios_semana", varios_semana.value);
 
     formData.append("taxista_id", taxiStore.user.id);
-    if (events.value.indexOf(date.value) != -1) {
+    //Función para ver si el id existe
+    let existe = taxiStore.semanales.filter(
+      (entrada) => entrada.id == semanal.value[0]?.id
+    );
+    if (existe.length > 0) {
       await api
         .put(`/ingreso_semanal/${semanal.value[0].id}/`, formData, axiosConfig)
         .then((res) => {
-          console.log(res)
+          console.log(res);
         })
         .catch((err) => {
           console.log(err.response);
@@ -419,7 +451,7 @@ const subir = async () => {
       await api
         .post(`/ingreso_semanal/create/`, formData, axiosConfig)
         .then((res) => {
-          console.log(res)
+          console.log(res);
         })
         .catch((err) => {
           console.log(err.response);
