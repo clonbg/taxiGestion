@@ -50,7 +50,7 @@ class IngresoSemanalDetailSerializers(serializers.ModelSerializer):
     id=serializers.PrimaryKeyRelatedField(read_only=True)
     dia_inicio = serializers.DateField()#unique
     dia_fin = serializers.DateField()#unique
-    imagen_semana = serializers.ImageField(allow_null=True)
+    imagen_semana = serializers.ImageField(required=False,allow_null=True)
     total_efectivo_semana = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
         MinValueValidator(1)

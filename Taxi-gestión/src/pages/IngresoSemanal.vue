@@ -325,8 +325,8 @@ watchEffect(() => {
 
 const validaFecha = computed(() => {
   if (dia_inicio.value && dia_fin.value) {
-    let fechaDeInicio = moment(dia_inicio.value.split("/").reverse().join("-"));
-    let fechaFinal = moment(dia_fin.value.split("/").reverse().join("-"));
+    let fechaDeInicio = moment(dia_inicio.value.split("/").reverse().join("/"));
+    let fechaFinal = moment(dia_fin.value.split("/").reverse().join("/"));
     if (
       fechaDeInicio.isValid() &&
       fechaFinal.isValid() &&
@@ -356,30 +356,6 @@ const dosDecimales = (num) => {
 };
 
 const saveState = computed(() => {
-  console.log(
-    !total_efectivo_semana.value,
-    total_efectivo_semana.value < 0,
-    total_efectivo_semana.value > 1000000,
-    !dosDecimales(total_efectivo_semana.value),
-    isNaN(total_efectivo_semana.value),
-    !total_tpv_semana.value,
-    total_tpv_semana.value < 0,
-    total_tpv_semana.value > 1000000,
-    !dosDecimales(total_tpv_semana.value),
-    isNaN(total_tpv_semana.value),
-    !total_apps_semana.value,
-    total_apps_semana.value < 0,
-    total_apps_semana.value > 1000000,
-    !dosDecimales(total_apps_semana.value),
-    isNaN(total_apps_semana.value),
-    !varios_semana.value,
-    varios_semana.value < -1000000,
-    varios_semana.value > 1000000,
-    !dosDecimales(varios_semana.value),
-    isNaN(varios_semana.value),
-    events.value.indexOf(date.value) == -1 && file.value == null,
-    !validaFecha.value
-  );
   if (
     !total_efectivo_semana.value ||
     total_efectivo_semana.value < 0 ||
@@ -418,45 +394,35 @@ const subir = async () => {
       },
     };
     var formData = new FormData();
-    formData.append("dia", date.value.replaceAll("/", "-"));
-    formData.append("total_efectivo", total_efectivo.value);
-    formData.append("total_apps", total_apps.value);
-    formData.append("total_tpv", total_tpv.value);
-
-    for (let i = 0; i < varios.value.length; i++) {
-      const element = varios.value[i];
-      formData.append("vario", element);
+    console.log(dia_inicio.value.split("/").reverse().join("/"))
+    formData.append("dia_inicio", dia_inicio.value.split("/").reverse().join("-"));
+    formData.append("dia_fin", dia_fin.value.split("/").reverse().join("-")); 
+    if (file.value) {
+      formData.append("imagen_semana", file.value);
     }
+    formData.append("total_efectivo_semana", total_efectivo_semana.value);
+    formData.append("total_apps_semana", total_apps_semana.value);
+    formData.append("total_tpv_semana", total_tpv_semana.value);
+    formData.append("varios_semana", varios_semana.value)
 
     formData.append("taxista_id", taxiStore.user.id);
-    if (file.value) {
-      formData.append("imagen", file.value);
-    }
     if (events.value.indexOf(date.value) != -1) {
       await api
-        .put(`/ingreso_diario/${diario.value[0].id}/`, formData, axiosConfig)
+        .put(`/ingreso_semanal/${semanal.value[0].id}/`, formData, axiosConfig)
         .then((res) => {
-          simulateProgressGuardar(0, res);
+          console.log(res)
         })
         .catch((err) => {
           console.log(err.response);
-          Notify.create({
-            type: "negative",
-            message: "Halgo ha fallado",
-          });
         });
     } else {
       await api
-        .post(`/ingreso_diario/create/`, formData, axiosConfig)
+        .post(`/ingreso_semanal/create/`, formData, axiosConfig)
         .then((res) => {
-          simulateProgressGuardar(0, res);
+          console.log(res)
         })
         .catch((err) => {
           console.log(err.response);
-          Notify.create({
-            type: "negative",
-            message: "Halgo ha fallado",
-          });
         });
     }
   }
