@@ -9,7 +9,6 @@
       :options="optionsFn"
       :locale="myLocale"
     />
-    {{semanal ? semanal[0]?.id : 'Non'}}
     <q-form
       class="form float-right"
       @submit.prevent="subir()"
@@ -83,7 +82,7 @@
                   <q-date
                     v-model="dia_inicio"
                     mask="DD/MM/YYYY"
-                    :options="optionsFn"
+                    :options="optionsInicio"
                   >
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
@@ -293,6 +292,24 @@ const optionsFn = (fecha) => {
   return fecha >= "2022/01/01" && fecha <= hoy.value;
 };
 
+const optionsInicio = (fecha) => {
+  let finales = []
+  for (var i = 0; i < semanalesTaxi.value.length; i++) {
+    finales.push(semanalesTaxi.value[i].dia_fin)
+  }
+  finales.sort()
+  console.log(finales)
+  //si existe dia_fin anterior a la nuestra, se pone. Si no '2022/01/01'
+  if (finales[0]==dia_fin.value) {} else {}
+  if (semanal.value[0]?.id) {
+    //editando
+    return fecha >= "2022/01/01" && fecha <= dia_fin.value.split('/').reverse().join('/');
+  } else {
+    //creando
+    //Desde el último dia_fin hasta hoy
+  }
+};
+
 watchEffect(() => {
   if (date.value) {
     semanal.value = semanalesTaxi.value.filter(
@@ -322,15 +339,6 @@ watchEffect(() => {
   }
 });
 
-const noFechasIncludes = () => {
-  
-  if (semanal.value) {
-    //Editando, copia de events sin sus dias
-  }
-  //Comprueba
-  return true
-};
-
 const validaFecha = computed(() => {
   if (dia_inicio.value && dia_fin.value) {
     let fecha = new Date(dia_inicio.value.split("/").reverse().join("/"));
@@ -342,9 +350,7 @@ const validaFecha = computed(() => {
       fechaFinal.isValid() &&
       dia_fin.value.length == 10 &&
       dia_inicio.value.length == 10 &&
-      fechaDeInicio.diff(fechaFinal) <= 0 &&
-      noFechasIncludes()
-    ) {
+      fechaDeInicio.diff(fechaFinal) <= 0    ) {
       return true;
     }
     return false;
