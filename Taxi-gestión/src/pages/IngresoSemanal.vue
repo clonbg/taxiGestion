@@ -9,6 +9,7 @@
       :options="optionsFn"
       :locale="myLocale"
     />
+    {{semanal ? semanal[0]?.id : 'Non'}}
     <q-form
       class="form float-right"
       @submit.prevent="subir()"
@@ -221,12 +222,6 @@
         color="negative"
         >Eliminar</q-btn
       >
-      <q-btn
-        class="form-submit q-ml-md q-my-md text-black"
-        @click="nuevo()"
-        color="white"
-        >Nuevo</q-btn
-      >
     </q-form>
   </q-page>
 </template>
@@ -328,10 +323,8 @@ watchEffect(() => {
 });
 
 const noFechasIncludes = () => {
-  let existe = taxiStore.semanales.filter(
-    (entrada) => entrada.id == semanal.value[0]?.id
-  );
-  if (existe[0].id == semanal.value[0].id) {
+  
+  if (semanal.value) {
     //Editando, copia de events sin sus dias
   }
   //Comprueba
@@ -395,7 +388,7 @@ const saveState = computed(() => {
     varios_semana.value > 1000000 ||
     !dosDecimales(varios_semana.value) ||
     isNaN(varios_semana.value) ||
-    (events.value.indexOf(date.value) == -1 && file.value == null) ||
+    (!semanal.value[0]?.id && file.value == null) ||
     !validaFecha.value
   ) {
     return true;
@@ -437,10 +430,7 @@ const subir = async () => {
 
     formData.append("taxista_id", taxiStore.user.id);
     //Función para ver si el id existe
-    let existe = taxiStore.semanales.filter(
-      (entrada) => entrada.id == semanal.value[0]?.id
-    );
-    if (existe.length > 0) {
+    if (semanal.value[0]?.id) {
       await api
         .put(`/ingreso_semanal/${semanal.value[0].id}/`, formData, axiosConfig)
         .then((res) => {
