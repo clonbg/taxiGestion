@@ -113,7 +113,7 @@
                   <q-date
                     v-model="dia_fin"
                     mask="DD/MM/YYYY"
-                    :options="optionsFn"
+                    :options="optionsFin"
                   >
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
@@ -298,13 +298,48 @@ const optionsInicio = (fecha) => {
   );
   events.value.sort();
   let posI = events.value.lastIndexOf(
-    inicio[0].dia_inicio.replaceAll("-", "/")
+    inicio[0]?.dia_inicio.replaceAll("-", "/")
   );
-  let posF = events.value.lastIndexOf(inicio[0].dia_fin.replaceAll("-", "/"));
-  return (
-    fecha > (events.value[posI - 1] ? events.value[posI - 1] : "2022/01/01") &&
-    fecha < (events.value[posF + 1] ? events.value[posF + 1] : hoy.value + 1)
+  let posF = events.value.lastIndexOf(inicio[0]?.dia_fin.replaceAll("-", "/"));
+  if (posI != -1 || posF != -1) {
+    return (
+      fecha >
+        (events.value[posI - 1] ? events.value[posI - 1] : "2022/01/01") &&
+      fecha < (events.value[posF + 1] ? events.value[posF + 1] : hoy.value + 1)
+    );
+  } else {
+    return (
+      fecha >
+        (events.value[events.value.length - 1]
+          ? events.value[events.value.length - 1]
+          : "2022/01/01") && fecha < hoy.value + 1
+    );
+  }
+};
+
+const optionsFin = (fecha) => {
+  let fin = semanalesTaxi.value.filter(
+    (element) =>
+      element.dia_inicio == dia_inicio.value.split("/").reverse().join("-")
   );
+  events.value.sort();
+  let posI = events.value.lastIndexOf(fin[0]?.dia_inicio.replaceAll("-", "/"));
+  let posF = events.value.lastIndexOf(fin[0]?.dia_fin.replaceAll("-", "/"));
+  if (posI != -1 || posF != -1) {
+    return (
+      fecha >
+        (events.value[posI - 1] ? events.value[posI - 1] : "2022/01/01") &&
+      fecha < (events.value[posF + 1] ? events.value[posF + 1] : hoy.value + 1)
+    );
+  } else {
+    console.log(events.value[events.value.length - 1]);
+    return (
+      fecha >
+        (events.value[events.value.length - 1]
+          ? events.value[events.value.length - 1]
+          : "2022/01/01") && fecha < hoy.value + 1
+    );
+  }
 };
 
 watchEffect(() => {
