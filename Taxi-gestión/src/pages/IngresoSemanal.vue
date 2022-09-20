@@ -293,21 +293,18 @@ const optionsFn = (fecha) => {
 };
 
 const optionsInicio = (fecha) => {
-  let finales = []
-  for (var i = 0; i < semanalesTaxi.value.length; i++) {
-    finales.push(semanalesTaxi.value[i].dia_fin)
-  }
-  finales.sort()
-  console.log(finales)
-  //si existe dia_fin anterior a la nuestra, se pone. Si no '2022/01/01'
-  if (finales[0]==dia_fin.value) {} else {}
-  if (semanal.value[0]?.id) {
-    //editando
-    return fecha >= "2022/01/01" && fecha <= dia_fin.value.split('/').reverse().join('/');
-  } else {
-    //creando
-    //Desde el último dia_fin hasta hoy
-  }
+  let inicio = semanalesTaxi.value.filter(
+    (element) => element.dia_fin == dia_fin.value.split("/").reverse().join("-")
+  );
+  events.value.sort();
+  let posI = events.value.lastIndexOf(
+    inicio[0].dia_inicio.replaceAll("-", "/")
+  );
+  let posF = events.value.lastIndexOf(inicio[0].dia_fin.replaceAll("-", "/"));
+  return (
+    fecha > (events.value[posI - 1] ? events.value[posI - 1] : "2022/01/01") &&
+    fecha < (events.value[posF + 1] ? events.value[posF + 1] : hoy.value + 1)
+  );
 };
 
 watchEffect(() => {
@@ -343,14 +340,15 @@ const validaFecha = computed(() => {
   if (dia_inicio.value && dia_fin.value) {
     let fecha = new Date(dia_inicio.value.split("/").reverse().join("/"));
     let fechaDeInicio = moment(fecha);
-    fecha = new Date(dia_fin.value.split("/").reverse().join("/"))
+    fecha = new Date(dia_fin.value.split("/").reverse().join("/"));
     let fechaFinal = moment(fecha);
     if (
       fechaDeInicio.isValid() &&
       fechaFinal.isValid() &&
       dia_fin.value.length == 10 &&
       dia_inicio.value.length == 10 &&
-      fechaDeInicio.diff(fechaFinal) <= 0    ) {
+      fechaDeInicio.diff(fechaFinal) <= 0
+    ) {
       return true;
     }
     return false;
