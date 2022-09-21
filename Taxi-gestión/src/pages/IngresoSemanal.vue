@@ -82,7 +82,7 @@
                   <q-date
                     v-model="dia_inicio"
                     mask="DD/MM/YYYY"
-                    :options="optionsInicio"
+                    :options="optionsImputDate"
                   >
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
@@ -113,7 +113,7 @@
                   <q-date
                     v-model="dia_fin"
                     mask="DD/MM/YYYY"
-                    :options="optionsFin"
+                    :options="optionsImputDate"
                   >
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
@@ -292,7 +292,7 @@ const optionsFn = (fecha) => {
   return fecha >= "2022/01/01" && fecha <= hoy.value;
 };
 
-const optionsInicio = (fecha) => {
+const optionsImputDate = (fecha) => {
   let inicio = semanalesTaxi.value.filter(
     (element) => element.dia_fin == dia_fin.value.split("/").reverse().join("-")
   );
@@ -308,36 +308,19 @@ const optionsInicio = (fecha) => {
       fecha < (events.value[posF + 1] ? events.value[posF + 1] : hoy.value + 1)
     );
   } else {
+    let newArray = events.value.slice();
+    let buscar = newArray.lastIndexOf(date.value);
+    if (buscar == -1) {
+      newArray.push(date.value);
+    }
+    newArray.sort();
+    let pos = newArray.lastIndexOf(date.value);
+    let today = new Date(hoy.value)
+    let todayMOne =moment(today)
+    todayMOne.add(1,"day")
     return (
-      fecha >
-        (events.value[events.value.length - 1]
-          ? events.value[events.value.length - 1]
-          : "2022/01/01") && fecha < hoy.value + 1
-    );
-  }
-};
-
-const optionsFin = (fecha) => {
-  let fin = semanalesTaxi.value.filter(
-    (element) =>
-      element.dia_inicio == dia_inicio.value.split("/").reverse().join("-")
-  );
-  events.value.sort();
-  let posI = events.value.lastIndexOf(fin[0]?.dia_inicio.replaceAll("-", "/"));
-  let posF = events.value.lastIndexOf(fin[0]?.dia_fin.replaceAll("-", "/"));
-  if (posI != -1 || posF != -1) {
-    return (
-      fecha >
-        (events.value[posI - 1] ? events.value[posI - 1] : "2022/01/01") &&
-      fecha < (events.value[posF + 1] ? events.value[posF + 1] : hoy.value + 1)
-    );
-  } else {
-    console.log(events.value[events.value.length - 1]);
-    return (
-      fecha >
-        (events.value[events.value.length - 1]
-          ? events.value[events.value.length - 1]
-          : "2022/01/01") && fecha < hoy.value + 1
+      fecha > (pos == 0 ? "2022/01/01" : newArray[pos - 1]) &&
+      fecha < (pos == newArray.length - 1 ? todayMOne.format("YYYY/MM/DD") : newArray[pos + 1])
     );
   }
 };
