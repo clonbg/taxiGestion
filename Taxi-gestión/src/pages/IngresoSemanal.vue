@@ -191,7 +191,7 @@
             dense
             :rules="[
               (val) =>
-                (val &&
+                (val !== '' &&
                   val >= -1000000 &&
                   !Number.isNaN(val) &&
                   val <= 1000000 &&
@@ -199,6 +199,7 @@
                 'Valor no válido',
             ]"
           />
+          {{ varios_semana }}
         </div>
       </div>
       <q-btn
@@ -315,12 +316,15 @@ const optionsImputDate = (fecha) => {
     }
     newArray.sort();
     let pos = newArray.lastIndexOf(date.value);
-    let today = new Date(hoy.value)
-    let todayMOne =moment(today)
-    todayMOne.add(1,"day")
+    let today = new Date(hoy.value);
+    let todayMOne = moment(today);
+    todayMOne.add(1, "day");
     return (
       fecha > (pos == 0 ? "2022/01/01" : newArray[pos - 1]) &&
-      fecha < (pos == newArray.length - 1 ? todayMOne.format("YYYY/MM/DD") : newArray[pos + 1])
+      fecha <
+        (pos == newArray.length - 1
+          ? todayMOne.format("YYYY/MM/DD")
+          : newArray[pos + 1])
     );
   }
 };
@@ -389,6 +393,13 @@ const dosDecimales = (num) => {
 };
 
 const saveState = computed(() => {
+  console.log(
+    !varios_semana.value,
+    varios_semana.value < -1000000,
+    varios_semana.value > 1000000,
+    !dosDecimales(varios_semana.value),
+    isNaN(varios_semana.value)
+  );
   if (
     !total_efectivo_semana.value ||
     total_efectivo_semana.value < 0 ||
@@ -405,7 +416,7 @@ const saveState = computed(() => {
     total_apps_semana.value > 1000000 ||
     !dosDecimales(total_apps_semana.value) ||
     isNaN(total_apps_semana.value) ||
-    !varios_semana.value ||
+    varios_semana.value === '' ||
     varios_semana.value < -1000000 ||
     varios_semana.value > 1000000 ||
     !dosDecimales(varios_semana.value) ||
