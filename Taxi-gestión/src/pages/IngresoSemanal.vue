@@ -199,7 +199,6 @@
                 'Valor no válido',
             ]"
           />
-          {{ varios_semana }}
         </div>
       </div>
       <q-btn
@@ -249,6 +248,8 @@ const total_efectivo_semana = ref(null);
 const total_tpv_semana = ref(null);
 const total_apps_semana = ref(null);
 const varios_semana = ref(null);
+
+const $q = useQuasar();
 
 const myLocale = {
   days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
@@ -393,13 +394,6 @@ const dosDecimales = (num) => {
 };
 
 const saveState = computed(() => {
-  console.log(
-    !varios_semana.value,
-    varios_semana.value < -1000000,
-    varios_semana.value > 1000000,
-    !dosDecimales(varios_semana.value),
-    isNaN(varios_semana.value)
-  );
   if (
     !total_efectivo_semana.value ||
     total_efectivo_semana.value < 0 ||
@@ -438,6 +432,17 @@ const nuevo = () => {
   total_apps_semana.value = "";
   varios_semana.value = "";
 };
+
+const confirmaBorrar = () => {
+  $q.dialog({
+      title: "Cuidado",
+      message: `¿Está seguro de eliminar del día ${dia_inicio.value} al ${dia_fin.value}?`,
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      await simulateProgressBorrar(0);
+    });
+}
 
 const subir = async () => {
   await taxiStore.refresToken();
