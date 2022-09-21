@@ -294,7 +294,7 @@ const optionsFn = (fecha) => {
 
 const optionsImputDate = (fecha) => {
   let inicio = semanalesTaxi.value.filter(
-    (element) => element.dia_fin == dia_fin.value.split("/").reverse().join("-")
+    (element) => element.id == semanal.value[0]?.id
   );
   events.value.sort();
   let posI = events.value.lastIndexOf(
