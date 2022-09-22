@@ -1,14 +1,21 @@
 <template>
   <q-page class="flex flex-center">
-    <q-date
-      v-model="date"
-      :events="events"
-      class="float-left"
-      style="margin-right: 15%"
-      today-btn
-      :options="optionsFn"
-      :locale="myLocale"
-    />
+    <div class="row float-left" style="margin-right: 15%; width: 15rem">
+      <q-date
+        v-model="date"
+        :events="events"
+        today-btn
+        :options="optionsFn"
+        :locale="myLocale"
+      />
+      <q-input
+        filled
+        class="q-mt-md"
+        label="Sueldo"
+        v-model="sueldo"
+        suffix="Euros"
+      />
+    </div>
     <q-form
       class="form float-right"
       @submit.prevent="subir()"
@@ -434,6 +441,27 @@ const dosDecimales = (num) => {
   }
   return false;
 };
+
+const sueldo = computed(() => {
+  if (date.value) {
+    let mes = date.value.substring(5, 7);
+    let sum = 0;
+    diariosTaxi.value.forEach((element) => {
+      if (element.dia.substring(5, 7) == mes) {
+        for (var i = 0; i < element.vario.length; i++) {
+          if (i % 2 == 0) {
+            sum = sum + parseInt(element.vario[i]);
+          }
+        }
+        sum =
+          sum + element.total_efectivo + element.total_tpv + element.total_apps;
+      }
+    });
+    return (sum * parseInt(taxiStore.user.sueldo)) / 100;
+  }
+  //const sueldo = semanalesTaxi.value.filter(item => )
+  return 0;
+});
 
 const subir = async () => {
   await taxiStore.refresToken();

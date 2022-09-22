@@ -1,14 +1,15 @@
 <template>
   <q-page class="flex flex-center">
-    <q-date
-      v-model="date"
-      :events="events"
-      class="float-left"
-      style="margin-right: 15%"
-      today-btn
-      :options="optionsFn"
-      :locale="myLocale"
-    />
+    <div class="row float-left" style="margin-right: 15%; width: 15rem">
+      <q-date
+        v-model="date"
+        :events="events"
+        today-btn
+        :options="optionsFn"
+        :locale="myLocale"
+      />
+    </div>
+
     <q-form
       class="form float-right"
       @submit.prevent="subir()"
@@ -410,7 +411,7 @@ const saveState = computed(() => {
     total_apps_semana.value > 1000000 ||
     !dosDecimales(total_apps_semana.value) ||
     isNaN(total_apps_semana.value) ||
-    varios_semana.value === '' ||
+    varios_semana.value === "" ||
     varios_semana.value < -1000000 ||
     varios_semana.value > 1000000 ||
     !dosDecimales(varios_semana.value) ||
@@ -435,14 +436,14 @@ const nuevo = () => {
 
 const confirmaBorrar = () => {
   $q.dialog({
-      title: "Cuidado",
-      message: `¿Está seguro de eliminar del día ${dia_inicio.value} al ${dia_fin.value}?`,
-      cancel: true,
-      persistent: true,
-    }).onOk(async () => {
-      await simulateProgressBorrar(0);
-    });
-}
+    title: "Cuidado",
+    message: `¿Está seguro de eliminar del día ${dia_inicio.value} al ${dia_fin.value}?`,
+    cancel: true,
+    persistent: true,
+  }).onOk(async () => {
+    await simulateProgressBorrar(0);
+  });
+};
 
 const subir = async () => {
   await taxiStore.refresToken();
