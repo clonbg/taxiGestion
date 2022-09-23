@@ -220,6 +220,7 @@
         class="form-submit q-ml-md q-my-md"
         @click="confirmaBorrar()"
         color="negative"
+        :loading="loadingBorrar[0]"
         >Eliminar</q-btn
       >
     </q-form>
@@ -251,6 +252,7 @@ const total_apps_semana = ref(null);
 const varios_semana = ref(null);
 
 const $q = useQuasar();
+const progress = ref(false);
 
 const myLocale = {
   days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
@@ -435,6 +437,55 @@ const nuevo = () => {
   total_tpv_semana.value = "";
   total_apps_semana.value = "";
   varios_semana.value = "";
+};
+
+const eliminarSemanal = async () => {
+  await taxiStore.refresToken();
+  if (taxiStore.access_token) {
+    let axiosConfig = {
+      headers: {
+        Authorization: `Bearer ${taxiStore.access_token}`,
+      },
+    };
+    let pos = semanalesTaxi.value.lastIndexOf(semanal.value[0]);
+    if (pos != -1) {
+      await api
+        .delete(`/ingreso_semanal/${semanal.value[0].id}/`, axiosConfig)
+        .then((res) => {})
+        .catch((err) => {
+          console.log(err.response);
+        });
+      semanalesTaxi.value.splice(pos, 1);
+    }
+  }
+};
+
+const loadingBorrar = ref([false, false, false, false, false, false]);
+const simulateProgressBorrar = (number) => {
+  // we set loading state
+  loadingBorrar.value[number] = true;
+  // simulate a delay
+  setTimeout(() => {
+    // we're done, we reset loading state
+    loadingBorrar.value[number] = false;
+    console.log("Borrar");
+    eliminarSemanal();
+    events.value = [];
+    semanalesTaxi.value.forEach((element) => {
+      if (element.id != semanal.value[0].id) {
+        let fecha1 = moment(element.dia_inicio);
+        let fecha2 = moment(element.dia_fin);
+        for (; fecha1 <= fecha2; ) {
+          events.value.push(fecha1.format("YYYY/MM/DD"));
+          fecha1.add(1, "day");
+        }
+      }
+    });
+    Notify.create({
+      type: "warning",
+      message: "Ha sido eliminado correctamente",
+    });
+  }, 3000);
 };
 
 const confirmaBorrar = () => {
