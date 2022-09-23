@@ -296,6 +296,9 @@ const optionsFn = (fecha) => {
 };
 
 const optionsImputDate = (fecha) => {
+  let today = new Date(hoy.value);
+  let todayMOne = moment(today);
+  todayMOne.add(1, "day");
   let inicio = semanalesTaxi.value.filter(
     (element) => element.id == semanal.value[0]?.id
   );
@@ -308,7 +311,10 @@ const optionsImputDate = (fecha) => {
     return (
       fecha >
         (events.value[posI - 1] ? events.value[posI - 1] : "2022/01/01") &&
-      fecha < (events.value[posF + 1] ? events.value[posF + 1] : hoy.value + 1)
+      fecha <
+        (events.value[posF + 1]
+          ? events.value[posF + 1]
+          : todayMOne.format("YYYY/MM/DD"))
     );
   } else {
     let newArray = events.value.slice();
@@ -318,9 +324,6 @@ const optionsImputDate = (fecha) => {
     }
     newArray.sort();
     let pos = newArray.lastIndexOf(date.value);
-    let today = new Date(hoy.value);
-    let todayMOne = moment(today);
-    todayMOne.add(1, "day");
     return (
       fecha > (pos == 0 ? "2022/01/01" : newArray[pos - 1]) &&
       fecha <
