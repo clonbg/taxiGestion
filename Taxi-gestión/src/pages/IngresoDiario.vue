@@ -366,7 +366,7 @@ const getDiarios = async () => {
 };
 
 const validarVarios = () => {
-  if (varios.value[0]) {
+  if (varios?.value[0]) {
     for (var i = 0; i < varios.value.length; i++) {
       if (varios.value[i] != "") {
         //Las dos están escritas
@@ -448,9 +448,11 @@ const sueldo = computed(() => {
     let sum = 0;
     diariosTaxi.value.forEach((element) => {
       if (element.dia.substring(5, 7) == mes) {
-        for (var i = 0; i < element.vario.length; i++) {
-          if (i % 2 == 0) {
-            sum = sum + parseInt(element.vario[i]);
+        if (element.vario) {
+          for (var i = 0; i < element.vario.length; i++) {
+            if (i % 2 == 0) {
+              sum = sum + parseInt(element.vario[i]);
+            }
           }
         }
         sum =
