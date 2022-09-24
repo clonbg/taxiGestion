@@ -7,32 +7,30 @@ from datetime import datetime, timedelta
 
 
 class IngresoSemanalCreationSerializers(serializers.ModelSerializer):
-    id=serializers.PrimaryKeyRelatedField(read_only=True)
-    dia_inicio = serializers.DateField()#unique
-    dia_fin = serializers.DateField()#unique
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
+    dia_inicio = serializers.DateField()  # unique
+    dia_fin = serializers.DateField()  # unique
     imagen_semana = serializers.ImageField(allow_null=True)
     total_efectivo_semana = serializers.FloatField(validators=[
-        MaxValueValidator(1000000),
-        MinValueValidator(1)
-    ],allow_null=True)
+        MaxValueValidator(1000000)], allow_null=True)
     total_apps_semana = serializers.FloatField(validators=[
-        MaxValueValidator(1000000),
-        MinValueValidator(1)
-    ],allow_null=True)
+        MaxValueValidator(1000000)
+    ], allow_null=True)
     total_tpv_semana = serializers.FloatField(validators=[
-        MaxValueValidator(1000000),
-        MinValueValidator(1)
-    ],allow_null=True)
+        MaxValueValidator(1000000)
+    ], allow_null=True)
     varios_semana = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
         MinValueValidator(-1000000)
-    ],allow_null=True)
+    ], allow_null=True)
     taxista = UserCreationSerializers(read_only=True)
-    taxista_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=User.objects.all(), source='taxista')
+    taxista_id = serializers.PrimaryKeyRelatedField(
+        write_only=True, queryset=User.objects.all(), source='taxista')
 
     class Meta:
         model = IngresoSemanal
-        fields = ['id','dia_inicio','dia_fin','imagen_semana','total_efectivo_semana','total_apps_semana','total_tpv_semana','varios_semana','taxista','taxista_id']
+        fields = ['id', 'dia_inicio', 'dia_fin', 'imagen_semana', 'total_efectivo_semana',
+                  'total_apps_semana', 'total_tpv_semana', 'varios_semana', 'taxista', 'taxista_id']
 
     # def validate(self, attrs):
     #     # dia_inicio menor que el dia_fin
@@ -46,33 +44,33 @@ class IngresoSemanalCreationSerializers(serializers.ModelSerializer):
     #         raise serializers.ValidationError(detail='Ya existen fechas mayores o iguales que el dia de inicio')
     #     return super().validate(attrs)
 
+
 class IngresoSemanalDetailSerializers(serializers.ModelSerializer):
-    id=serializers.PrimaryKeyRelatedField(read_only=True)
-    dia_inicio = serializers.DateField()#unique
-    dia_fin = serializers.DateField()#unique
-    imagen_semana = serializers.ImageField(required=False,allow_null=True)
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
+    dia_inicio = serializers.DateField()  # unique
+    dia_fin = serializers.DateField()  # unique
+    imagen_semana = serializers.ImageField(required=False, allow_null=True)
     total_efectivo_semana = serializers.FloatField(validators=[
-        MaxValueValidator(1000000),
-        MinValueValidator(1)
-    ],allow_null=True)
+        MaxValueValidator(1000000)
+    ], allow_null=True)
     total_apps_semana = serializers.FloatField(validators=[
-        MaxValueValidator(1000000),
-        MinValueValidator(1)
-    ],allow_null=True)
+        MaxValueValidator(1000000)
+    ], allow_null=True)
     total_tpv_semana = serializers.FloatField(validators=[
-        MaxValueValidator(1000000),
-        MinValueValidator(1)
-    ],allow_null=True)
+        MaxValueValidator(1000000)
+    ], allow_null=True)
     varios_semana = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
         MinValueValidator(-1000000)
-    ],allow_null=True)
+    ], allow_null=True)
     taxista = UserCreationSerializers(read_only=True)
-    taxista_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=User.objects.all(), source='taxista')
+    taxista_id = serializers.PrimaryKeyRelatedField(
+        write_only=True, queryset=User.objects.all(), source='taxista')
 
     class Meta:
         model = IngresoSemanal
-        fields = ['id','dia_inicio','dia_fin','imagen_semana','total_efectivo_semana','total_apps_semana','total_tpv_semana','varios_semana','taxista','taxista_id']
+        fields = ['id', 'dia_inicio', 'dia_fin', 'imagen_semana', 'total_efectivo_semana',
+                  'total_apps_semana', 'total_tpv_semana', 'varios_semana', 'taxista', 'taxista_id']
 
     # def validate(self, attrs):
     #     # dia_inicio menor que el dia_fin

@@ -12,16 +12,13 @@ class IngresoSemanal(models.Model):
     imagen_semana = models.ImageField(
         upload_to='imgs/%Y/%m/%d/', null=True, blank=True)
     total_efectivo_semana = models.FloatField(validators=[
-        MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MaxValueValidator(1000000)
     ],null=True, blank=True)
     total_apps_semana = models.FloatField(validators=[
-        MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MaxValueValidator(1000000)
     ],null=True, blank=True)
     total_tpv_semana = models.FloatField(validators=[
-        MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MaxValueValidator(1000000)
     ],null=True, blank=True)
     varios_semana = models.FloatField(validators=[
         MaxValueValidator(1000000),

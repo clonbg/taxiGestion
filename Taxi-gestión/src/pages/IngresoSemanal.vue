@@ -135,7 +135,7 @@
             dense
             :rules="[
               (val) =>
-                (val &&
+                (val !== '' &&
                   val >= 0 &&
                   !isNaN(val) &&
                   val <= 1000000 &&
@@ -154,7 +154,7 @@
             dense
             :rules="[
               (val) =>
-                (val &&
+                (val !== '' &&
                   val >= 0 &&
                   !isNaN(val) &&
                   val <= 1000000 &&
@@ -173,7 +173,7 @@
             dense
             :rules="[
               (val) =>
-                (val &&
+                (val !== '' &&
                   val >= 0 &&
                   !isNaN(val) &&
                   val <= 1000000 &&
@@ -284,7 +284,7 @@ const getHoy = () => {
 };
 
 const getEvents = () => {
-  events.value=[]
+  events.value = [];
   semanalesTaxi.value.forEach((element) => {
     let fecha1 = moment(element.dia_inicio);
     let fecha2 = moment(element.dia_fin);
@@ -402,18 +402,40 @@ const dosDecimales = (num) => {
 };
 
 const saveState = computed(() => {
+  console.log(
+    total_efectivo_semana.value === "",
+    total_efectivo_semana.value < 0,
+    total_efectivo_semana.value > 1000000,
+    !dosDecimales(total_efectivo_semana.value),
+    isNaN(total_efectivo_semana.value),
+    total_tpv_semana.value === "",
+    total_tpv_semana.value < 0,
+    total_tpv_semana.value > 1000000,
+    !dosDecimales(total_tpv_semana.value),
+    isNaN(total_tpv_semana.value),
+    total_apps_semana.value === "",
+    total_apps_semana.value < 0,
+    total_apps_semana.value > 1000000,
+    !dosDecimales(total_apps_semana.value),
+    isNaN(total_apps_semana.value),
+    varios_semana.value === "",
+    varios_semana.value < -1000000,
+    varios_semana.value > 1000000,
+    !dosDecimales(varios_semana.value),
+    isNaN(varios_semana.value)
+  );
   if (
-    !total_efectivo_semana.value ||
+    total_efectivo_semana.value === "" ||
     total_efectivo_semana.value < 0 ||
     total_efectivo_semana.value > 1000000 ||
     !dosDecimales(total_efectivo_semana.value) ||
     isNaN(total_efectivo_semana.value) ||
-    !total_tpv_semana.value ||
+    total_tpv_semana.value === "" ||
     total_tpv_semana.value < 0 ||
     total_tpv_semana.value > 1000000 ||
     !dosDecimales(total_tpv_semana.value) ||
     isNaN(total_tpv_semana.value) ||
-    !total_apps_semana.value ||
+    total_apps_semana.value === "" ||
     total_apps_semana.value < 0 ||
     total_apps_semana.value > 1000000 ||
     !dosDecimales(total_apps_semana.value) ||
@@ -500,21 +522,21 @@ const simulateProgressGuardar = (number, res) => {
     // we're done, we reset loading state
     loadingGuardar.value[number] = false;
     if (res.data.id == semanal.value[0]?.id) {
-      console.log('Editando', res.data)
+      console.log("Editando", res.data);
       imagen_semana.value = res.data.imagen_semana;
-      dia_inicio.value = res.data.dia_inicio.replaceAll("-", "/")
-      dia_fin.value = res.data.dia_fin.replaceAll("-", "/")
-      let pos = semanalesTaxi.value.filter(t => t.id == semanal.value[0].id)
-      pos = semanalesTaxi.value.lastIndexOf(pos[0])
-      semanalesTaxi.value.splice(pos,1)
-      semanalesTaxi.value.push(res.data)
-      getEvents()
-      console.log(semanalesTaxi.value)
+      dia_inicio.value = res.data.dia_inicio.replaceAll("-", "/");
+      dia_fin.value = res.data.dia_fin.replaceAll("-", "/");
+      let pos = semanalesTaxi.value.filter((t) => t.id == semanal.value[0].id);
+      pos = semanalesTaxi.value.lastIndexOf(pos[0]);
+      semanalesTaxi.value.splice(pos, 1);
+      semanalesTaxi.value.push(res.data);
+      getEvents();
+      console.log(semanalesTaxi.value);
       file.value = null;
     } else {
       imagen_semana.value = res.data.imagen;
       semanalesTaxi.value.push(res.data);
-      getEvents()
+      getEvents();
       file.value = null;
     }
     Notify.create({
