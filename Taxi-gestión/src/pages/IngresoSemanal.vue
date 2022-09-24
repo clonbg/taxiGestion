@@ -211,7 +211,7 @@
       >
       <q-btn
         class="form-submit q-ml-md q-my-md"
-        @click="getDiarios()"
+        @click="getSemanal()"
         color="primary"
         >Cancelar</q-btn
       >
@@ -497,6 +497,32 @@ const confirmaBorrar = () => {
   }).onOk(async () => {
     await simulateProgressBorrar(0);
   });
+};
+
+const getSemanal = async () => {
+  if (semanal.value[0]) {
+    await taxiStore.get_ingresos_semanales();
+    semanalesTaxi.value = [];
+    taxiStore.semanales.forEach((element) => {
+      if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
+        semanalesTaxi.value.push(element);
+      }
+    });
+    semanal.value = semanalesTaxi.value.filter(
+      (dia) =>
+        moment(dia.dia_inicio) <= new Date(date.value) &&
+        moment(dia.dia_fin) >= new Date(date.value)
+    );
+  } else {
+    imagen_semana.value = "";
+    dia_inicio.value = "";
+    dia_fin.value = "";
+    total_efectivo_semana.value = "";
+    total_tpv_semana.value = "";
+    total_apps_semana.value = "";
+    varios_semana.value = "";
+  }
+  file.value = null;
 };
 
 const subir = async () => {
