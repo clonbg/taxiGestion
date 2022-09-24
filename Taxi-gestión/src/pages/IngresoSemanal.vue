@@ -207,6 +207,7 @@
         type="submit"
         :disable="saveState"
         :color="saveState ? 'red' : 'green'"
+        :loading="loadingGuardar[0]"
         >Guardar</q-btn
       >
       <q-btn
@@ -283,6 +284,7 @@ const getHoy = () => {
 };
 
 const getEvents = () => {
+  events.value=[]
   semanalesTaxi.value.forEach((element) => {
     let fecha1 = moment(element.dia_inicio);
     let fecha2 = moment(element.dia_fin);
@@ -488,6 +490,40 @@ const simulateProgressBorrar = (number) => {
   }, 3000);
 };
 
+const loadingGuardar = ref([false, false, false, false, false, false]);
+const simulateProgressGuardar = (number, res) => {
+  // we set loading state
+  loadingGuardar.value[number] = true;
+
+  // simulate a delay
+  setTimeout(() => {
+    // we're done, we reset loading state
+    loadingGuardar.value[number] = false;
+    if (res.data.id == semanal.value[0]?.id) {
+      console.log('Editando', res.data)
+      imagen_semana.value = res.data.imagen_semana;
+      dia_inicio.value = res.data.dia_inicio.replaceAll("-", "/")
+      dia_fin.value = res.data.dia_fin.replaceAll("-", "/")
+      let pos = semanalesTaxi.value.filter(t => t.id == semanal.value[0].id)
+      pos = semanalesTaxi.value.lastIndexOf(pos[0])
+      semanalesTaxi.value.splice(pos,1)
+      semanalesTaxi.value.push(res.data)
+      getEvents()
+      console.log(semanalesTaxi.value)
+      file.value = null;
+    } else {
+      imagen_semana.value = res.data.imagen;
+      semanalesTaxi.value.push(res.data);
+      getEvents()
+      file.value = null;
+    }
+    Notify.create({
+      type: "positive",
+      message: "Ha sido guardado correctamente",
+    });
+  }, 3000);
+};
+
 const confirmaBorrar = () => {
   $q.dialog({
     title: "Cuidado",
@@ -553,6 +589,7 @@ const subir = async () => {
       await api
         .put(`/ingreso_semanal/${semanal.value[0].id}/`, formData, axiosConfig)
         .then((res) => {
+          simulateProgressGuardar(0, res);
           console.log(res);
         })
         .catch((err) => {
@@ -562,6 +599,7 @@ const subir = async () => {
       await api
         .post(`/ingreso_semanal/create/`, formData, axiosConfig)
         .then((res) => {
+          simulateProgressGuardar(0, res);
           console.log(res);
         })
         .catch((err) => {
