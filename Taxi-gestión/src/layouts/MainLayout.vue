@@ -16,7 +16,7 @@
         </q-toolbar-title>
 
         <div>
-          Ruta
+          <span class="q-mr-sm text-yellow">{{ ruta }}</span>
           <q-btn
             icon="mdi-location-exit"
             color="red"
@@ -44,13 +44,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 import { useTaxiStore } from "../stores/taxi-store";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { onMounted } from "vue";
-
+let ruta = computed(() => {
+  if (router.currentRoute.value.fullPath == "/") {
+    return "Perfil de usuario";
+  } else if (router.currentRoute.value.fullPath == "/diario") {
+    return "Ingresos diarios";
+  } else if (router.currentRoute.value.fullPath == "/semanal") {
+    return "Ingresos semanales";
+  } else if (router.currentRoute.value.fullPath == "/graficas") {
+    return "Gráficos y comparativas";
+  } else return "";
+});
 const router = useRouter();
 
 const taxiStore = useTaxiStore();
@@ -87,7 +97,7 @@ const essentialLink = [
     title: "Base de datos",
     caption: "Base de datos",
     icon: "storage",
-    to: "http://127.0.0.1:8000/admin/",
+    to: `${taxiStore.urlServer}api/admin/`,
     admin: true,
   },
 ];

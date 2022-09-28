@@ -402,28 +402,6 @@ const dosDecimales = (num) => {
 };
 
 const saveState = computed(() => {
-  console.log(
-    total_efectivo_semana.value === "",
-    total_efectivo_semana.value < 0,
-    total_efectivo_semana.value > 1000000,
-    !dosDecimales(total_efectivo_semana.value),
-    isNaN(total_efectivo_semana.value),
-    total_tpv_semana.value === "",
-    total_tpv_semana.value < 0,
-    total_tpv_semana.value > 1000000,
-    !dosDecimales(total_tpv_semana.value),
-    isNaN(total_tpv_semana.value),
-    total_apps_semana.value === "",
-    total_apps_semana.value < 0,
-    total_apps_semana.value > 1000000,
-    !dosDecimales(total_apps_semana.value),
-    isNaN(total_apps_semana.value),
-    varios_semana.value === "",
-    varios_semana.value < -1000000,
-    varios_semana.value > 1000000,
-    !dosDecimales(varios_semana.value),
-    isNaN(varios_semana.value)
-  );
   if (
     total_efectivo_semana.value === "" ||
     total_efectivo_semana.value < 0 ||
