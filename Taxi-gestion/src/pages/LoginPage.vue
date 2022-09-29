@@ -38,7 +38,7 @@
       >
     </form>
     <p
-      @click="openURL(`${taxiStore.urlServer}/reset_password/`)"
+      @click="openURL(`${taxiStore.urlServer}/api/reset_password/`)"
       class="title cursor-pointer text-secondary"
     >
       ¿Ha perdido la contraseña o tiene que activar la cuenta?

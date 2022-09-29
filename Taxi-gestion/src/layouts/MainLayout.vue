@@ -97,7 +97,7 @@ const essentialLink = [
     title: "Base de datos",
     caption: "Base de datos",
     icon: "storage",
-    to: `${taxiStore.urlServer}api/admin/`,
+    to: `${taxiStore.urlServer}/api/admin/`,
     admin: true,
   },
 ];
