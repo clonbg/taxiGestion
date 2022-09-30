@@ -13,15 +13,15 @@ class IngresoDiario(models.Model):
         upload_to='imgs/%Y/%m/%d/', null=True, blank=True)
     total_efectivo = models.FloatField(validators=[
         MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MinValueValidator(0)
     ], null=True, blank=True)
     total_apps = models.FloatField(validators=[
         MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MinValueValidator(0)
     ], null=True, blank=True)
     total_tpv = models.FloatField(validators=[
         MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MinValueValidator(0)
     ], null=True, blank=True)
     vario = ArrayField(models.CharField(max_length=25), null=True, blank=True)
     taxista = models.ForeignKey(

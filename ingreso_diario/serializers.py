@@ -11,15 +11,15 @@ class IngresoDiarioCreationSerializers(serializers.ModelSerializer):
     imagen = serializers.ImageField(allow_null=True)
     total_efectivo = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MinValueValidator(0)
     ], allow_null=True)
     total_apps = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MinValueValidator(0)
     ], allow_null=True)
     total_tpv = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MinValueValidator(0)
     ], allow_null=True)
     vario = serializers.ListField(
         child=serializers.CharField(allow_null=True, required=False), allow_null=True, required=False, default = [])
@@ -46,15 +46,15 @@ class IngresoDiarioDetailSerializers(serializers.ModelSerializer):
     imagen = serializers.ImageField(required=False,allow_null=True)
     total_efectivo = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MinValueValidator(0)
     ], allow_null=True)
     total_apps = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MinValueValidator(0)
     ], allow_null=True)
     total_tpv = serializers.FloatField(validators=[
         MaxValueValidator(1000000),
-        MinValueValidator(1)
+        MinValueValidator(0)
     ], allow_null=True)
     vario = serializers.ListField(
         child=serializers.CharField(allow_null=True, required=False), allow_null=True, required=False, default = [])

@@ -78,7 +78,7 @@
             dense
             :rules="[
               (val) =>
-                (val &&
+                (val !== '' &&
                   val >= 0 &&
                   !isNaN(val) &&
                   val <= 1000000 &&
@@ -97,7 +97,7 @@
             dense
             :rules="[
               (val) =>
-                (val &&
+                (val !== '' &&
                   val >= 0 &&
                   !isNaN(val) &&
                   val <= 1000000 &&
@@ -116,7 +116,7 @@
             dense
             :rules="[
               (val) =>
-                (val &&
+                (val !== '' &&
                   val >= 0 &&
                   !isNaN(val) &&
                   val <= 1000000 &&
