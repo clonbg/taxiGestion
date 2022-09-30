@@ -25,9 +25,11 @@
           <div class="col-12">
             <q-file
               v-model="file"
-              label="Cambie su foto"
+              label="Cambie su foto (5Mb Max)"
               filled
               class="q-my-xl"
+              max-file-size="5242880"
+              @rejected="onRejected"
             >
               <template v-slot:prepend>
                 <q-icon name="attach_file" />
@@ -192,6 +194,14 @@ const simulateProgress = (number) => {
       message: "Ha sido guardado correctamente",
     });
   }, 3000);
+};
+
+const onRejected = (rejectedEntries) => {
+  file.value = null;
+  Notify.create({
+    type: "negative",
+    message: `${rejectedEntries.length} archivos no han pasado la validación`,
+  });
 };
 
 const taxiStore = useTaxiStore();

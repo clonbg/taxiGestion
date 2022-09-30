@@ -48,8 +48,8 @@
         v-model="file"
         :label="
           events.indexOf(date) == -1
-            ? 'Inserte la imagen'
-            : 'Puede cambiar la imagen'
+            ? 'Inserte la imagen (5Mb Max)'
+            : 'Puede cambiar la imagen (5Mb Max)'
         "
         filled
         :rules="[
@@ -57,6 +57,8 @@
             (events.indexOf(date) == -1 ? val : true) ||
             'La imagen es obligatoria',
         ]"
+        max-file-size="5242880"
+        @rejected="onRejected"
       >
         <template v-slot:prepend>
           <q-icon name="attach_file" />
@@ -254,6 +256,14 @@ const varios_semana = ref(null);
 
 const $q = useQuasar();
 const progress = ref(false);
+
+const onRejected = (rejectedEntries) => {
+  file.value = null;
+  Notify.create({
+    type: "negative",
+    message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
+  });
+};
 
 const myLocale = {
   days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
