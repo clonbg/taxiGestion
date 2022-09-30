@@ -40,7 +40,6 @@ export default route(function (/* { store, ssrContext } */) {
         return next("/"); //Si es la página de login y existe el access_token
       }
     }
-    console.log(to.path);
     if (to.path == "/graficas" || to.path == "/graficas/") {
       await taxiStore.refresToken();
 

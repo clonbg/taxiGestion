@@ -470,7 +470,6 @@ const simulateProgressBorrar = (number) => {
   setTimeout(() => {
     // we're done, we reset loading state
     loadingBorrar.value[number] = false;
-    console.log("Borrar");
     eliminarSemanal();
     events.value = [];
     semanalesTaxi.value.forEach((element) => {
@@ -500,7 +499,6 @@ const simulateProgressGuardar = (number, res) => {
     // we're done, we reset loading state
     loadingGuardar.value[number] = false;
     if (res.data.id == semanal.value[0]?.id) {
-      console.log("Editando", res.data);
       imagen_semana.value = res.data.imagen_semana;
       dia_inicio.value = res.data.dia_inicio.replaceAll("-", "/");
       dia_fin.value = res.data.dia_fin.replaceAll("-", "/");
@@ -509,7 +507,6 @@ const simulateProgressGuardar = (number, res) => {
       semanalesTaxi.value.splice(pos, 1);
       semanalesTaxi.value.push(res.data);
       getEvents();
-      console.log(semanalesTaxi.value);
       file.value = null;
     } else {
       imagen_semana.value = res.data.imagen;
@@ -590,7 +587,6 @@ const subir = async () => {
         .put(`/ingreso_semanal/${semanal.value[0].id}/`, formData, axiosConfig)
         .then((res) => {
           simulateProgressGuardar(0, res);
-          console.log(res);
         })
         .catch((err) => {
           console.log(err.response);
@@ -600,7 +596,6 @@ const subir = async () => {
         .post(`/ingreso_semanal/create/`, formData, axiosConfig)
         .then((res) => {
           simulateProgressGuardar(0, res);
-          console.log(res);
         })
         .catch((err) => {
           console.log(err.response);

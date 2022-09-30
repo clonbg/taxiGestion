@@ -48,7 +48,6 @@ export const useTaxiStore = defineStore("taxi", () => {
       Date.now() - localStorage.getItem("tmp_taxi_access_token") >
         14 * 60 * 1000
     ) {
-      console.log("no es valido el access token");
       access_token.value = null;
       if (
         localStorage.getItem("taxi_refresh_token") === null ||
@@ -58,7 +57,6 @@ export const useTaxiStore = defineStore("taxi", () => {
         Date.now() - localStorage.getItem("tmp_taxi_refresh_token") >
           7 * 24 * 60 * 60 * 1000 - 60000
       ) {
-        console.log("no es válido el refresh token");
       } else {
         const res = await api.post("/djoser/jwt/refresh/", {
           refresh: localStorage.getItem("taxi_refresh_token"),

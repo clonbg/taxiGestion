@@ -309,7 +309,6 @@ const subir = async () => {
     await api
       .put(`/taxistas/${taxiStore.user.id}/`, formData, axiosConfig)
       .then(async (res) => {
-        console.log(res.data);
         simulateProgress(0);
       })
       .catch((err) => {
