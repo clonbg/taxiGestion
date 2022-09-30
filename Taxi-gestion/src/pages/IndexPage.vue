@@ -29,7 +29,9 @@
               filled
               class="q-my-xl"
               max-file-size="5242880"
+              accept=".jpg,.jpeg,.png"
               @rejected="onRejected"
+              :filter="validarFile"
             >
               <template v-slot:prepend>
                 <q-icon name="attach_file" />
@@ -200,8 +202,15 @@ const onRejected = (rejectedEntries) => {
   file.value = null;
   Notify.create({
     type: "negative",
-    message: `${rejectedEntries.length} archivos no han pasado la validación`,
+    message: `${rejectedEntries.length} archivo(s) no han pasado la validación`,
   });
+};
+
+const validarFile = (archivo) => {
+  console.log(archivo);
+  return archivo.filter(
+    (file) => file.type == "image/jpeg" || file.type == "image/png"
+  );
 };
 
 const taxiStore = useTaxiStore();
