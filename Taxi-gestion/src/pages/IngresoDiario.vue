@@ -362,10 +362,10 @@ const getEvents = () => {
 };
 
 const getDiarios = async () => {
-  if (diario.value[0]) {
+  if (events.value.lastIndexOf(date.value) != -1) {
     await taxiStore.get_ingresos_diarios();
+    diariosTaxi.value = [];
     taxiStore.diarios.forEach((element) => {
-      diariosTaxi.value = [];
       if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
         diariosTaxi.value.push(element);
       }
