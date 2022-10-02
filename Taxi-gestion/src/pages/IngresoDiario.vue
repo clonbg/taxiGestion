@@ -9,9 +9,12 @@
         :locale="myLocale"
       />
       <q-input
+        disable
         filled
         class="q-mt-md"
-        label="Sueldo"
+        :label="`Sueldo de ${myLocale.months[
+          date?.substring(5, 7) - 1
+        ].toLowerCase()}`"
         v-model="sueldo"
         suffix="Euros"
       />
