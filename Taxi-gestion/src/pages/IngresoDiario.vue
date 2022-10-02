@@ -12,9 +12,9 @@
         disable
         filled
         class="q-mt-md"
-        :label="`Sueldo de ${myLocale.months[
-          date?.substring(5, 7) - 1
-        ].toLowerCase()}`"
+        :label="`Sueldo de ${
+          date ? myLocale.months[date?.substring(5, 7) - 1].toLowerCase() : ''
+        }`"
         v-model="sueldo"
         suffix="Euros"
       />
@@ -298,7 +298,6 @@ const onRejected = (rejectedEntries) => {
 };
 
 const validarFile = (archivo) => {
-  console.log(archivo);
   return archivo.filter(
     (file) => file.type == "image/jpeg" || file.type == "image/png"
   );
@@ -413,17 +412,17 @@ const validarVarios = () => {
 
 const saveState = computed(() => {
   if (
-    !total_efectivo.value ||
+    !total_efectivo.value === "" ||
     total_efectivo.value < 0 ||
     total_efectivo.value > 1000000 ||
     !dosDecimales(total_efectivo.value) ||
     isNaN(total_efectivo.value) ||
-    !total_tpv.value ||
+    !total_tpv.value === "" ||
     total_tpv.value < 0 ||
     total_tpv.value > 1000000 ||
     !dosDecimales(total_tpv.value) ||
     isNaN(total_tpv.value) ||
-    !total_apps.value ||
+    !total_apps.value === "" ||
     total_apps.value < 0 ||
     total_apps.value > 1000000 ||
     !dosDecimales(total_apps.value) ||
