@@ -412,17 +412,17 @@ const validarVarios = () => {
 
 const saveState = computed(() => {
   if (
-    !total_efectivo.value === "" ||
+    total_efectivo.value === "" ||
     total_efectivo.value < 0 ||
     total_efectivo.value > 1000000 ||
     !dosDecimales(total_efectivo.value) ||
     isNaN(total_efectivo.value) ||
-    !total_tpv.value === "" ||
+    total_tpv.value === "" ||
     total_tpv.value < 0 ||
     total_tpv.value > 1000000 ||
     !dosDecimales(total_tpv.value) ||
     isNaN(total_tpv.value) ||
-    !total_apps.value === "" ||
+    total_apps.value === "" ||
     total_apps.value < 0 ||
     total_apps.value > 1000000 ||
     !dosDecimales(total_apps.value) ||
