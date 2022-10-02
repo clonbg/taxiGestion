@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="flex flex-center q-ma-sm">
     <div class="row float-left" style="margin-right: 15%; width: 15rem">
       <q-date
         v-model="date"
@@ -132,7 +132,7 @@
       </div>
       <span v-for="(item, index) in varios" :key="index">
         <div v-if="index % 2 != 0">
-          <div class="row no-wrap">
+          <div class="row no-wrap q-mr-md">
             <div class="col-4 q-mb-lm q-mr-sm">
               <q-input
                 standout
@@ -177,28 +177,6 @@
         </div>
       </span>
       <q-btn
-        class="form-submit"
-        type="submit"
-        :disable="saveState"
-        :color="saveState ? 'red' : 'green'"
-        :loading="loadingGuardar[0]"
-        >Guardar</q-btn
-      >
-      <q-btn
-        class="form-submit q-ml-md q-my-md"
-        @click="getDiarios()"
-        color="primary"
-        >Cancelar</q-btn
-      >
-      <q-btn
-        v-if="diario[0] ? true : false"
-        class="form-submit q-ml-md q-my-md"
-        @click="confirmaBorrar()"
-        color="negative"
-        :loading="loadingBorrar[0]"
-        >Eliminar</q-btn
-      >
-      <q-btn
         :disable="validarVarios()"
         round
         color="purple"
@@ -207,6 +185,28 @@
         class="float-right q-mt-sm"
         @click="variosMas()"
       />
+      <q-btn
+        class="form-submit q-my-md q-mr-sm"
+        type="submit"
+        :disable="saveState"
+        :color="saveState ? 'red' : 'green'"
+        :loading="loadingGuardar[0]"
+        >Guardar</q-btn
+      >
+      <q-btn
+        class="form-submit q-mx-sm q-my-md"
+        @click="getDiarios()"
+        color="primary"
+        >Cancelar</q-btn
+      >
+      <q-btn
+        v-if="diario[0] ? true : false"
+        class="form-submit q-my-md"
+        @click="confirmaBorrar()"
+        color="negative"
+        :loading="loadingBorrar[0]"
+        >Eliminar</q-btn
+      >
     </q-form>
   </q-page>
 </template>

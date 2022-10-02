@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="flex flex-center q-ma-sm">
     <div class="row float-left" style="margin-right: 15%; width: 15rem">
       <q-date
         v-model="date"

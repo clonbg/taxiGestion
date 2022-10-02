@@ -1,10 +1,10 @@
 <template>
   <q-page>
-    <div class="flex flex-center">
+    <div class="flex flex-center q-ma-sm">
+      <div class="row">
       <q-form
-        class="form q-my-xl"
+        class="form"
         @submit.prevent="subir()"
-        style="min-width: 600px"
         autocorrect="off"
         autocapitalize="off"
         autocomplete="off"
@@ -12,7 +12,7 @@
       >
         <q-img
           :src="`${taxiStore.urlServer}${taxiStore.user.foto}`"
-          class="imagen q-ma-xl"
+          class="imagen q-mx-xl"
           :ratio="16 / 9"
         >
           <template v-slot:error>
@@ -166,6 +166,7 @@
         >
       </q-form>
     </div>
+  </div>
   </q-page>
 </template>
 
