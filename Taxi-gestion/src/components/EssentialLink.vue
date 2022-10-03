@@ -1,14 +1,25 @@
 <template>
-  <q-item clickable @click="leer(to)" v-if="
-    !admin ||
-    (admin && (taxiStore.user ? taxiStore.user.is_superuser : false))
-  ">
-    <q-item-section v-if="icon" avatar>
-      <q-icon color="black" :name="icon" />
+  <q-item
+    clickable
+    @click="leer(to)"
+    v-if="
+      !admin ||
+      (admin && (taxiStore.user ? taxiStore.user.is_superuser : false))
+    "
+  >
+    <q-item-section v-if="icon" avatar class="q-mb-xs">
+      <q-icon
+        :color="router.currentRoute.value.path == to ? 'green' : 'black'"
+        :name="icon"
+      />
     </q-item-section>
-
     <q-item-section>
-      <q-item-label class="text-black">{{ title }}</q-item-label>
+      <q-item-label
+        :class="
+          router.currentRoute.value.path == to ? 'text-green' : 'text-black'
+        "
+        >{{ title }}</q-item-label
+      >
       <q-item-label caption>{{ caption }}</q-item-label>
     </q-item-section>
   </q-item>
