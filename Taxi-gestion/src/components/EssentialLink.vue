@@ -3,8 +3,9 @@
     clickable
     @click="leer(to)"
     v-if="
-      !admin ||
-      (admin && (taxiStore.user ? taxiStore.user.is_superuser : false))
+      (!admin && (taxiStore.user ? !taxiStore.user.is_superuser : false)) ||
+      (admin && (taxiStore.user ? taxiStore.user.is_superuser : false)) ||
+      to == '/'
     "
   >
     <q-item-section v-if="icon" avatar class="q-mb-xs">
