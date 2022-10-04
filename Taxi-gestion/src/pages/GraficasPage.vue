@@ -31,7 +31,7 @@
         :locale="myLocale"
       />
     </div>
-    <div>Prueba</div>
+    <div><pre>{{semana[0]}}</pre></div>
   </q-page>
 </template>
 <script setup>
@@ -83,14 +83,16 @@ const setModel = (val) => {
 };
 
 watchEffect(async () => {
-  if (taxi.value) {
+  if (stringOptions.lastIndexOf(taxi.value) != -1) {
     await taxiStore.get_ingresos_diarios();
+    diariosTaxi.value = [];
     taxiStore.diarios.forEach((element) => {
       if (element.taxista?.email == taxi.value) {
         diariosTaxi.value.push(element);
       }
     });
     await taxiStore.get_ingresos_semanales();
+    semanalesTaxi.value = [];
     taxiStore.semanales.forEach((element) => {
       if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
         semanalesTaxi.value.push(element);
@@ -105,20 +107,26 @@ watchEffect(async () => {
         fecha1.add(1, "day");
       }
     });
-    console.log(diariosTaxi.value, semanalesTaxi.value, events.value);
+  } else {
+    diariosTaxi.value = [];
+    semanalesTaxi.value = [];
+    events.value = [];
   }
+  console.log(taxi.value, diariosTaxi.value, semanalesTaxi.value, events.value);
 });
 
 watchEffect(() => {
-  if (date.value) {
+  if (date.value && stringOptions.lastIndexOf(taxi.value) != -1) {
     semana.value = semanalesTaxi.value.filter(
       (t) =>
         moment(t.dia_inicio) <= moment(new Date(date.value)) &&
         moment(t.dia_fin) >= moment(new Date(date.value))
     );
-    console.log("cambia de día", semana.value);
     // aqui los diarios que corresponden a esa semana
+  } else {
+    semana.value = '';
   }
+  console.log("cambia de día", semana.value);
 });
 
 const listaTaxistas = () => {
