@@ -31,7 +31,18 @@
         :locale="myLocale"
       />
     </div>
-    <div><pre>{{semana[0]}}</pre></div>
+    <div>
+      <ul v-if="semana[0]">
+        <li>
+          {{ semana[0].dia_inicio.split("-").reverse().join("-") }} a
+          {{ semana[0].dia_fin.split("-").reverse().join("-") }} => efectivo:
+          {{ semana[0].total_efectivo_semana }}, tpv:
+          {{ semana[0].total_tpv_semana }}, apps:
+          {{ semana[0].total_apps_semana }}, varios:
+          {{ semana[0].varios_semana }}
+        </li>
+      </ul>
+    </div>
   </q-page>
 </template>
 <script setup>
@@ -94,7 +105,7 @@ watchEffect(async () => {
     await taxiStore.get_ingresos_semanales();
     semanalesTaxi.value = [];
     taxiStore.semanales.forEach((element) => {
-      if (element.taxista?.email == localStorage.getItem("email_taxi_user")) {
+      if (element.taxista?.email == taxi.value) {
         semanalesTaxi.value.push(element);
       }
     });
@@ -124,7 +135,7 @@ watchEffect(() => {
     );
     // aqui los diarios que corresponden a esa semana
   } else {
-    semana.value = '';
+    semana.value = "";
   }
   console.log("cambia de día", semana.value);
 });
