@@ -31,8 +31,8 @@
         :locale="myLocale"
       />
     </div>
-    <div>
-      <ul v-if="semana[0]">
+    <div v-if="semana[0]">
+      <ul>
         <li>
           {{ semana[0].dia_inicio.split("-").reverse().join("-") }} a
           {{ semana[0].dia_fin.split("-").reverse().join("-") }} => efectivo:
@@ -42,7 +42,16 @@
           {{ semana[0].varios_semana }}
         </li>
       </ul>
+      <ul v-for="dia in dias" :key="dia.id" class="q-ml-lg">
+        <li v-if="dias">
+          {{ dia.dia.split("-").reverse().join("-") }} => efectivo:
+          {{ dia.total_efectivo }}, tpv: {{ dia.total_tpv }}, apps:
+          {{ dia.total_apps
+          }}{{ dia.total_varios ? `, varios: ${dia.total_varios}` : "" }}
+        </li>
+      </ul>
     </div>
+    <p v-else>No hay ninguna semana aquí, cambie de día o de taxista</p>
   </q-page>
 </template>
 <script setup>
@@ -58,7 +67,8 @@ const options = ref(stringOptions);
 const diariosTaxi = ref([]);
 const semanalesTaxi = ref([]);
 const events = ref([]);
-const semana = ref();
+const semana = ref(null);
+const dias = ref(null);
 
 const myLocale = {
   days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
@@ -123,7 +133,6 @@ watchEffect(async () => {
     semanalesTaxi.value = [];
     events.value = [];
   }
-  console.log(taxi.value, diariosTaxi.value, semanalesTaxi.value, events.value);
 });
 
 watchEffect(() => {
@@ -134,10 +143,29 @@ watchEffect(() => {
         moment(t.dia_fin) >= moment(new Date(date.value))
     );
     // aqui los diarios que corresponden a esa semana
+    dias.value = diariosTaxi.value
+      .filter((t) => {
+        return (
+          moment(t.dia) <= moment(semana.value[0]?.dia_fin) &&
+          moment(t.dia) >= moment(semana.value[0]?.dia_inicio)
+        );
+      })
+      .reverse();
+    for (var i = 0; i < dias.value.length; i++) {
+      if (dias.value[i].vario.length != 0) {
+        let sum = 0;
+        for (var j = 0; j < dias.value[i].vario.length; j++) {
+          if (j % 2 == 0) {
+            sum += parseInt(dias.value[i].vario[j]);
+          }
+        }
+        dias.value[i].total_varios = sum;
+      }
+    }
   } else {
     semana.value = "";
+    dias.value = "";
   }
-  console.log("cambia de día", semana.value);
 });
 
 const listaTaxistas = () => {
