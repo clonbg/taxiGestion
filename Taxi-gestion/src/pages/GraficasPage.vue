@@ -50,6 +50,14 @@
           }}{{ dia.total_varios ? `, varios: ${dia.total_varios}` : "" }}
         </li>
       </ul>
+      <q-badge
+        rounded
+        :color="semana[0].suma ? 'green' : 'red'"
+        :label="
+          semana[0].suma ? 'La suma es correcta' : 'La suma es incorrecta'
+        "
+        class="q-ml-xl"
+      />
     </div>
     <p v-else>No hay ninguna semana aquí, cambie de día o de taxista</p>
   </q-page>
@@ -161,6 +169,26 @@ watchEffect(() => {
         }
         dias.value[i].total_varios = sum;
       }
+    }
+    if (dias.value[0]) {
+      let sumSemana =
+        parseInt(semana.value[0].total_efectivo_semana) +
+        parseInt(semana.value[0].total_tpv_semana) +
+        parseInt(semana.value[0].total_apps_semana) +
+        parseInt(semana.value[0].varios_semana);
+      let sumaDias = 0;
+      dias.value.forEach((element) => {
+        sumaDias +=
+          parseInt(element.total_apps) +
+          parseInt(element.total_efectivo) +
+          parseInt(element.total_tpv);
+        if (element.total_varios) {
+          sumaDias += element.total_varios;
+        }
+      });
+      if (sumSemana == sumaDias) {
+        semana.value[0].suma = true;
+      } else semana.value[0].suma = false;
     }
   } else {
     semana.value = "";
