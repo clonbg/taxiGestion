@@ -54,7 +54,11 @@
         rounded
         :color="semana[0].suma ? 'green' : 'red'"
         :label="
-          semana[0].suma ? 'La suma es correcta' : 'La suma es incorrecta'
+          semana[0].suma
+            ? 'La suma es correcta'
+            : dias[0]
+            ? 'La suma es incorrecta'
+            : 'No hay entradas diarias para esa semana'
         "
         class="q-ml-xl"
       />
