@@ -53,12 +53,26 @@ import { onMounted } from "vue";
 let ruta = computed(() => {
   if (router.currentRoute.value.fullPath == "/") {
     return "Perfil de usuario";
-  } else if (router.currentRoute.value.fullPath == "/diario") {
+  } else if (
+    router.currentRoute.value.fullPath == "/diario" ||
+    router.currentRoute.value.fullPath == "/diario/"
+  ) {
     return "Ingresos diarios";
-  } else if (router.currentRoute.value.fullPath == "/semanal") {
+  } else if (
+    router.currentRoute.value.fullPath == "/semanal" ||
+    router.currentRoute.value.fullPath == "/semanal/"
+  ) {
     return "Ingresos semanales";
-  } else if (router.currentRoute.value.fullPath == "/graficas") {
+  } else if (
+    router.currentRoute.value.fullPath == "/graficas" ||
+    router.currentRoute.value.fullPath == "/graficas/"
+  ) {
     return "Gráficos y comparativas";
+  } else if (
+    router.currentRoute.value.fullPath == "/comprobaciones" ||
+    router.currentRoute.value.fullPath == "/comprobaciones/"
+  ) {
+    return "Cálculos";
   } else return "";
 });
 const router = useRouter();
@@ -87,8 +101,15 @@ const essentialLink = [
     to: "/semanal",
   },
   {
+    title: "Comprobaciones",
+    caption: "Calculos",
+    icon: "calculate",
+    to: "/comprobaciones",
+    admin: true,
+  },
+  {
     title: "Gráficas",
-    caption: "comparativas",
+    caption: "Gráficas",
     icon: "insert_chart_outlined",
     to: "/graficas",
     admin: true,

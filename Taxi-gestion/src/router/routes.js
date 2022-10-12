@@ -22,6 +22,10 @@ const routes = [
         path: "graficas",
         component: () => import("src/pages/GraficasPage.vue"),
       },
+      {
+        path: "comprobaciones",
+        component: () => import("src/pages/ComprobarSemanas.vue"),
+      },
     ],
   },
 
