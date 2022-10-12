@@ -1,75 +1,81 @@
 <template>
-  <q-page class="flex flex-center q-ma-sm">
-    <div class="row float-left" style="margin-right: 15%; width: 15rem">
-      <div class="q-gutter-md row">
-        <q-select
-          filled
-          :model-value="taxi"
-          use-input
-          hide-selected
-          fill-input
-          input-debounce="0"
-          :options="options"
-          @filter="filterFn"
-          @input-value="setModel"
-          hint="Text autocomplete"
-          style="width: 250px; padding-bottom: 32px"
-          label="Taxista"
-        >
-          <template v-slot:no-option>
-            <q-item>
-              <q-item-section class="text-grey"> No results </q-item-section>
-            </q-item>
-          </template>
-        </q-select>
+  <q-page>
+    <div class="flex flex-center q-ma-sm">
+      <div class="row float-left" style="margin-right: 15%; width: 15rem">
+        <div class="q-gutter-md row">
+          <q-select
+            filled
+            :model-value="taxi"
+            use-input
+            hide-selected
+            fill-input
+            input-debounce="0"
+            :options="options"
+            @filter="filterFn"
+            @input-value="setModel"
+            hint="Text autocomplete"
+            style="width: 250px; padding-bottom: 32px"
+            label="Taxista"
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <q-date
+          v-model="date"
+          :events="events"
+          today-btn
+          :options="optionsFn"
+          :locale="myLocale"
+        />
       </div>
-      <q-date
-        v-model="date"
-        :events="events"
-        today-btn
-        :options="optionsFn"
-        :locale="myLocale"
-      />
+      <div v-if="semana[0]">
+        <ul>
+          <li>
+            {{ semana[0].dia_inicio.split("-").reverse().join("-") }} a
+            {{ semana[0].dia_fin.split("-").reverse().join("-") }} => efectivo:
+            {{ semana[0].total_efectivo_semana }}, tpv:
+            {{ semana[0].total_tpv_semana }}, apps:
+            {{ semana[0].total_apps_semana }}, varios:
+            {{ semana[0].varios_semana }}
+          </li>
+        </ul>
+        <ul v-for="dia in dias" :key="dia.id" class="q-ml-lg">
+          <li v-if="dias">
+            {{ dia.dia.split("-").reverse().join("-") }} => efectivo:
+            {{ dia.total_efectivo }}, tpv: {{ dia.total_tpv }}, apps:
+            {{ dia.total_apps
+            }}{{ dia.total_varios ? `, varios: ${dia.total_varios}` : "" }}
+          </li>
+        </ul>
+        <q-badge
+          rounded
+          :color="semana[0].suma ? 'green' : 'red'"
+          :label="
+            semana[0].suma
+              ? 'La suma es correcta'
+              : dias[0]
+              ? 'La suma es incorrecta'
+              : 'No hay entradas diarias para esa semana'
+          "
+          class="q-ml-xl"
+        />
+      </div>
+      <p v-else>No hay ninguna semana aquí, cambie de día o de taxista</p>
     </div>
-    <div v-if="semana[0]">
-      <ul>
-        <li>
-          {{ semana[0].dia_inicio.split("-").reverse().join("-") }} a
-          {{ semana[0].dia_fin.split("-").reverse().join("-") }} => efectivo:
-          {{ semana[0].total_efectivo_semana }}, tpv:
-          {{ semana[0].total_tpv_semana }}, apps:
-          {{ semana[0].total_apps_semana }}, varios:
-          {{ semana[0].varios_semana }}
-        </li>
-      </ul>
-      <ul v-for="dia in dias" :key="dia.id" class="q-ml-lg">
-        <li v-if="dias">
-          {{ dia.dia.split("-").reverse().join("-") }} => efectivo:
-          {{ dia.total_efectivo }}, tpv: {{ dia.total_tpv }}, apps:
-          {{ dia.total_apps
-          }}{{ dia.total_varios ? `, varios: ${dia.total_varios}` : "" }}
-        </li>
-      </ul>
-      <q-badge
-        rounded
-        :color="semana[0].suma ? 'green' : 'red'"
-        :label="
-          semana[0].suma
-            ? 'La suma es correcta'
-            : dias[0]
-            ? 'La suma es incorrecta'
-            : 'No hay entradas diarias para esa semana'
-        "
-        class="q-ml-xl"
-      />
+    <div class="q-ma-xl">
+      <chart></chart>
     </div>
-    <p v-else>No hay ninguna semana aquí, cambie de día o de taxista</p>
   </q-page>
 </template>
 <script setup>
 import { ref, onMounted, watchEffect } from "vue";
 import { useTaxiStore } from "../stores/taxi-store";
 import moment from "moment";
+import Chart from "../components/charts/MyChart.vue";
 
 const taxiStore = useTaxiStore();
 const date = ref(new Date().toJSON().slice(0, 10).replace(/-/g, "/"));
