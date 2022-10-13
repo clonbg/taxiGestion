@@ -33,24 +33,16 @@
         />
       </div>
       <div v-if="semana[0]">
-        <ul>
-          <li>
-            {{ semana[0].dia_inicio.split("-").reverse().join("-") }} a
-            {{ semana[0].dia_fin.split("-").reverse().join("-") }} => efectivo:
-            {{ semana[0].total_efectivo_semana }}, tpv:
-            {{ semana[0].total_tpv_semana }}, apps:
-            {{ semana[0].total_apps_semana }}, varios:
-            {{ semana[0].varios_semana }}
-          </li>
-        </ul>
-        <ul v-for="dia in dias" :key="dia.id" class="q-ml-lg">
-          <li v-if="dias">
-            {{ dia.dia.split("-").reverse().join("-") }} => efectivo:
-            {{ dia.total_efectivo }}, tpv: {{ dia.total_tpv }}, apps:
-            {{ dia.total_apps
-            }}{{ dia.total_varios ? `, varios: ${dia.total_varios}` : "" }}
-          </li>
-        </ul>
+        <div class="q-pa-md">
+          <q-table
+            title="Semana"
+            dense
+            :rows="rows"
+            :columns="columns"
+            row-key="dias"
+            :rows-per-page-options="[0]"
+          />
+        </div>
         <q-badge
           rounded
           :color="semana[0].suma ? 'green' : 'red'"
@@ -69,7 +61,7 @@
   </q-page>
 </template>
 <script setup>
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watchEffect, computed } from "vue";
 import { useTaxiStore } from "../stores/taxi-store";
 import moment from "moment";
 import Chart from "../components/charts/MyChart.vue";
@@ -84,6 +76,67 @@ const semanalesTaxi = ref([]);
 const events = ref([]);
 const semana = ref(null);
 const dias = ref(null);
+
+const columns = [
+  {
+    name: "dias",
+    required: true,
+    label: "Días",
+    align: "left",
+    field: (row) => row.dias,
+    format: (val) => `${val}`,
+    sortable: true,
+  },
+  {
+    name: "efectivo",
+    align: "left",
+    label: "Efectivo",
+    field: "efectivo",
+    sortable: true,
+  },
+  { name: "tpv", label: "TPV", field: "tpv", align: "left", sortable: true },
+  { name: "apps", label: "Apps", align: "left", field: "apps" },
+  { name: "varios", label: "Varios", align: "left", field: "varios" },
+];
+
+const rows = computed(() => {
+  var tabla = [];
+  if (semana.value[0]) {
+    tabla = [
+      {
+        dias:
+          semana.value[0].dia_inicio.split("-").reverse().join("/") +
+          " a " +
+          semana.value[0].dia_fin.split("-").reverse().join("/"),
+        efectivo: semana.value[0].total_efectivo_semana,
+        tpv: semana.value[0].total_tpv_semana,
+        apps: semana.value[0].total_apps_semana,
+        varios: semana.value[0].varios_semana,
+      },
+    ];
+  }
+  if (dias.value[0]) {
+    dias.value.forEach((element) => {
+      console.log(element);
+      var varios = 0;
+      for (var i = 0; i < element.vario.length; i++) {
+        if (i % 2 == 0) {
+          varios += parseInt(element.vario[i]);
+        }
+      }
+      var item = {
+        dias: element.dia.split("-").reverse().join("/"),
+        efectivo: element.total_efectivo,
+        tpv: element.total_tpv,
+        apps: element.total_apps,
+        varios: varios,
+      };
+      tabla.push(item);
+    });
+  }
+
+  return tabla;
+});
 
 const myLocale = {
   days: "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado".split("_"),
