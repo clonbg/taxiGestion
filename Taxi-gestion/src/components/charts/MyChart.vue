@@ -1,5 +1,6 @@
 <template>
 	<apexchart
+		ref="realtimeChart"
 		type="area"
 		height="350"
 		:series="series"
