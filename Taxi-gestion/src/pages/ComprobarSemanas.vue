@@ -13,7 +13,6 @@
             :options="options"
             @filter="filterFn"
             @input-value="setModel"
-            hint="Text autocomplete"
             style="width: 250px; padding-bottom: 32px"
             label="Taxista"
           >
