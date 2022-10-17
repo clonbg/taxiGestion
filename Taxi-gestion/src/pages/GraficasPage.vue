@@ -100,7 +100,7 @@ var series = [
   },
   {
     name: "",
-    data: [11, 32, 0, 32, 34, 52, 41],
+    data: [],
   },
 ];
 
@@ -144,34 +144,23 @@ const listaTaxistas = () => {
 
 const getDiarios = async () => {
   await taxiStore.get_ingresos_diarios();
-  // for del mes con los días
-  // si hay entrada diaria del taxista 1 o 2 se añade a su data
-  // si no añadimos un cero
 };
 
 watchEffect(() => {
-  getDiarios();
-  console.log(taxiStore.diarios);
-  if (typeof taxista1.value === "string") {
-    series[0].name = taxista1.value;
-    // Traer las entradas diarias que coinciden con este taxista, sumarlas cada día y devolverlo en array
-  }
-  if (typeof taxista2.value === "string") {
-    series[1].name = taxista2.value;
-    // Traer las entradas diarias que coinciden con este taxista, sumarlas cada día y devolverlo en array
-  }
+  //días tiene el mes
+  let num_dias_mes = new Date(
+    anyo.value,
+    optionsMeses.indexOf(mes.value) + 1,
+    0
+  ).getDate();
+
   if (
     anyo.value &&
     !isNaN(anyo.value) &&
     anyo.value >= 2022 &&
     anyo.value <= 2200
   ) {
-    //días tiene el mes
-    let num_dias_mes = new Date(
-      anyo.value,
-      optionsMeses.indexOf(mes.value) + 1,
-      0
-    ).getDate();
+    // Si el año es correcto crear las categorias, la barra de abajo de la gráfica
     chartOptions.xaxis.categories = [];
     for (var i = 1; i <= num_dias_mes; i++) {
       let item = `${anyo.value}-${
@@ -182,6 +171,56 @@ watchEffect(() => {
       chartOptions.xaxis.categories.push(item);
     }
   } else chartOptions.xaxis.categories = [];
+
+  if (typeof taxista1.value === "string") {
+    series[0].name = taxista1.value;
+    var data1 = [...Array(num_dias_mes)].map((x) => 0);
+    var month = optionsMeses.indexOf(mes.value) + 1;
+    var filtroTaxista1 = taxiStore.diarios.filter(
+      (x) =>
+        x.taxista.email == taxista1.value &&
+        month == parseInt(x.dia.substring(5, 7))
+    );
+    filtroTaxista1.forEach((element) => {
+      var dia = parseInt(element.dia.substring(8, 10));
+      var suma =
+        element.total_efectivo + element.total_apps + element.total_tpv;
+      if (element.vario) {
+        for (var i = 0; i < element.vario.length; i++) {
+          if (i % 2 == 0) {
+            suma += parseInt(element.vario[i]);
+          }
+        }
+      }
+      data1[dia] = suma;
+    });
+    series[0].data = data1;
+  }
+  if (typeof taxista2.value === "string") {
+    series[1].name = taxista2.value;
+    var data2 = [...Array(num_dias_mes)].map((x) => 0);
+    var month = optionsMeses.indexOf(mes.value) + 1;
+    var filtroTaxista2 = taxiStore.diarios.filter(
+      (x) =>
+        x.taxista.email == taxista2.value &&
+        month == parseInt(x.dia.substring(5, 7))
+    );
+    filtroTaxista2.forEach((element) => {
+      var dia = parseInt(element.dia.substring(8, 10));
+      var suma =
+        element.total_efectivo + element.total_apps + element.total_tpv;
+      if (element.vario) {
+        for (var i = 0; i < element.vario.length; i++) {
+          if (i % 2 == 0) {
+            suma += parseInt(element.vario[i]);
+          }
+        }
+      }
+      data2[dia] = suma;
+    });
+    series[1].data = data2;
+  }
+
   if (stringOptions2 != [] || stringOptions1 != []) {
     listaTaxistas();
   }
@@ -208,5 +247,6 @@ const filterFn2 = (val, update, abort) => {
 
 onMounted(() => {
   listaTaxistas();
+  getDiarios();
 });
 </script>

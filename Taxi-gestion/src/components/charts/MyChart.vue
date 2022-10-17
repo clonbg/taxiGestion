@@ -6,8 +6,6 @@
 		:series="series"
 		:options="options"
 	></apexchart>
-
-	{{ options }}-{{ series }}
 </template>
 
 <script>
