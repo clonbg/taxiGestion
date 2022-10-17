@@ -273,7 +273,7 @@ watchEffect(() => {
           }
         }
       }
-      data1[dia] = suma;
+      data1[dia-1] = suma;
     });
     series[0].data = data1;
     // gráfica 2
@@ -318,7 +318,7 @@ watchEffect(() => {
           }
         }
       }
-      data2[dia] = suma;
+      data2[dia-1] = suma;
     });
     series[1].data = data2;
     // gráfica 2
