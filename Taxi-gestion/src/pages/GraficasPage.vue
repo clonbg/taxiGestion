@@ -42,8 +42,11 @@
           label="Año"
           filled
           :rules="[
-            ((val) => val && !isNaN(val) && val >= 2022 && val <= 2200) ||
-              'Año no válido',
+            ((val) =>
+              val &&
+              !isNaN(val) &&
+              val >= 2022 &&
+              val <= new Date().getFullYear()) || 'Año no válido',
           ]"
         />
         <q-select
@@ -66,6 +69,15 @@
       <chart
         :series="series"
         :options="chartOptions"
+        :key="componentkey"
+      ></chart>
+    </div>
+    <div class="qr-mr-md q-mt-xl">
+      <chart
+        type="bar"
+        height="350"
+        :options="chartOptionsBarras"
+        :series="seriesBarras"
         :key="componentkey"
       ></chart>
     </div>
@@ -119,9 +131,78 @@ const chartOptions = {
     type: "datetime",
     categories: [],
   },
+  yaxis: {
+    title: {
+      text: "$ (Euros)",
+    },
+  },
   tooltip: {
     x: {
       format: "dd/MM/yy",
+    },
+  },
+};
+
+const seriesBarras = [
+  {
+    name: "",
+    data: [],
+  },
+  {
+    name: "",
+    data: [],
+  },
+];
+
+const chartOptionsBarras = {
+  chart: {
+    type: "bar",
+    height: 350,
+  },
+  plotOptions: {
+    bar: {
+      horizontal: false,
+      columnWidth: "55%",
+      endingShape: "rounded",
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    show: true,
+    width: 2,
+    colors: ["transparent"],
+  },
+  xaxis: {
+    categories: [
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic",
+    ],
+  },
+  yaxis: {
+    title: {
+      text: "$ (Euros)",
+    },
+  },
+  fill: {
+    opacity: 1,
+  },
+  tooltip: {
+    y: {
+      formatter: function (val) {
+        return "$ " + val + " Euros";
+      },
     },
   },
 };
@@ -158,7 +239,7 @@ watchEffect(() => {
     anyo.value &&
     !isNaN(anyo.value) &&
     anyo.value >= 2022 &&
-    anyo.value <= 2200
+    anyo.value <= new Date().getFullYear()
   ) {
     // Si el año es correcto crear las categorias, la barra de abajo de la gráfica
     chartOptions.xaxis.categories = [];
@@ -195,6 +276,27 @@ watchEffect(() => {
       data1[dia] = suma;
     });
     series[0].data = data1;
+    // gráfica 2
+    seriesBarras[0].name = taxista1.value;
+    seriesBarras[0].data = [...Array(12)].map((x) => 0);
+    var filtroTaxista1 = taxiStore.diarios.filter(
+      (x) =>
+        x.taxista.email == taxista1.value &&
+        anyo.value == parseInt(x.dia.substring(0, 4))
+    );
+    filtroTaxista1.forEach((element) => {
+      var suma =
+        element.total_efectivo + element.total_apps + element.total_tpv;
+      if (element.vario) {
+        for (var i = 0; i < element.vario.length; i++) {
+          if (i % 2 == 0) {
+            suma += parseInt(element.vario[i]);
+          }
+        }
+      }
+      var orden = parseInt(element.dia.substring(5, 7)) - 1;
+      seriesBarras[0].data[orden] += suma;
+    });
   }
   if (typeof taxista2.value === "string") {
     series[1].name = taxista2.value;
@@ -219,12 +321,33 @@ watchEffect(() => {
       data2[dia] = suma;
     });
     series[1].data = data2;
+    // gráfica 2
+    seriesBarras[1].name = taxista2.value;
+    seriesBarras[1].data = [...Array(12)].map((x) => 0);
+    var filtroTaxista2 = taxiStore.diarios.filter(
+      (x) =>
+        x.taxista.email == taxista2.value &&
+        anyo.value == parseInt(x.dia.substring(0, 4))
+    );
+    filtroTaxista2.forEach((element) => {
+      var suma =
+        element.total_efectivo + element.total_apps + element.total_tpv;
+      if (element.vario) {
+        for (var i = 0; i < element.vario.length; i++) {
+          if (i % 2 == 0) {
+            suma += parseInt(element.vario[i]);
+          }
+        }
+      }
+      var orden = parseInt(element.dia.substring(5, 7)) - 1;
+      seriesBarras[1].data[orden] += suma;
+    });
   }
 
   if (stringOptions2 != [] || stringOptions1 != []) {
     listaTaxistas();
   }
-  componentkey.value += 1; //Update
+  componentkey.value += 1; //Update grap
 });
 
 const filterFn1 = (val, update, abort) => {
