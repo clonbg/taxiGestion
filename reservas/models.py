@@ -1,7 +1,5 @@
 from django.db import models
 from taxistas.models import User
-from django.utils.timezone import now
-import datetime
 
 
 class Reserva(models.Model):
