@@ -14,4 +14,4 @@ class Reserva(models.Model):
     hora_creada_reserva = models.TimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"<Reserva {self.nombre}, {self.direccion}, {self.hora}"
+        return f"<Reserva {self.nombre}, {self.direccion}, {self.hora_recogida}"
