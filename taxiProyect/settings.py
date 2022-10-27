@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'licencias.apps.LicenciasConfig',
     'ingreso_diario.apps.IngresoDiarioConfig',
     'ingreso_semanal.apps.IngresoSemanalConfig',
+    'reservas.apps.ReservasConfig',
 
     'rest_framework',
     'corsheaders',
