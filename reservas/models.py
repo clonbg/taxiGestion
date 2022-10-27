@@ -1,5 +1,6 @@
 from django.db import models
 from taxistas.models import User
+from django.utils.timezone import now
 
 
 class Reserva(models.Model):
@@ -11,7 +12,7 @@ class Reserva(models.Model):
     taxista = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True)
     confirmada = models.BooleanField(default=False)
-    hora_creada_reserva = models.TimeField(auto_now_add=True)
+    hora_creada_reserva = models.TimeField(default=now)
 
     def __str__(self):
         return f"<Reserva {self.nombre}, {self.direccion}, {self.hora_recogida}"
