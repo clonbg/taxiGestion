@@ -24,7 +24,7 @@ urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/taxistas/', include('taxistas.urls')),
     path('api/licencias/', include('licencias.urls')),
-    path('api/reservas/', include('reservas.urls')),
+    # path('api/reservas/', include('reservas.urls')),
     path('api/ingreso_diario/', include('ingreso_diario.urls')),
     path('api/ingreso_semanal/', include('ingreso_semanal.urls')),
     path('api/djoser/', include('djoser.urls.jwt')),
