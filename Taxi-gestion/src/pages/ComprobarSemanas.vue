@@ -3,19 +3,8 @@
     <div class="flex flex-center q-ma-sm q-mt-xl">
       <div class="row float-left" style="margin-right: 15%; width: 15rem">
         <div class="q-gutter-md row">
-          <q-select
-            filled
-            :model-value="taxi"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            :options="options"
-            @filter="filterFn"
-            @input-value="setModel"
-            style="width: 250px; padding-bottom: 32px"
-            label="Taxista"
-          >
+          <q-select filled :model-value="taxi" use-input hide-selected fill-input input-debounce="0" :options="options"
+            @filter="filterFn" @input-value="setModel" style="width: 250px; padding-bottom: 32px" label="Taxista">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
@@ -23,37 +12,19 @@
             </template>
           </q-select>
         </div>
-        <q-date
-          v-model="date"
-          :events="events"
-          today-btn
-          :options="optionsFn"
-          :locale="myLocale"
-        />
+        <q-date v-model="date" :events="events" today-btn :options="optionsFn" :locale="myLocale" />
       </div>
       <div v-if="semana[0]">
         <div class="q-pa-md">
-          <q-table
-            title="Semana"
-            dense
-            :rows="rows"
-            :columns="columns"
-            row-key="dias"
-            :rows-per-page-options="[0]"
-          />
+          <q-table title="Semana" dense :rows="rows" :columns="columns" row-key="dias" :rows-per-page-options="[0]" />
         </div>
-        <q-badge
-          rounded
-          :color="semana[0].suma ? 'green' : 'red'"
-          :label="
-            semana[0].suma
-              ? 'La suma es correcta'
-              : dias[0]
-              ? 'La suma es incorrecta'
-              : 'No hay entradas diarias para esa semana'
-          "
-          class="q-ml-xl"
-        />
+        <q-badge rounded :color="semana[0].suma ? 'green' : 'red'" :label="
+  semana[0].suma
+    ? 'La suma es correcta'
+    : dias[0]
+      ? 'La suma es incorrecta'
+      : 'No hay entradas diarias para esa semana'
+        " class="q-ml-xl" />
       </div>
       <div v-else>No hay ninguna semana aquí, cambie de día o de taxista</div>
     </div>
@@ -63,7 +34,6 @@
 import { ref, onMounted, watchEffect, computed } from "vue";
 import { useTaxiStore } from "../stores/taxi-store";
 import moment from "moment";
-import Chart from "../components/charts/MyChart.vue";
 
 const taxiStore = useTaxiStore();
 const date = ref(new Date().toJSON().slice(0, 10).replace(/-/g, "/"));
@@ -157,7 +127,7 @@ const optionsFn = (fecha) => {
   );
 };
 
-const filterFn = (val, update, abort) => {
+const filterFn = (val, update) => {
   update(() => {
     const needle = val.toLocaleLowerCase();
     options.value = stringOptions.filter(
@@ -190,7 +160,7 @@ watchEffect(async () => {
     semanalesTaxi.value.forEach((element) => {
       let fecha1 = moment(element.dia_inicio);
       let fecha2 = moment(element.dia_fin);
-      for (; fecha1 <= fecha2; ) {
+      for (; fecha1 <= fecha2;) {
         events.value.push(fecha1.format("YYYY/MM/DD"));
         fecha1.add(1, "day");
       }
