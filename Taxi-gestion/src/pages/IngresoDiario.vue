@@ -1,48 +1,21 @@
 <template>
   <q-page class="flex flex-center q-ma-sm">
     <div class="row float-left" style="margin-right: 15%; width: 15rem">
-      <q-date
-        v-model="date"
-        :events="events"
-        today-btn
-        :options="optionsFn"
-        :locale="myLocale"
-      />
-      <q-input
-        disable
-        filled
-        class="q-mt-md"
-        :label="`Sueldo de ${
-          date ? myLocale.months[date?.substring(5, 7) - 1].toLowerCase() : ''
-        }`"
-        v-model="sueldo"
-        suffix="Euros"
-      />
+      <q-date v-model="date" :events="events" today-btn :options="optionsFn" :locale="myLocale" />
+      <q-input disable filled class="q-mt-md" :label="`Sueldo de ${date ? myLocale.months[date?.substring(5, 7) - 1].toLowerCase() : ''
+      }`" v-model="sueldo" suffix="Euros" />
     </div>
-    <q-form
-      class="form float-right"
-      @submit.prevent="subir()"
-      autocorrect="off"
-      autocapitalize="off"
-      autocomplete="off"
-      spellcheck="false"
-      style="width: 30rem"
-    >
-      <q-img
-        :src="
-          `${taxiStore.urlServer}${imagen}` != `${taxiStore.urlServer}`
-            ? `${taxiStore.urlServer}${imagen}`
-            : ' '
-        "
-        class="q-my-xl"
-        :class="{
-          zoom: `${taxiStore.urlServer}${imagen}` != `${taxiStore.urlServer}`,
-        }"
-        :ratio="16 / 9"
-        ><div
-          class="absolute-bottom-right text-subtitle2 cursor-pointer"
-          @click="openURL(`${taxiStore.urlServer}${imagen}`)"
-        >
+    <q-form class="form float-right" @submit.prevent="subir()" autocorrect="off" autocapitalize="off" autocomplete="off"
+      spellcheck="false" style="width: 30rem">
+      <q-img :src="
+        `${taxiStore.urlServer}${imagen}` != `${taxiStore.urlServer}`
+          ? `${taxiStore.urlServer}${imagen}`
+          : ' '
+      " class="q-my-xl" :class="{
+  zoom: `${taxiStore.urlServer}${imagen}` != `${taxiStore.urlServer}`,
+}" :ratio="16 / 9">
+        <div class="absolute-bottom-right text-subtitle2 cursor-pointer"
+          @click="openURL(`${taxiStore.urlServer}${imagen}`)">
           Abrir
         </div>
         <template v-slot:error>
@@ -51,162 +24,94 @@
           </div>
         </template>
       </q-img>
-      <q-file
-        v-model="file"
-        :label="
-          events.indexOf(date) == -1
-            ? 'Inserte la imagen (5Mb Max)'
-            : 'Puede cambiar la imagen (5Mb Max)'
-        "
-        filled
-        :rules="[
-          (val) =>
-            (events.indexOf(date) == -1 ? val : true) ||
-            'La imagen es obligatoria',
-        ]"
-        max-file-size="5242880"
-        @rejected="onRejected"
-        :filter="validarFile"
-      >
+      <q-file v-model="file" :label="
+        events.indexOf(date) == -1
+          ? 'Inserte la imagen (5Mb Max)'
+          : 'Puede cambiar la imagen (5Mb Max)'
+      " filled :rules="[
+  (val) =>
+    (events.indexOf(date) == -1 ? val : true) ||
+    'La imagen es obligatoria',
+]" max-file-size="5242880" @rejected="onRejected" :filter="validarFile">
         <template v-slot:prepend>
           <q-icon name="attach_file" />
         </template>
       </q-file>
       <div class="row">
         <div class="col-12">
-          <q-input
-            class="q-mt-md"
-            standout
-            v-model="total_efectivo"
-            label="Efectivo"
-            dense
-            :rules="[
-              (val) =>
-                (val !== '' &&
-                  val >= 0 &&
-                  !isNaN(val) &&
-                  val <= 1000000 &&
-                  dosDecimales(val)) ||
-                'Valor no válido',
-            ]"
-          />
+          <q-input class="q-mt-md" standout v-model="total_efectivo" label="Efectivo" dense :rules="[
+            (val) =>
+              (val !== '' &&
+                val >= 0 &&
+                !isNaN(val) &&
+                val <= 1000000 &&
+                dosDecimales(val)) ||
+              'Valor no válido',
+          ]" />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <q-input
-            standout
-            v-model="total_tpv"
-            label="TPV"
-            dense
-            :rules="[
-              (val) =>
-                (val !== '' &&
-                  val >= 0 &&
-                  !isNaN(val) &&
-                  val <= 1000000 &&
-                  dosDecimales(val)) ||
-                'Valor no válido',
-            ]"
-          />
+          <q-input standout v-model="total_tpv" label="TPV" dense :rules="[
+            (val) =>
+              (val !== '' &&
+                val >= 0 &&
+                !isNaN(val) &&
+                val <= 1000000 &&
+                dosDecimales(val)) ||
+              'Valor no válido',
+          ]" />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <q-input
-            standout
-            v-model="total_apps"
-            label="Apps"
-            dense
-            :rules="[
-              (val) =>
-                (val !== '' &&
-                  val >= 0 &&
-                  !isNaN(val) &&
-                  val <= 1000000 &&
-                  dosDecimales(val)) ||
-                'Valor no válido',
-            ]"
-          />
+          <q-input standout v-model="total_apps" label="Apps" dense :rules="[
+            (val) =>
+              (val !== '' &&
+                val >= 0 &&
+                !isNaN(val) &&
+                val <= 1000000 &&
+                dosDecimales(val)) ||
+              'Valor no válido',
+          ]" />
         </div>
       </div>
-      <span v-for="(item, index) in varios" :key="index">
+      <span v-for="(_, index) in varios" :key="index">
         <div v-if="index % 2 != 0">
           <div class="row no-wrap q-mr-md">
             <div class="col-4 q-mb-lm q-mr-sm">
-              <q-input
-                standout
-                v-model="varios[index - 1]"
-                label="Varios"
-                dense
-                :rules="[
-                  (val) =>
-                    (val &&
-                      val >= -1000000 &&
-                      !Number.isNaN(val) &&
-                      val <= 1000000 &&
-                      dosDecimales(val)) ||
-                    'Valor no válido',
-                ]"
-              />
+              <q-input standout v-model="varios[index - 1]" label="Varios" dense :rules="[
+                (val) =>
+                  (val &&
+                    val >= -1000000 &&
+                    !Number.isNaN(val) &&
+                    val <= 1000000 &&
+                    dosDecimales(val)) ||
+                  'Valor no válido',
+              ]" />
             </div>
             <div class="col-7">
-              <q-input
-                standout
-                v-model="varios[index]"
-                label="Varios"
-                dense
-                :rules="[
-                  (val) =>
-                    (val &&
-                      val.toString().length >= 3 &&
-                      val.toString().length <= 25) ||
-                    'Valor no válido',
-                ]"
-              />
+              <q-input standout v-model="varios[index]" label="Varios" dense :rules="[
+                (val) =>
+                  (val &&
+                    val.toString().length >= 3 &&
+                    val.toString().length <= 25) ||
+                  'Valor no válido',
+              ]" />
             </div>
-            <div class="col-2 nowrap">
-              <q-icon
-                name="delete"
-                color="teal"
-                size="3em"
-                @click="borrar(index)"
-              />
+            <div class="col-2 nowrap cursor-pointer">
+              <q-icon name="delete" color="teal" size="3em" @click="borrar(index)" />
             </div>
           </div>
         </div>
       </span>
-      <q-btn
-        :disable="validarVarios()"
-        round
-        color="purple"
-        glossy
-        icon="add_task"
-        class="float-right q-mt-sm"
-        @click="variosMas()"
-      />
-      <q-btn
-        class="form-submit q-my-md q-mr-sm"
-        type="submit"
-        :disable="saveState"
-        :color="saveState ? 'red' : 'green'"
-        :loading="loadingGuardar[0]"
-        >Guardar</q-btn
-      >
-      <q-btn
-        class="form-submit q-mx-sm q-my-md"
-        @click="getDiarios()"
-        color="primary"
-        >Cancelar</q-btn
-      >
-      <q-btn
-        v-if="diario[0] ? true : false"
-        class="form-submit q-my-md"
-        @click="confirmaBorrar()"
-        color="negative"
-        :loading="loadingBorrar[0]"
-        >Eliminar</q-btn
-      >
+      <q-btn :disable="validarVarios()" round color="purple" glossy icon="add_task" class="float-right q-mt-sm"
+        @click="variosMas()" />
+      <q-btn class="form-submit q-my-md q-mr-sm" type="submit" :disable="saveState" :color="saveState ? 'red' : 'green'"
+        :loading="loadingGuardar[0]">Guardar</q-btn>
+      <q-btn class="form-submit q-mx-sm q-my-md" @click="getDiarios()" color="primary">Cancelar</q-btn>
+      <q-btn v-if="diario[0] ? true : false" class="form-submit q-my-md" @click="confirmaBorrar()" color="negative"
+        :loading="loadingBorrar[0]">Eliminar</q-btn>
     </q-form>
   </q-page>
 </template>
@@ -219,7 +124,6 @@ import { useQuasar, Notify, openURL } from "quasar";
 const loadingBorrar = ref([false, false, false, false, false, false]);
 const loadingGuardar = ref([false, false, false, false, false, false]);
 
-const progress = ref(false);
 
 const simulateProgressBorrar = (number) => {
   // we set loading state
@@ -281,7 +185,7 @@ let imagen = ref("");
 let total_efectivo = ref("");
 let total_tpv = ref("");
 let total_apps = ref("");
-let varios = ref("");
+let varios = ref([]);
 
 const date = ref(null);
 
@@ -546,7 +450,7 @@ const confirmaBorrar = () => {
       cancel: true,
       persistent: true,
     }).onOk(async () => {
-      await simulateProgressBorrar(0);
+      simulateProgressBorrar(0);
     });
   }
 };
@@ -563,7 +467,7 @@ const eliminarDiario = async () => {
     if (pos != -1) {
       await api
         .delete(`/ingreso_diario/${diario.value[0].id}/`, axiosConfig)
-        .then((res) => {})
+        .then(() => { })
         .catch((err) => {
           console.log(err.response);
         });
@@ -593,6 +497,7 @@ onMounted(async () => {
 .zoom {
   transition: transform 0.2s;
 }
+
 .zoom:hover {
   transform: scale(1.2);
 }
