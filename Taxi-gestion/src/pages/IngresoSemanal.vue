@@ -1,41 +1,22 @@
 <template>
   <q-page class="flex flex-center q-ma-sm">
     <div class="row float-left" style="margin-right: 15%; width: 15rem">
-      <q-date
-        v-model="date"
-        :events="events"
-        today-btn
-        :options="optionsFn"
-        :locale="myLocale"
-      />
+      <q-date v-model="date" :events="events" today-btn :options="optionsFn" :locale="myLocale" />
     </div>
 
-    <q-form
-      class="form float-right"
-      @submit.prevent="subir()"
-      autocorrect="off"
-      autocapitalize="off"
-      autocomplete="off"
-      spellcheck="false"
-      style="width: 30rem"
-    >
-      <q-img
-        :src="
-          `${taxiStore.urlServer}${imagen_semana}` != `${taxiStore.urlServer}`
-            ? `${taxiStore.urlServer}${imagen_semana}`
-            : ' '
-        "
-        class="q-my-xl"
-        :class="{
-          zoom:
-            `${taxiStore.urlServer}${imagen_semana}` !=
-            `${taxiStore.urlServer}`,
-        }"
-        :ratio="16 / 9"
-        ><div
-          class="absolute-bottom-right text-subtitle2 cursor-pointer"
-          @click="openURL(`${taxiStore.urlServer}${imagen_semana}`)"
-        >
+    <q-form class="form float-right" @submit.prevent="subir()" autocorrect="off" autocapitalize="off" autocomplete="off"
+      spellcheck="false" style="width: 30rem">
+      <q-img :src="
+        `${taxiStore.urlServer}${imagen_semana}` != `${taxiStore.urlServer}`
+          ? `${taxiStore.urlServer}${imagen_semana}`
+          : ' '
+      " class="q-my-xl" :class="{
+  zoom:
+    `${taxiStore.urlServer}${imagen_semana}` !=
+    `${taxiStore.urlServer}`,
+}" :ratio="16 / 9">
+        <div class="absolute-bottom-right text-subtitle2 cursor-pointer"
+          @click="openURL(`${taxiStore.urlServer}${imagen_semana}`)">
           Abrir
         </div>
         <template v-slot:error>
@@ -44,50 +25,27 @@
           </div>
         </template>
       </q-img>
-      <q-file
-        v-model="file"
-        :label="
-          events.indexOf(date) == -1
-            ? 'Inserte la imagen (5Mb Max)'
-            : 'Puede cambiar la imagen (5Mb Max)'
-        "
-        filled
-        :rules="[
-          (val) =>
-            (events.indexOf(date) == -1 ? val : true) ||
-            'La imagen es obligatoria',
-        ]"
-        max-file-size="5242880"
-        @rejected="onRejected"
-        :filter="validarFile"
-      >
+      <q-file v-model="file" :label="
+        events.indexOf(date) == -1
+          ? 'Inserte la imagen (5Mb Max)'
+          : 'Puede cambiar la imagen (5Mb Max)'
+      " filled :rules="[
+  (val) =>
+    (events.indexOf(date) == -1 ? val : true) ||
+    'La imagen es obligatoria',
+]" max-file-size="5242880" @rejected="onRejected" :filter="validarFile">
         <template v-slot:prepend>
           <q-icon name="attach_file" />
         </template>
       </q-file>
       <div class="row">
         <div class="col-6">
-          <q-input
-            ref="inicioRef"
-            class="q-mt-md"
-            label="día inicial"
-            filled
-            v-model="dia_inicio"
-            mask="##/##/####"
-            :error="!validaFecha"
-          >
+          <q-input ref="inicioRef" class="q-mt-md" label="día inicial" filled v-model="dia_inicio" mask="##/##/####"
+            :error="!validaFecha">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy
-                  cover
-                  transition-show="scale"
-                  transition-hide="scale"
-                >
-                  <q-date
-                    v-model="dia_inicio"
-                    mask="DD/MM/YYYY"
-                    :options="optionsImputDate"
-                  >
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="dia_inicio" mask="DD/MM/YYYY" :options="optionsImputDate">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -98,27 +56,12 @@
           </q-input>
         </div>
         <div class="col-6">
-          <q-input
-            ref="finRef"
-            class="q-ml-sm q-mt-md"
-            label="día final"
-            filled
-            v-model="dia_fin"
-            mask="##/##/####"
-            :error="!validaFecha"
-          >
+          <q-input ref="finRef" class="q-ml-sm q-mt-md" label="día final" filled v-model="dia_fin" mask="##/##/####"
+            :error="!validaFecha">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy
-                  cover
-                  transition-show="scale"
-                  transition-hide="scale"
-                >
-                  <q-date
-                    v-model="dia_fin"
-                    mask="DD/MM/YYYY"
-                    :options="optionsImputDate"
-                  >
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="dia_fin" mask="DD/MM/YYYY" :options="optionsImputDate">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -131,102 +74,61 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <q-input
-            standout
-            v-model="total_efectivo_semana"
-            label="Efectivo"
-            dense
-            :rules="[
-              (val) =>
-                (val !== '' &&
-                  val >= 0 &&
-                  !isNaN(val) &&
-                  val <= 1000000 &&
-                  dosDecimales(val)) ||
-                'Valor no válido',
-            ]"
-          />
+          <q-input standout v-model="total_efectivo_semana" label="Efectivo" dense :rules="[
+            (val) =>
+              (val !== '' &&
+                val >= 0 &&
+                !isNaN(val) &&
+                val <= 1000000 &&
+                dosDecimales(val)) ||
+              'Valor no válido',
+          ]" />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <q-input
-            standout
-            v-model="total_tpv_semana"
-            label="TPV"
-            dense
-            :rules="[
-              (val) =>
-                (val !== '' &&
-                  val >= 0 &&
-                  !isNaN(val) &&
-                  val <= 1000000 &&
-                  dosDecimales(val)) ||
-                'Valor no válido',
-            ]"
-          />
+          <q-input standout v-model="total_tpv_semana" label="TPV" dense :rules="[
+            (val) =>
+              (val !== '' &&
+                val >= 0 &&
+                !isNaN(val) &&
+                val <= 1000000 &&
+                dosDecimales(val)) ||
+              'Valor no válido',
+          ]" />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <q-input
-            standout
-            v-model="total_apps_semana"
-            label="Apps"
-            dense
-            :rules="[
-              (val) =>
-                (val !== '' &&
-                  val >= 0 &&
-                  !isNaN(val) &&
-                  val <= 1000000 &&
-                  dosDecimales(val)) ||
-                'Valor no válido',
-            ]"
-          />
+          <q-input standout v-model="total_apps_semana" label="Apps" dense :rules="[
+            (val) =>
+              (val !== '' &&
+                val >= 0 &&
+                !isNaN(val) &&
+                val <= 1000000 &&
+                dosDecimales(val)) ||
+              'Valor no válido',
+          ]" />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <q-input
-            standout
-            v-model="varios_semana"
-            label="Varios"
-            dense
-            :rules="[
-              (val) =>
-                (val !== '' &&
-                  val >= -1000000 &&
-                  !Number.isNaN(val) &&
-                  val <= 1000000 &&
-                  dosDecimales(val)) ||
-                'Valor no válido',
-            ]"
-          />
+          <q-input standout v-model="varios_semana" label="Varios" dense :rules="[
+            (val) =>
+              (val !== '' &&
+                val >= -1000000 &&
+                !Number.isNaN(val) &&
+                val <= 1000000 &&
+                dosDecimales(val)) ||
+              'Valor no válido',
+          ]" />
         </div>
       </div>
-      <q-btn
-        class="form-submit"
-        type="submit"
-        :disable="saveState"
-        :color="saveState ? 'red' : 'green'"
-        :loading="loadingGuardar[0]"
-        >Guardar</q-btn
-      >
-      <q-btn
-        class="form-submit q-ml-md q-my-md"
-        @click="getSemanal()"
-        color="primary"
-        >Cancelar</q-btn
-      >
-      <q-btn
-        v-if="semanal?.length == 1 ? true : false"
-        class="form-submit q-ml-md q-my-md"
-        @click="confirmaBorrar()"
-        color="negative"
-        :loading="loadingBorrar[0]"
-        >Eliminar</q-btn
-      >
+      <q-btn class="form-submit" type="submit" :disable="saveState" :color="saveState ? 'red' : 'green'"
+        :loading="loadingGuardar[0]">Guardar</q-btn>
+      <q-btn class="form-submit q-ml-md q-my-md" @click="getSemanal()" color="primary">Cancelar</q-btn>
+      <q-btn v-if="semanal?.length == 1 ? true : false" class="form-submit q-ml-md q-my-md" @click="confirmaBorrar()"
+        color="negative" :loading="loadingBorrar[0]">Eliminar</q-btn>
     </q-form>
   </q-page>
 </template>
@@ -256,7 +158,6 @@ const total_apps_semana = ref(null);
 const varios_semana = ref(null);
 
 const $q = useQuasar();
-const progress = ref(false);
 
 const onRejected = (rejectedEntries) => {
   file.value = null;
@@ -306,7 +207,7 @@ const getEvents = () => {
   semanalesTaxi.value.forEach((element) => {
     let fecha1 = moment(element.dia_inicio);
     let fecha2 = moment(element.dia_fin);
-    for (; fecha1 <= fecha2; ) {
+    for (; fecha1 <= fecha2;) {
       events.value.push(fecha1.format("YYYY/MM/DD"));
       fecha1.add(1, "day");
     }
@@ -332,11 +233,11 @@ const optionsImputDate = (fecha) => {
   if (posI != -1 || posF != -1) {
     return (
       fecha >
-        (events.value[posI - 1] ? events.value[posI - 1] : "2022/01/01") &&
+      (events.value[posI - 1] ? events.value[posI - 1] : "2022/01/01") &&
       fecha <
-        (events.value[posF + 1]
-          ? events.value[posF + 1]
-          : todayMOne.format("YYYY/MM/DD"))
+      (events.value[posF + 1]
+        ? events.value[posF + 1]
+        : todayMOne.format("YYYY/MM/DD"))
     );
   } else {
     let newArray = events.value.slice();
@@ -349,9 +250,9 @@ const optionsImputDate = (fecha) => {
     return (
       fecha > (pos == 0 ? "2022/01/01" : newArray[pos - 1]) &&
       fecha <
-        (pos == newArray.length - 1
-          ? todayMOne.format("YYYY/MM/DD")
-          : newArray[pos + 1])
+      (pos == newArray.length - 1
+        ? todayMOne.format("YYYY/MM/DD")
+        : newArray[pos + 1])
     );
   }
 };
@@ -450,15 +351,15 @@ const saveState = computed(() => {
   return false;
 });
 
-const nuevo = () => {
-  imagen_semana.value = "";
-  dia_inicio.value = "";
-  dia_fin.value = "";
-  total_efectivo_semana.value = "";
-  total_tpv_semana.value = "";
-  total_apps_semana.value = "";
-  varios_semana.value = "";
-};
+// const nuevo = () => {
+//   imagen_semana.value = "";
+//   dia_inicio.value = "";
+//   dia_fin.value = "";
+//   total_efectivo_semana.value = "";
+//   total_tpv_semana.value = "";
+//   total_apps_semana.value = "";
+//   varios_semana.value = "";
+// };
 
 const eliminarSemanal = async () => {
   await taxiStore.refresToken();
@@ -472,7 +373,7 @@ const eliminarSemanal = async () => {
     if (pos != -1) {
       await api
         .delete(`/ingreso_semanal/${semanal.value[0].id}/`, axiosConfig)
-        .then((res) => {})
+        .then(() => { })
         .catch((err) => {
           console.log(err.response);
         });
@@ -495,7 +396,7 @@ const simulateProgressBorrar = (number) => {
       if (element.id != semanal.value[0].id) {
         let fecha1 = moment(element.dia_inicio);
         let fecha2 = moment(element.dia_fin);
-        for (; fecha1 <= fecha2; ) {
+        for (; fecha1 <= fecha2;) {
           events.value.push(fecha1.format("YYYY/MM/DD"));
           fecha1.add(1, "day");
         }
@@ -547,7 +448,7 @@ const confirmaBorrar = () => {
     cancel: true,
     persistent: true,
   }).onOk(async () => {
-    await simulateProgressBorrar(0);
+    simulateProgressBorrar(0);
   });
 };
 
@@ -647,6 +548,7 @@ onMounted(async () => {
 .zoom {
   transition: transform 0.2s;
 }
+
 .zoom:hover {
   transform: scale(1.2);
 }
